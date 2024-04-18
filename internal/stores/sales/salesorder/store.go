@@ -1,0 +1,165 @@
+package salesorder
+
+import (
+	"context"
+	"fmt"
+	"log"
+	"reflect"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys/lysmeta"
+	"github.com/loveyourstack/lys/lyspg"
+	"github.com/loveyourstack/lys/lystype"
+	"github.com/loveyourstack/northwind/internal/nw"
+	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderdetail"
+	"github.com/loveyourstack/northwind/pkg/lyspmath"
+)
+
+const (
+	schemaName     string = "sales"
+	tableName      string = "order"
+	viewName       string = "v_order"
+	pkColName      string = "id"
+	defaultOrderBy string = "order_number DESC"
+)
+
+type Input struct {
+	CustomerFk      int64            `db:"customer_fk" json:"customer_fk,omitempty" validate:"required"`
+	DestAddress     string           `db:"dest_address" json:"dest_address,omitempty" validate:"required"`
+	DestCity        string           `db:"dest_city" json:"dest_city,omitempty" validate:"required"`
+	DestCompanyName string           `db:"dest_company_name" json:"dest_company_name,omitempty" validate:"required"`
+	DestCountryFk   int64            `db:"dest_country_fk" json:"dest_country_fk,omitempty" validate:"required"`
+	DestPostalCode  string           `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"required"`
+	DestState       string           `db:"dest_state" json:"dest_state,omitempty"`
+	FreightCost     float32          `db:"freight_cost" json:"freight_cost,omitempty" validate:"required,number,gte=0"`
+	IsShipped       bool             `db:"is_shipped" json:"is_shipped,omitempty"`
+	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	OrderDate       lystype.Date     `db:"order_date" json:"order_date,omitempty" validate:"required"`
+	OrderNumber     int32            `db:"order_number" json:"order_number,omitempty" validate:"required"`
+	RequiredDate    lystype.Date     `db:"required_date" json:"required_date,omitempty" validate:"required"`
+	SalesmanFk      int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
+	ShippedDate     lystype.Date     `db:"shipped_date" json:"shipped_date,omitempty"`
+	ShipperFk       int64            `db:"shipper_fk" json:"shipper_fk,omitempty" validate:"required"`
+}
+
+type Model struct {
+	Id                  int64            `db:"id" json:"id"`
+	CustomerCode        string           `db:"customer_code" json:"customer_code,omitempty"`
+	CustomerCompanyName string           `db:"customer_company_name" json:"customer_company_name,omitempty"`
+	DestCountryIso2     string           `db:"dest_country_iso2" json:"dest_country_iso2,omitempty"`
+	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	Salesman            string           `db:"salesman" json:"salesman,omitempty"`
+	ShipperCompanyName  string           `db:"shipper_company_name" json:"shipper_company_name,omitempty"`
+	OrderDetailCount    int              `db:"order_detail_count" json:"order_detail_count"`
+	OrderValue          float32          `db:"order_value" json:"order_value"`
+	Input
+}
+
+var (
+	gDbTags      []string
+	gJsonTags    []string
+	gInputDbTags []string
+)
+
+func init() {
+	var err error
+	gDbTags, gJsonTags, err = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem(), reflect.ValueOf(&Model{}).Elem())
+	if err != nil {
+		log.Fatalf("lysmeta.GetStructTags failed for %s.%s: %s", schemaName, tableName, err.Error())
+	}
+	gInputDbTags, _, _ = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem())
+}
+
+type Store struct {
+	Db *pgxpool.Pool
+}
+
+func (s Store) BulkInsert(ctx context.Context, inputs []Input) (rowsAffected int64, err error) {
+	return lyspg.BulkInsert[Input](ctx, s.Db, schemaName, tableName, inputs)
+}
+
+func (s Store) Delete(ctx context.Context, id int64) (stmt string, err error) {
+	return lyspg.DeleteUnique(ctx, s.Db, schemaName, tableName, pkColName, id)
+}
+
+func (s Store) GetJsonFields() []string {
+	return gJsonTags
+}
+
+func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {
+	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, gDbTags, input)
+}
+
+func (s Store) Restore(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
+
+	stmt, err = lyspg.Restore(ctx, tx, schemaName, tableName, pkColName, id, false)
+	if err != nil {
+		return stmt, fmt.Errorf("lyspg.Restore failed: %w", err)
+	}
+
+	// cascade to order details
+	orderDetailStore := salesorderdetail.Store{Db: s.Db}
+	stmt, err = orderDetailStore.RestoreCascadedByOrder(ctx, tx, id)
+	if err != nil {
+		return stmt, fmt.Errorf("orderDetailStore.RestoreCascadedByOrder failed: %w", err)
+	}
+
+	return "", nil
+}
+
+func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, stmt string, err error) {
+	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, gDbTags, params)
+}
+
+func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
+	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, gDbTags, id)
+}
+
+func (s Store) SoftDelete(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
+
+	// cascade to order details
+	orderDetailStore := salesorderdetail.Store{Db: s.Db}
+	stmt, err = orderDetailStore.SoftDeleteCascadedByOrder(ctx, tx, id)
+	if err != nil {
+		return stmt, fmt.Errorf("orderDetailStore.SoftDeleteCascadedByOrder failed: %w", err)
+	}
+
+	return lyspg.SoftDelete(ctx, tx, schemaName, tableName, pkColName, id, false)
+}
+
+func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {
+	input.LastModifiedAt = lystype.Datetime(time.Now())
+	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id)
+}
+
+func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
+	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, gInputDbTags, assignmentsMap, id)
+}
+
+func (s Store) Validate(validate *validator.Validate, input Input) (err error) {
+
+	err = lysmeta.Validate(validate, input)
+	if err != nil {
+		return err
+	}
+
+	// further business rules
+
+	if input.FreightCost != lyspmath.RoundFloat32(input.FreightCost, 2) {
+		return fmt.Errorf("freight_cost may have max 2 decimal places")
+	}
+
+	if time.Time(input.OrderDate).Before(nw.CommencementOfTradingDate) {
+		return fmt.Errorf("order_date must be from %s", nw.CommencementOfTradingDateStr)
+	}
+
+	if time.Time(input.RequiredDate).Before(nw.CommencementOfTradingDate) {
+		return fmt.Errorf("required_date must be from %s", nw.CommencementOfTradingDateStr)
+	}
+
+	return nil
+}

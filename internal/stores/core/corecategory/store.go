@@ -1,0 +1,94 @@
+package corecategory
+
+import (
+	"context"
+	"log"
+	"reflect"
+	"time"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys"
+	"github.com/loveyourstack/lys/lysmeta"
+	"github.com/loveyourstack/lys/lyspg"
+	"github.com/loveyourstack/lys/lystype"
+)
+
+const (
+	schemaName     string = "core"
+	tableName      string = "category"
+	viewName       string = "v_category"
+	pkColName      string = "id"
+	defaultOrderBy string = "name"
+)
+
+type Input struct {
+	Description    string           `db:"description" json:"description,omitempty" validate:"required"`
+	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"` // assigned in Update funcs
+	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
+}
+
+type Model struct {
+	Id                 int64            `db:"id" json:"id"`
+	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	ActiveProductCount int              `db:"active_product_count" json:"active_product_count"`
+	Input
+}
+
+var (
+	gDbTags      []string
+	gJsonTags    []string
+	gInputDbTags []string
+)
+
+func init() {
+	var err error
+	gDbTags, gJsonTags, err = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem(), reflect.ValueOf(&Model{}).Elem())
+	if err != nil {
+		log.Fatalf("lysmeta.GetStructTags failed for %s.%s: %s", schemaName, tableName, err.Error())
+	}
+	gInputDbTags, _, _ = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem())
+}
+
+type Store struct {
+	Db *pgxpool.Pool
+}
+
+func (s Store) Delete(ctx context.Context, id int64) (stmt string, err error) {
+	return lyspg.DeleteUnique(ctx, s.Db, schemaName, tableName, pkColName, id)
+}
+
+func (s Store) GetJsonFields() []string {
+	return gJsonTags
+}
+
+func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {
+	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, gDbTags, input)
+}
+
+func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, stmt string, err error) {
+	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, gDbTags, params)
+}
+
+func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
+	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, gDbTags, id)
+}
+
+func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {
+	input.LastModifiedAt = lystype.Datetime(time.Now())
+	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
+}
+
+func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
+	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["last_modified_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
+	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, gInputDbTags, assignmentsMap, id)
+}
+
+func (s Store) Validate(validate *validator.Validate, input Input) error {
+	return lysmeta.Validate(validate, input)
+}

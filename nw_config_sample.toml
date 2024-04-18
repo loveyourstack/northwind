@@ -1,0 +1,31 @@
+[general]
+appName = "Northwind"
+env     = "dev"
+
+[database]
+host   = "localhost"
+port   = "5432"
+database = "northwind"
+schemaCreationOrder = ["public", "common", "system", "core", "hr", "sales"] # must be updated when schemas are added / removed. Also need to add to schemas.sql
+
+[dbSuperUser]
+userName = "postgres"
+password = ""
+
+[dbOwnerUser]
+userName = "northwind_owner" # this PG user owns all database objects
+password = "123"
+
+[dbServerUser]
+userName = "northwind_server" # this PG user only has the db access needed for the HTTP server
+password = "456"
+
+[dbCliUser]
+userName = "northwind_cli" # this PG user only has the db access needed for CLI commands
+password = "789"
+
+[api]
+port = "8010"
+
+[ui]
+url = "http://localhost:3000"
