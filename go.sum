@@ -16,8 +16,6 @@ github.com/go-playground/universal-translator v0.18.1 h1:Bcnm0ZwsGyWbCzImXv+pAJn
 github.com/go-playground/universal-translator v0.18.1/go.mod h1:xekY+UJKNuX9WP91TpwSH2VMlDf28Uj24BCp08ZFTUY=
 github.com/go-playground/validator/v10 v10.19.0 h1:ol+5Fu+cSq9JD7SoSqe04GMI92cbn0+wvQ3bZ8b/AU4=
 github.com/go-playground/validator/v10 v10.19.0/go.mod h1:dbuPbCMFw/DrkbEynArYaCwl3amGuJotoKCe95atGMM=
-github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
-github.com/google/uuid v1.6.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/gorilla/handlers v1.5.2 h1:cLTUSsNkgcwhgRqvCNmdbRWG0A3N4F+M2nWKdScwyEE=
 github.com/gorilla/handlers v1.5.2/go.mod h1:dX+xVpaxdSw+q0Qek8SSsl3dfMk3jNddUkMzo0GtH0w=
 github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
@@ -36,14 +34,8 @@ github.com/jackc/puddle/v2 v2.2.1 h1:RhxXJtFG022u4ibrCSMSiu5aOq1i77R3OHKNJj77OAk
 github.com/jackc/puddle/v2 v2.2.1/go.mod h1:vriiEXHvEE654aYKXXjOvZM39qJ0q+azkZFrfEOc3H4=
 github.com/leodido/go-urn v1.4.0 h1:WT9HwE9SGECu3lg4d/dIA+jxlljEa1/ffXKmRjqdmIQ=
 github.com/leodido/go-urn v1.4.0/go.mod h1:bvxc+MVxLKB4z00jd1z+Dvzr47oO32F/QSNjSBOlFxI=
-github.com/loveyourstack/lys v0.0.0-20240416140948-a56a731c0c42 h1:NNsehWCZSguZkQ6wGOIvi4rP8SMNpE50xoeFw+Lwg1w=
-github.com/loveyourstack/lys v0.0.0-20240416140948-a56a731c0c42/go.mod h1:0Ss3FxbyPoUpQ8TU7R7yLNFHiUreQf2Kl/GPYrqwt2A=
-github.com/loveyourstack/lys v0.0.0-20240416142957-c48e3a74f077 h1:E6HbJBXT7I9JslSDCXyy3HMiATAs2WgVVuZIUjpJMBw=
-github.com/loveyourstack/lys v0.0.0-20240416142957-c48e3a74f077/go.mod h1:0Ss3FxbyPoUpQ8TU7R7yLNFHiUreQf2Kl/GPYrqwt2A=
-github.com/loveyourstack/lys v0.0.0-20240416152101-51b482a37e40 h1:3Tk0NEJHJdNNpllsGPjOBf6o0ay3IN2sU2I0x0hVd14=
-github.com/loveyourstack/lys v0.0.0-20240416152101-51b482a37e40/go.mod h1:0Ss3FxbyPoUpQ8TU7R7yLNFHiUreQf2Kl/GPYrqwt2A=
-github.com/loveyourstack/lys v0.0.0-20240417083838-752e75051670 h1:STSWtgrYOHKgHer9lkkPpc8jzHQpe7hyy8Z6fNt/x90=
-github.com/loveyourstack/lys v0.0.0-20240417083838-752e75051670/go.mod h1:kjIFJSa4YuH5CPRcPx96nsWBjtvH7ipF8zDM0AiF42Q=
+github.com/loveyourstack/lys v0.1.1 h1:Nbv82D8iWT1JiLVC0biN4XO6LOp9i+Z1Zk+B+T45BDo=
+github.com/loveyourstack/lys v0.1.1/go.mod h1:SDxNKvAvHqxMk+LNs4dSKmXnlMsIsLpfo9NFKY1SWpc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
