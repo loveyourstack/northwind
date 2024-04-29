@@ -13,6 +13,7 @@
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
     class="pa-4"
+    :row-props="({ item }) => getRowClass(item)"
   >
     <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
       <v-data-table-footer
@@ -26,6 +27,7 @@
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Orders' }}</div>
+            <div>Unshipped orders are marked red.</div>
           </div>
         </v-col>
         <v-col>
@@ -127,6 +129,12 @@ const filterOrderNumber = ref<string>()
 const filterCustomerName = ref<string>()
 const filterShipped = ref<boolean>()
 const lsKey = 'orders_dt'
+
+function getRowClass(item: Order) {
+  if (!item.is_shipped) {
+    return { class: 'bg-red-lighten-5' }
+  }
+}
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
 

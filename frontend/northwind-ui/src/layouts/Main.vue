@@ -10,6 +10,8 @@
 
       <div class="text-body-1 mr-2">Username</div>
 
+      <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>
+
       <v-menu>
         <template v-slot:activator="{ props }">
           <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
@@ -55,18 +57,24 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import { useTheme } from 'vuetify'
 import { useAppStore } from '@/stores/app'
 import { useCommonStore } from '@/stores/common'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import ApiError from '@/components/ApiError.vue'
 
+const theme = useTheme()
 const appStore = useAppStore()
 const commonStore = useCommonStore()
 const coreStore = useCoreStore()
 const hrStore = useHRStore()
 
 const showNav = ref(true)
+
+function toggleTheme () {
+  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
+}
 
 onMounted(() => {
   // refresh stores on page reload
@@ -96,6 +104,17 @@ onMounted(() => {
 tbody tr:nth-of-type(even) {
   background-color: rgba(0, 0, 0, .01);
 }
+
+.color-pill {
+  /* background-color needs to be set */
+  border-radius: 0.25em;
+  padding: 5px 10px 5px 10px;
+}
+
+/* TODO somehow darken color-pill background color since text color changes from black to white
+.v-theme--dark .color-pill {
+}
+*/
 
 .v-data-table-footer {
   justify-content: flex-start;

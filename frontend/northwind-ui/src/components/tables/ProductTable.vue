@@ -62,6 +62,10 @@
         </v-col>
       </v-row>
     </template>
+    <template v-slot:[`item.category`]="{ item }">
+      <span v-if="item.category_color_hex" class="color-pill" :style="'background-color: ' + item.category_color_hex + ';'">{{ item.category }}</span>
+      <span v-else>{{ item.category }}</span>
+    </template>
     <template v-slot:[`item.supplier_company_name`]="{ item }">
       <router-link :to="{ name: 'Supplier detail', params: {id: item.supplier_fk }}">
         {{item.supplier_company_name}}

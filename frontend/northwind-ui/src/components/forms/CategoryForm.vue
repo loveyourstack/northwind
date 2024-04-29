@@ -16,6 +16,13 @@
             <v-text-field label="Description" v-model="item.description"
               :rules="[(v: string) => !!v || 'Description is required']"
             ></v-text-field>
+
+            <v-color-picker label="Color" v-model="item.color_hex" :mode="'hex'" hide-inputs show-swatches
+            ></v-color-picker>
+
+            <v-btn size="small" icon class="mt-2" @click="item.color_hex = ''">
+              <v-icon class="float-right" icon="mdi-close"></v-icon>
+            </v-btn>
           </v-col>
         </v-row>
 

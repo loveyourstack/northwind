@@ -42,6 +42,13 @@
         </v-col>
       </v-row>
     </template>
+    <template v-slot:[`item.name`]="{ item }">
+      <span v-if="item.color_hex" class="color-pill" :style="'background-color: ' + item.color_hex + ';'">{{ item.name }}</span>
+      <span v-else>{{ item.name }}</span>
+    </template>
+    <template v-slot:[`item.color_hex`]="{ item }">
+      <span v-if="item.color_hex" class="dot" :style="'background-color: ' + item.color_hex + ';'"></span>
+    </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
         <v-icon color="light-blue" icon="mdi-pencil"></v-icon>
@@ -66,6 +73,7 @@ const props = defineProps<{
 var headers = [
   { title: 'Name', key: 'name' },
   { title: 'Description', key: 'description' },
+  { title: 'Color', key: 'color_hex' },
   { title: '# products', key: 'active_product_count', align: 'end' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
@@ -130,3 +138,13 @@ onBeforeMount(() => {
 })
 
 </script>
+
+<style scoped>
+.dot {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-top: 5px;
+}
+</style>

@@ -2,6 +2,7 @@
 CREATE OR REPLACE VIEW core.v_category AS
 	SELECT 
     c_c.id,
+    c_c.color_hex,
     c_c.description,
     c_c.entry_at,
     c_c.entry_by,
@@ -31,6 +32,7 @@ CREATE OR REPLACE VIEW core.v_product AS
     c_p.id,
     c_p.category_fk,
     c_c.name AS category,
+    c_c.color_hex AS category_color_hex,
     c_p.entry_at,
     c_p.entry_by,
     c_p.is_discontinued,

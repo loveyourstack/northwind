@@ -1,5 +1,6 @@
 
 export interface CategoryInput {
+  color_hex: string
   description: string
   name: string
 }
@@ -9,6 +10,7 @@ export interface Category extends CategoryInput {
 }
 export function NewCategory(): Category {
   return  {
+    color_hex: '',
     description: '',
     name: '',
     id: 0,
@@ -17,6 +19,7 @@ export function NewCategory(): Category {
 }
 export function GetCategoryInputFromItem(item: Category): CategoryInput {
   return  {
+    color_hex: item.color_hex,
     description: item.description,
     name: item.name,
   }
@@ -39,6 +42,7 @@ export interface ProductInput {
 export interface Product extends ProductInput {
   id: number
   category: string
+  category_color_hex: string
   supplier_company_name: string
 }
 export function NewProduct(): Product {
@@ -51,6 +55,7 @@ export function NewProduct(): Product {
     unit_price: 0,
     id: 0,
     category: '',
+    category_color_hex: '',
     supplier_company_name: ''
   }
 }

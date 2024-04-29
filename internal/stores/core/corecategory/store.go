@@ -23,6 +23,7 @@ const (
 )
 
 type Input struct {
+	ColorHex       string           `db:"color_hex" json:"color_hex,omitempty"`
 	Description    string           `db:"description" json:"description,omitempty" validate:"required"`
 	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
 	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
