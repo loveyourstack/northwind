@@ -106,15 +106,14 @@ tbody tr:nth-of-type(even) {
 }
 
 .color-pill {
-  /* background-color needs to be set */
+  /* light background-color needs to be set */
   border-radius: 0.25em;
   padding: 5px 10px 5px 10px;
 }
-
-/* TODO somehow darken color-pill background color since text color changes from black to white
 .v-theme--dark .color-pill {
+  /* in dark theme, retain contrast to light background-color */
+  color: black;
 }
-*/
 
 .v-data-table-footer {
   justify-content: flex-start;
