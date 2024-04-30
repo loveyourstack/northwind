@@ -26,7 +26,7 @@
 
     </v-app-bar>
 
-    <v-navigation-drawer v-model="showNav" theme="dark" image="./../assets/sidebar.jpg">
+    <v-navigation-drawer v-model="showNav" floating>
       <v-list density="compact">
         <v-list-item link title="Home" to="/home"></v-list-item>
 
@@ -86,8 +86,15 @@ onMounted(() => {
 </script>
 
 <style>
+
 .clickable:hover {
   cursor: pointer;
+}
+
+.cockpit {
+  background: url('../assets/cockpit.jpg');
+  background-size: cover;
+  height: 100vh;
 }
 
 .dt-title {

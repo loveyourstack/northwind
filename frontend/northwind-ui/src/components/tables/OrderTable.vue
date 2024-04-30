@@ -87,6 +87,7 @@
 
 <script lang="ts" setup>
 import { ref, watch, onBeforeMount } from 'vue'
+import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Order } from '@/types/sales'
@@ -100,6 +101,7 @@ const props = defineProps<{
   title?: string
 }>()
 
+const theme = useTheme()
 const commonStore = useCommonStore()
 
 var headers = [
@@ -132,7 +134,7 @@ const lsKey = 'orders_dt'
 
 function getRowClass(item: Order) {
   if (!item.is_shipped) {
-    return { class: 'bg-red-lighten-5' }
+    return theme.global.current.value.dark ? { style: 'background-color: #480505;' } : { class: 'bg-red-lighten-5' }
   }
 }
 

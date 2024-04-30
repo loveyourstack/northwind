@@ -1,5 +1,5 @@
 <template>
-  <v-container class="">
+  <v-container fluid class="cockpit">
     <v-responsive class="">
       <v-row>
         <v-col>
