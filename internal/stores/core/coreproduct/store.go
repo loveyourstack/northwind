@@ -39,12 +39,13 @@ type Input struct {
 }
 
 type Model struct {
-	Id                  int64            `db:"id" json:"id"`
-	Category            string           `db:"category" json:"category,omitempty"`
-	CategoryColorHex    string           `db:"category_color_hex" json:"category_color_hex,omitempty"`
-	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
-	SupplierCompanyName string           `db:"supplier_company_name" json:"supplier_company_name,omitempty"`
-	SupplierCountryIso2 string           `db:"supplier_country_iso2" json:"supplier_country_iso2,omitempty"`
+	Id                   int64            `db:"id" json:"id"`
+	Category             string           `db:"category" json:"category,omitempty"`
+	CategoryColorHex     string           `db:"category_color_hex" json:"category_color_hex,omitempty"`
+	CategoryColorIsLight bool             `db:"category_color_is_light" json:"category_color_is_light"`
+	EntryAt              lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	SupplierCompanyName  string           `db:"supplier_company_name" json:"supplier_company_name,omitempty"`
+	SupplierCountryIso2  string           `db:"supplier_country_iso2" json:"supplier_country_iso2,omitempty"`
 	Input
 }
 

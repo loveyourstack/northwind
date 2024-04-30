@@ -7,6 +7,7 @@ export interface CategoryInput {
 export interface Category extends CategoryInput {
   id: number
   active_product_count: number
+  color_is_light: boolean
 }
 export function NewCategory(): Category {
   return  {
@@ -14,7 +15,8 @@ export function NewCategory(): Category {
     description: '',
     name: '',
     id: 0,
-    active_product_count: 0
+    active_product_count: 0,
+    color_is_light: false
   }
 }
 export function GetCategoryInputFromItem(item: Category): CategoryInput {
@@ -43,6 +45,7 @@ export interface Product extends ProductInput {
   id: number
   category: string
   category_color_hex: string
+  category_color_is_light: boolean
   supplier_company_name: string
 }
 export function NewProduct(): Product {
@@ -56,6 +59,7 @@ export function NewProduct(): Product {
     id: 0,
     category: '',
     category_color_hex: '',
+    category_color_is_light: false,
     supplier_company_name: ''
   }
 }

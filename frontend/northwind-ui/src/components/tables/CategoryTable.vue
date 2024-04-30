@@ -43,7 +43,11 @@
       </v-row>
     </template>
     <template v-slot:[`item.name`]="{ item }">
-      <span v-if="item.color_hex" class="color-pill" :style="'background-color: ' + item.color_hex + ';'">{{ item.name }}</span>
+      <span v-if="item.color_hex" 
+        class="color-pill" 
+        :class="item.color_is_light ? 'text-black' : 'text-white'"
+        :style="'background-color: ' + item.color_hex + ';'"
+      >{{ item.name }}</span>
       <span v-else>{{ item.name }}</span>
     </template>
     <template v-slot:[`item.color_hex`]="{ item }">

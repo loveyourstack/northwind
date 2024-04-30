@@ -63,7 +63,11 @@
       </v-row>
     </template>
     <template v-slot:[`item.category`]="{ item }">
-      <span v-if="item.category_color_hex" class="color-pill" :style="'background-color: ' + item.category_color_hex + ';'">{{ item.category }}</span>
+      <span v-if="item.category_color_hex" 
+        class="color-pill" 
+        :class="item.category_color_is_light ? 'text-black' : 'text-white'"
+        :style="'background-color: ' + item.category_color_hex + ';'"
+      >{{ item.category }}</span>
       <span v-else>{{ item.category }}</span>
     </template>
     <template v-slot:[`item.supplier_company_name`]="{ item }">

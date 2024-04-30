@@ -5,6 +5,7 @@ CREATE TABLE core.category
   entry_at tracking_at,
   last_modified_at tracking_at,
   color_hex text NOT NULL,
+  color_is_light boolean NOT NULL,
   description text NOT NULL UNIQUE,
   entry_by tracking_by,
   last_modified_by tracking_by,

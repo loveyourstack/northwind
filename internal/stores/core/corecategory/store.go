@@ -2,6 +2,7 @@ package corecategory
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"reflect"
 	"time"
@@ -12,6 +13,7 @@ import (
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
+	"github.com/loveyourstack/northwind/pkg/lyspcolor"
 )
 
 const (
@@ -24,6 +26,7 @@ const (
 
 type Input struct {
 	ColorHex       string           `db:"color_hex" json:"color_hex,omitempty"`
+	ColorIsLight   bool             `db:"color_is_light" json:"color_is_light,omitempty"` // assigned in Insert and Update funcs
 	Description    string           `db:"description" json:"description,omitempty" validate:"required"`
 	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
 	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
@@ -67,6 +70,14 @@ func (s Store) GetJsonFields() []string {
 
 func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {
 	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+
+	if input.ColorHex != "" {
+		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
+		if err != nil {
+			return newItem, "", fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
+		}
+	}
+
 	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, gDbTags, input)
 }
 
@@ -81,12 +92,34 @@ func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item 
 func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {
 	input.LastModifiedAt = lystype.Datetime(time.Now())
 	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+
+	if input.ColorHex != "" {
+		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
+		if err != nil {
+			return "", fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
+		}
+	}
+
 	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
 	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
 	assignmentsMap["last_modified_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
+
+	colorHex, ok := assignmentsMap["color_hex"]
+	if ok {
+		colorHexStr, isStr := colorHex.(string)
+		if !isStr {
+			return "", fmt.Errorf("colorHex must be a string")
+		}
+
+		assignmentsMap["color_is_light"], err = lyspcolor.HexIsLight(colorHexStr)
+		if err != nil {
+			return "", fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
+		}
+	}
+
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, gInputDbTags, assignmentsMap, id)
 }
 
