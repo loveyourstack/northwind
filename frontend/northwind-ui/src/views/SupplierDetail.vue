@@ -4,9 +4,9 @@
       <v-row>
         <v-col>
 
-          <v-tabs v-model="selectedTab" color="deep-purple-accent-4">
+          <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab">
 
-            <v-tab value="details">Details</v-tab>
+            <v-tab class="ml-2" value="details">Details</v-tab>
 
             <v-tab value="products"
               v-if="props.id !== 0"
@@ -16,7 +16,7 @@
 
           </v-tabs>
 
-          <v-window v-model="selectedTab" class="mt-2">
+          <v-window v-model="selectedTab">
 
             <!-- details tab not lazy loaded, others are -->
             <v-window-item value="details">

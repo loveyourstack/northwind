@@ -27,22 +27,28 @@
           </v-col>
           <v-col cols="12" md="6">
 
-            <v-text-field label="Address" v-model="item.address"
-            ></v-text-field>
+            <fieldset class="pa-4 fs-std">
 
-            <v-text-field label="City" v-model="item.city"
-            ></v-text-field>
+              <legend class="pl-2 pr-2">Address</legend>
 
-            <v-text-field label="State" v-model="item.state"
-            ></v-text-field>
+              <v-text-field label="Address" v-model="item.address"
+              ></v-text-field>
 
-            <v-text-field label="Postal code" v-model="item.postal_code"
-            ></v-text-field>
+              <v-text-field label="City" v-model="item.city"
+              ></v-text-field>
 
-            <v-autocomplete label="Country" v-model="item.country_fk"
-              :items="commonStore.activeCountriesList" item-title="name" item-value="id"
-              :rules="[(v: number) => !!v || 'Country is required']"
-            ></v-autocomplete>
+              <v-text-field label="State" v-model="item.state"
+              ></v-text-field>
+
+              <v-text-field label="Postal code" v-model="item.postal_code"
+              ></v-text-field>
+
+              <v-autocomplete label="Country" v-model="item.country_fk"
+                :items="commonStore.activeCountriesList" item-title="name" item-value="id"
+                :rules="[(v: number) => !!v || 'Country is required']"
+              ></v-autocomplete>
+              
+            </fieldset>
 
           </v-col>
         </v-row>

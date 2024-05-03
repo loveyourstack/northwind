@@ -157,6 +157,10 @@ onMounted(() => {
   padding: 0.5rem 1rem 0.5rem 0;
 }
 
+.fs-std {
+  border-color: #FAFAFA80;
+}
+
 .nav-bg-left {
   opacity: 0.9;
   background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(var(--v-theme-yellow_tint)) 100%) !important;

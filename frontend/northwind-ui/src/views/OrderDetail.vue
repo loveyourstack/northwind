@@ -4,13 +4,13 @@
       <v-row>
         <v-col>
 
-          <v-tabs color="deep-purple-accent-4">
+          <v-tabs style="background: rgb(var(--v-theme-surface));">
 
-            <v-tab value="orderDetails">Order details</v-tab>
+            <v-tab class="ml-2" value="orderDetails">Order details</v-tab>
 
           </v-tabs>
 
-          <v-window class="mt-2">
+          <v-window>
 
             <v-window-item value="orderDetails">
               <v-card>

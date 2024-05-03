@@ -42,25 +42,31 @@
           </v-col>
           <v-col cols="12" md="6">
 
-            <v-text-field label="Address" v-model="item.address"
-              :rules="[(v: string) => !!v || 'Address is required']"
-            ></v-text-field>
+            <fieldset class="pa-4 fs-std mb-4">
 
-            <v-text-field label="City" v-model="item.city"
-              :rules="[(v: string) => !!v || 'City is required']"
-            ></v-text-field>
+              <legend class="pl-2 pr-2">Address</legend>
 
-            <v-text-field label="State" v-model="item.state"
-            ></v-text-field>
+              <v-text-field label="Address" v-model="item.address"
+                :rules="[(v: string) => !!v || 'Address is required']"
+              ></v-text-field>
 
-            <v-text-field label="Postal code" v-model="item.postal_code"
-              :rules="[(v: string) => !!v || 'Postal code is required']"
-            ></v-text-field>
+              <v-text-field label="City" v-model="item.city"
+                :rules="[(v: string) => !!v || 'City is required']"
+              ></v-text-field>
 
-            <v-autocomplete label="Country" v-model="item.country_fk"
-              :items="commonStore.countriesList" item-title="name" item-value="id"
-              :rules="[(v: number) => !!v || 'Country is required']"
-            ></v-autocomplete>
+              <v-text-field label="State" v-model="item.state"
+              ></v-text-field>
+
+              <v-text-field label="Postal code" v-model="item.postal_code"
+                :rules="[(v: string) => !!v || 'Postal code is required']"
+              ></v-text-field>
+
+              <v-autocomplete label="Country" v-model="item.country_fk"
+                :items="commonStore.countriesList" item-title="name" item-value="id"
+                :rules="[(v: number) => !!v || 'Country is required']"
+              ></v-autocomplete>
+
+            </fieldset>
 
             <v-text-field label="Home phone" v-model="item.home_phone"
             ></v-text-field>

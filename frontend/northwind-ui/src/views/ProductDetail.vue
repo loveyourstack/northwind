@@ -3,11 +3,11 @@
     <v-responsive class="">
       <v-row>
         <v-col>
-          <v-tabs v-model="selectedTab" color="deep-purple-accent-4">
-            <v-tab value="details">Details</v-tab>
+          <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab">
+            <v-tab class="ml-2" value="details">Details</v-tab>
           </v-tabs>
 
-          <v-window v-model="selectedTab" class="mt-2">
+          <v-window v-model="selectedTab">
 
             <v-window-item value="details">
               <ProductForm :id="props.id"
