@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-h2 font-weight-bold">{{ appStore.projectTitle }}</h1>
+  <h1 class="text-h2 font-weight-bold projectFont text-yellow-darken-2">{{ appStore.projectTitle }}</h1>
 </template>
 
 <script lang="ts" setup>

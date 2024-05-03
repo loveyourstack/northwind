@@ -75,12 +75,15 @@
         {{item.supplier_company_name}}
       </router-link>
     </template>
+    <template v-slot:[`item.unit_price`]="{ item }">
+      <span>{{ item.unit_price.toFixed(2) }}</span>
+    </template>
     <template v-slot:[`item.is_discontinued`]="{ item }">
       <v-icon v-if="item.is_discontinued" size="small" icon="mdi-check"></v-icon>
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" :to="{ name: 'Product detail', params: { id: item.id }}">
-        <v-icon color="light-blue" icon="mdi-details"></v-icon>
+        <v-icon color="primary" icon="mdi-details"></v-icon>
       </v-btn>
     </template>
   </v-data-table-server>

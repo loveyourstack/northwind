@@ -1,10 +1,12 @@
 <template>
   <v-app class="rounded rounded-md">
-    <v-app-bar density="compact">
+    <v-app-bar density="compact" class="appbar-bg" image="./../assets/sky.png" theme="dark">
 
       <v-app-bar-nav-icon variant="text" @click.stop="showNav = !showNav"></v-app-bar-nav-icon>
       <v-img max-height="30px" max-width="30px" src="./../assets/logo.png" class="ml-1"></v-img>
-      <v-toolbar-title>{{ appStore.projectTitle }}</v-toolbar-title>
+      <v-toolbar-title>
+        <span class="text-yellow-darken-2 font-weight-bold projectFont">{{ appStore.projectTitle }}</span>
+      </v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -26,7 +28,7 @@
 
     </v-app-bar>
 
-    <v-navigation-drawer v-model="showNav" floating>
+    <v-navigation-drawer v-model="showNav" class="nav-bg-left" floating>
       <v-list density="compact">
         <v-list-item link title="Home" to="/home"></v-list-item>
 
@@ -56,7 +58,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, watch, onBeforeMount, onMounted } from 'vue'
 import { useTheme } from 'vuetify'
 import { useAppStore } from '@/stores/app'
 import { useCommonStore } from '@/stores/common'
@@ -72,9 +74,32 @@ const hrStore = useHRStore()
 
 const showNav = ref(true)
 
+const lsKey = 'main'
+
+// tried to bind into CSS below: not working
+//const appBarBg = ref('linear-gradient(180deg, white, rgb(var(--v-theme-yellow_tint)) 100%) !important;')
+
 function toggleTheme () {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
+
+watch([theme.global.name], () => {
+
+  let lsObj = {
+    'theme': theme.global.name.value,
+  }
+  localStorage.setItem(lsKey, JSON.stringify(lsObj))
+})
+
+onBeforeMount(() => {
+  var lsJSON = localStorage.getItem(lsKey)
+  if (!lsJSON) {
+    return
+  }
+
+  let lsObj = JSON.parse(lsJSON)
+  if (lsObj['theme']) { theme.global.name.value = lsObj['theme'] }
+})
 
 onMounted(() => {
   // refresh stores on page reload
@@ -87,14 +112,38 @@ onMounted(() => {
 
 <style>
 
+.appbar-bg {
+  opacity: 0.9;
+}
+
 .clickable:hover {
   cursor: pointer;
 }
 
+/* using pseudo-element to be able to apply opacity to background image */
 .cockpit {
+  position: relative; 
+  height: 100%;
+  display: flex;
+}
+.cockpit::before {
+  content: "";
   background: url('../assets/cockpit.jpg');
   background-size: cover;
-  height: 100vh;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  opacity: 0.4;
+}
+.v-theme--dark .cockpit::before {
+  opacity: 0.25;
+}
+
+.color-pill {
+  border-radius: 0.25em;
+  padding: 5px 10px 5px 10px;
 }
 
 .dt-title {
@@ -108,13 +157,20 @@ onMounted(() => {
   padding: 0.5rem 1rem 0.5rem 0;
 }
 
-tbody tr:nth-of-type(even) {
-  background-color: rgba(0, 0, 0, .01);
+.nav-bg-left {
+  opacity: 0.9;
+  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(var(--v-theme-yellow_tint)) 100%) !important;
+}
+.v-theme--dark .nav-bg-left {
+  background: linear-gradient(90deg, rgb(var(--v-theme-yellow_tint)) 0%, rgba(33,33,33,1) 50%) !important;
 }
 
-.color-pill {
-  border-radius: 0.25em;
-  padding: 5px 10px 5px 10px;
+.projectFont {
+  font-family: "Sriracha", cursive;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: rgba(0, 0, 0, .01);
 }
 
 .v-data-table-footer {

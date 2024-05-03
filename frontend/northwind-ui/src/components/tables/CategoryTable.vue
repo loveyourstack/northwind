@@ -55,7 +55,7 @@
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
-        <v-icon color="light-blue" icon="mdi-pencil"></v-icon>
+        <v-icon color="primary" icon="mdi-pencil"></v-icon>
       </v-btn>
     </template>
   </v-data-table-server>

@@ -53,7 +53,7 @@
     </template>
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" :to="{ name: 'Employee detail', params: { id: item.id }}">
-        <v-icon color="light-blue" icon="mdi-details"></v-icon>
+        <v-icon color="primary" icon="mdi-details"></v-icon>
       </v-btn>
     </template>
   </v-data-table-server>
