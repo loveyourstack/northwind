@@ -12,7 +12,7 @@
     item-value="id"
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
-    class="pa-4"
+    class="pa-4 rounded"
   >
     <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
       <v-data-table-footer

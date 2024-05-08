@@ -1,6 +1,6 @@
 <template>
   <v-app class="rounded rounded-md">
-    <v-app-bar density="compact" class="appbar-bg" image="./../assets/sky.png" theme="dark">
+    <v-app-bar density="compact" elevation="8" class="appbar-bg" image="./../assets/sky.png" theme="dark">
 
       <v-app-bar-nav-icon variant="text" @click.stop="showNav = !showNav"></v-app-bar-nav-icon>
       <v-img max-height="30px" max-width="30px" src="./../assets/logo.png" class="ml-1"></v-img>
@@ -28,7 +28,7 @@
 
     </v-app-bar>
 
-    <v-navigation-drawer v-model="showNav" class="nav-bg-left" floating>
+    <v-navigation-drawer v-model="showNav" elevation="8" class="nav-bg-left" floating>
       <v-list density="compact">
         <v-list-item link title="Home" to="/home"></v-list-item>
 
@@ -163,7 +163,7 @@ onMounted(() => {
 
 .nav-bg-left {
   opacity: 0.9;
-  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(var(--v-theme-yellow_tint)) 100%) !important;
+  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(var(--v-theme-yellow_tint)) 50%) !important;
 }
 .v-theme--dark .nav-bg-left {
   background: linear-gradient(90deg, rgb(var(--v-theme-yellow_tint)) 0%, rgba(33,33,33,1) 50%) !important;
@@ -174,7 +174,10 @@ onMounted(() => {
 }
 
 tbody tr:nth-of-type(even) {
-  background-color: rgba(0, 0, 0, .01);
+  background-color: rgba(0, 0, 0, .02);
+}
+.v-theme--dark tbody tr:nth-of-type(even) {
+  background-color: rgba(0, 0, 0, .10);
 }
 
 .v-data-table-footer {

@@ -12,7 +12,7 @@
     item-value="id"
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
-    class="pa-4"
+    class="pa-4 rounded"
   >
     <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
       <v-data-table-footer
@@ -59,7 +59,7 @@ const coreStore = useCoreStore()
 var headers = [
   { title: 'Order number', key: 'order_number' },
   { title: 'Product', key: 'product_name' },
-  { title: 'Quantity', key: 'quantity' },
+  { title: 'Quantity', key: 'quantity', align: 'end' },
   { title: 'Unit price', key: 'unit_price', align: 'end' },
   { title: 'Discount', key: 'discount', align: 'end' },
 ] as const
