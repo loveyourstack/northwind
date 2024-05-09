@@ -1,15 +1,15 @@
 
-INSERT INTO core.category (id, name, description) VALUES (-1, 'None', 'None');
-INSERT INTO core.category (name, description) VALUES
-  ('Beverages','Soft drinks, coffees, teas, beers, and ales'),
-  ('Condiments','Sweet and savory sauces, relishes, spreads, and seasonings'),
-  ('Confections','Desserts, candies, and sweet breads'),
-  ('Dairy Products','Cheeses'),
-  ('Grains/Cereals','Breads, crackers, pasta, and cereal'),
-  ('Meat/Poultry','Prepared meats'),
-  ('Produce','Dried fruit and bean curd'),
-  ('Seafood','Seaweed and fish'),
-  ('Test category','Test');
+INSERT INTO core.category (id, name, description, color_hex, color_is_light) VALUES (-1, 'None', 'None', '', false);
+INSERT INTO core.category (name, description, color_hex, color_is_light) VALUES
+  ('Beverages','Soft drinks, coffees, teas, beers, and ales', '', false),
+  ('Condiments','Sweet and savory sauces, relishes, spreads, and seasonings', '', false),
+  ('Confections','Desserts, candies, and sweet breads', '', false),
+  ('Dairy Products','Cheeses', '', false),
+  ('Grains/Cereals','Breads, crackers, pasta, and cereal', '', false),
+  ('Meat/Poultry','Prepared meats', '', false),
+  ('Produce','Dried fruit and bean curd', '', false),
+  ('Seafood','Seaweed and fish', '', false),
+  ('Test category','Test', '', false);
 
 
 INSERT INTO core.supplier (company_name, contact_name, contact_title, address, city, state, postal_code, phone, country_fk) VALUES
