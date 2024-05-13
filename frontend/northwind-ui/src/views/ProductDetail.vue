@@ -2,7 +2,7 @@
   <v-container fluid class="cockpit">
     <v-responsive class="">
       <v-row>
-        <v-col>
+        <v-col cols="auto">
           <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab" class="rounded">
             <v-tab class="ml-2" value="details">Details</v-tab>
           </v-tabs>

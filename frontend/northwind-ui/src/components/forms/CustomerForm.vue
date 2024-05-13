@@ -8,7 +8,7 @@
 
         <v-row>
 
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <v-text-field label="Code" v-model="item.code"
               :rules=codeRules
@@ -29,7 +29,7 @@
             ></v-text-field>
 
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <v-text-field label="Address" v-model="item.address"
             ></v-text-field>

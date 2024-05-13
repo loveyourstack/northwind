@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="item" variant="flat">
+  <v-card v-if="item" variant="flat" min-width="800px">
     <v-card-title class="pt-6">
       {{ cardTitle }}
     </v-card-title>
@@ -8,7 +8,7 @@
 
         <v-row>
 
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <v-text-field label="Name" v-model="item.name" hint="If possible, first name initial and full last name"
               :rules="[(v: string) => !!v || 'Name is required']"
@@ -40,7 +40,7 @@
             ></v-text-field>
 
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <fieldset class="pa-4 fs-std mb-4">
 

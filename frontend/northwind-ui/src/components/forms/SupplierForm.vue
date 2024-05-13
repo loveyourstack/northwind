@@ -8,7 +8,7 @@
 
         <v-row>
 
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <v-text-field label="Company name" v-model="item.company_name"
               :rules="[(v: string) => !!v || 'Company name is required']"
@@ -25,7 +25,7 @@
             ></v-text-field>
 
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <fieldset class="pa-4 fs-std">
 

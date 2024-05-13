@@ -8,7 +8,7 @@
 
         <v-row>
 
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <v-text-field label="Name" v-model="item.name"
               :rules="[(v: string) => !!v || 'Name is required']"
@@ -33,7 +33,7 @@
             ></v-autocomplete>
 
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" class="form-col">
 
             <v-text-field label="Unit price" v-model.number="item.unit_price"
               :rules="[(v: number) => !!v || 'Unit price is required']"

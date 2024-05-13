@@ -76,9 +76,6 @@ const showNav = ref(true)
 
 const lsKey = 'main'
 
-// tried to bind into CSS below: not working
-//const appBarBg = ref('linear-gradient(180deg, white, rgb(var(--v-theme-yellow_tint)) 100%) !important;')
-
 function toggleTheme () {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
@@ -157,16 +154,20 @@ onMounted(() => {
   padding: 0.5rem 1rem 0.5rem 0;
 }
 
+.form-col {
+  min-width: 400px;
+}
+
 .fs-std {
   border-color: #FAFAFA80;
 }
 
 .nav-bg-left {
   opacity: 0.9;
-  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgb(var(--v-theme-yellow_tint)) 50%) !important;
+  background: linear-gradient(90deg, rgb(var(--v-theme-dark_yellow)) 0%, rgb(var(--v-theme-light_yellow)) 50%) !important;
 }
 .v-theme--dark .nav-bg-left {
-  background: linear-gradient(90deg, rgb(var(--v-theme-yellow_tint)) 0%, rgba(33,33,33,1) 50%) !important;
+  background: linear-gradient(90deg, rgb(var(--v-theme-dark_yellow)) 0%, rgba(33,33,33,1) 50%) !important;
 }
 
 .projectFont {
