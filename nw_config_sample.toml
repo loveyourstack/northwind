@@ -25,7 +25,7 @@ userName = "northwind_cli" # this PG user only has the db access needed for CLI 
 password = "789"
 
 [api]
-port = "8010"
+port = "8011"
 
 [ui]
-url = "http://localhost:3000"
+url = "http://localhost:3001"

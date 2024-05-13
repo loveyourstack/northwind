@@ -30,9 +30,9 @@
 
             <v-window-item v-if="props.id !== 0 && visitedTabs.includes('products')" value="products">
               <v-card>
-                <v-card-text class="pt-0">
+                <v-card-text class="pa-0">
                   <ProductTable :supplier_id="props.id" :title="itemName + ' > Products'" />
-                  <v-row class="pt-4">
+                  <v-row class="pt-4 pb-4 pl-4">
                     <v-col>
                       <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
                         <v-icon icon="mdi-arrow-left"></v-icon>

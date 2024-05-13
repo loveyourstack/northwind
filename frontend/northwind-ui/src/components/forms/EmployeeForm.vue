@@ -1,5 +1,5 @@
 <template>
-  <v-card v-if="item" variant="flat" min-width="800px">
+  <v-card v-if="item" variant="flat">
     <v-card-title class="pt-6">
       {{ cardTitle }}
     </v-card-title>
@@ -35,7 +35,7 @@
               :rules="[(v: string) => !!v || 'Job title is required']"
             ></v-text-field>
 
-            <v-text-field label="Date of birth" v-model="item.date_of_birth"
+            <v-text-field label="Date of birth (dd/mm/yyyy)" v-model="item.date_of_birth"
               :rules="[(v: string) => !!v || 'Date of birth is required']"
             ></v-text-field>
 

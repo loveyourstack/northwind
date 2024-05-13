@@ -8,7 +8,7 @@
 
         <v-row>
 
-          <v-col>
+          <v-col class="form-col">
             <v-text-field label="Name" v-model="item.name"
               :rules="[(v: string) => !!v || 'Name is required']"
             ></v-text-field>

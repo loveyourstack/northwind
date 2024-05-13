@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" persistent width="auto" min-width="400">
+  <v-dialog v-model="showDialog" persistent width="auto">
     <CategoryForm :id="editID"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
@@ -31,7 +31,7 @@
       ></v-data-table-footer>
     </template>
     <template v-slot:[`top`]="{}">
-      <v-row align="center" class="pb-2" style="min-width: 800px;">
+      <v-row align="center" class="pb-2">
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Categories' }}</div>

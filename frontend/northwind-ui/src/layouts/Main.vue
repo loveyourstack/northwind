@@ -148,6 +148,7 @@ onMounted(() => {
   font-weight: 500;
   letter-spacing: 0.0125em;
   line-height: 2rem;
+  white-space: nowrap;
 }
 
 .dt-title-block {
@@ -155,7 +156,11 @@ onMounted(() => {
 }
 
 .form-col {
-  min-width: 400px;
+  min-width: 450px;
+}
+
+.form-col-l {
+  min-width: 550px;
 }
 
 .fs-std {

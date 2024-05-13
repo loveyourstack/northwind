@@ -23,7 +23,7 @@
       ></v-data-table-footer>
     </template>
     <template v-slot:[`top`]="{}">
-      <v-row align="center" class="pb-2" style="min-width: 800px;">
+      <v-row align="center" class="pb-2">
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Orders' }}</div>
