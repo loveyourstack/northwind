@@ -23,13 +23,6 @@
     @update:options="loadItems"
     class="pa-4 rounded"
   >
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
-    </template>
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
         <v-col>
@@ -42,6 +35,7 @@
         </v-col>
       </v-row>
     </template>
+
     <template v-slot:[`item.name`]="{ item }">
       <span v-if="item.color_hex" 
         class="color-pill" 
@@ -50,14 +44,25 @@
       >{{ item.name }}</span>
       <span v-else>{{ item.name }}</span>
     </template>
+
     <template v-slot:[`item.color_hex`]="{ item }">
       <span v-if="item.color_hex" class="dot" :style="'background-color: ' + item.color_hex + ';'"></span>
     </template>
+
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
         <v-icon color="primary" icon="mdi-pencil"></v-icon>
       </v-btn>
     </template>
+
+    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
+      <v-data-table-footer
+        :items-per-page-options="itemsPerPageOptions"
+        :page-text="getPageTextEstimated(totalItemsEstimated)"
+        :show-current-page=true
+      ></v-data-table-footer>
+    </template>
+
   </v-data-table-server>
 </template>
 

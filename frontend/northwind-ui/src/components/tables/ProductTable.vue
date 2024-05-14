@@ -14,13 +14,6 @@
     @update:options="loadItems"
     class="pa-4 rounded"
   >
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
-    </template>
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
         <v-col>
@@ -62,6 +55,7 @@
         </v-col>
       </v-row>
     </template>
+    
     <template v-slot:[`item.category`]="{ item }">
       <span v-if="item.category_color_hex" 
         class="color-pill" 
@@ -70,22 +64,35 @@
       >{{ item.category }}</span>
       <span v-else>{{ item.category }}</span>
     </template>
+
     <template v-slot:[`item.supplier_company_name`]="{ item }">
       <router-link :to="{ name: 'Supplier detail', params: {id: item.supplier_fk }}">
         {{item.supplier_company_name}}
       </router-link>
     </template>
+
     <template v-slot:[`item.unit_price`]="{ item }">
       <span>{{ item.unit_price.toFixed(2) }}</span>
     </template>
+
     <template v-slot:[`item.is_discontinued`]="{ item }">
       <v-icon v-if="item.is_discontinued" size="small" icon="mdi-check"></v-icon>
     </template>
+
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" :to="{ name: 'Product detail', params: { id: item.id }}">
         <v-icon color="primary" icon="mdi-details"></v-icon>
       </v-btn>
     </template>
+
+    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
+      <v-data-table-footer
+        :items-per-page-options="itemsPerPageOptions"
+        :page-text="getPageTextEstimated(totalItemsEstimated)"
+        :show-current-page=true
+      ></v-data-table-footer>
+    </template>
+
   </v-data-table-server>
 </template>
 

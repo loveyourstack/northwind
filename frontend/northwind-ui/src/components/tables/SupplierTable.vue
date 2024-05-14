@@ -14,13 +14,6 @@
     @update:options="loadItems"
     class="pa-4 rounded"
   >
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
-    </template>
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
         <v-col>
@@ -54,11 +47,21 @@
         </v-col>
       </v-row>
     </template>
+
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" :to="{ name: 'Supplier detail', params: { id: item.id }}">
         <v-icon color="primary" icon="mdi-details"></v-icon>
       </v-btn>
     </template>
+
+    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
+      <v-data-table-footer
+        :items-per-page-options="itemsPerPageOptions"
+        :page-text="getPageTextEstimated(totalItemsEstimated)"
+        :show-current-page=true
+      ></v-data-table-footer>
+    </template>
+
   </v-data-table-server>
 </template>
 

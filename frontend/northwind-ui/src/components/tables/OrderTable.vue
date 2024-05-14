@@ -15,13 +15,6 @@
     class="pa-4 rounded"
     :row-props="({ item }) => getRowClass(item)"
   >
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
-    </template>
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
         <v-col>
@@ -57,31 +50,47 @@
         </v-col>
       </v-row>
     </template>
+
     <template v-slot:[`item.customer_company_name`]="{ item }">
       <router-link :to="{ name: 'Customer detail', params: {id: item.customer_fk }}">
         {{item.customer_company_name}}
       </router-link>
     </template>
+
     <template v-slot:[`item.is_shipped`]="{ item }">
       <v-icon v-if="item.is_shipped" size="small" icon="mdi-check"></v-icon>
     </template>
+
     <template v-slot:[`item.order_date`]="{ item }">
       {{ useDateFormat(item.order_date, 'DD MMM YYYY').value }}
     </template>
+
     <template v-slot:[`item.required_date`]="{ item }">
       {{ useDateFormat(item.required_date, 'DD MMM YYYY').value }}
     </template>
+
     <template v-slot:[`item.shipped_date`]="{ item }">
       <span v-if="item.is_shipped">{{ useDateFormat(item.shipped_date, 'DD MMM YYYY').value }}</span>
     </template>
+
     <template v-slot:[`item.order_value`]="{ item }">
       <span>{{ item.order_value.toFixed(2) }}</span>
     </template>
+
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" :to="{ name: 'Order detail', params: { id: item.id }}">
         <v-icon color="primary" icon="mdi-details"></v-icon>
       </v-btn>
     </template>
+
+    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
+      <v-data-table-footer
+        :items-per-page-options="itemsPerPageOptions"
+        :page-text="getPageTextEstimated(totalItemsEstimated)"
+        :show-current-page=true
+      ></v-data-table-footer>
+    </template>
+    
   </v-data-table-server>
 </template>
 

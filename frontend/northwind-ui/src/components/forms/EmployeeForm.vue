@@ -26,6 +26,10 @@
               :rules="[(v: string) => !!v || 'Last name is required']"
             ></v-text-field>
 
+            <v-text-field label="Date of birth" type="date" v-model="item.date_of_birth"
+              :rules="[(v: string) => !!v || 'Date of birth is required']"
+            ></v-text-field>
+
             <v-autocomplete label="Reports to" v-model="item.reports_to_fk"
               :items="hrStore.employeesList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Reports to is required']"
@@ -35,8 +39,8 @@
               :rules="[(v: string) => !!v || 'Job title is required']"
             ></v-text-field>
 
-            <v-text-field label="Date of birth (dd/mm/yyyy)" v-model="item.date_of_birth"
-              :rules="[(v: string) => !!v || 'Date of birth is required']"
+            <v-text-field label="Hire date" type="date" v-model="item.hire_date"
+              :rules="[(v: Date) => !!v || 'Hire date is required']"
             ></v-text-field>
 
           </v-col>
@@ -135,6 +139,8 @@ const itemURL = baseURL + '/' + props.id
 const itemForm = ref()
 const saveBtnLabel = ref('Save')
 const showSaved = ref(false)
+
+const showDateDialog = ref(false)
 
 const cardTitle = computed(() => {
   return props.id !== 0 ? item.value!.name : 'New Employee'

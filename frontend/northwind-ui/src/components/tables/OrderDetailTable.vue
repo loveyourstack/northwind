@@ -14,13 +14,6 @@
     @update:options="loadItems"
     class="pa-4 rounded"
   >
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
-    </template>
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
         <v-col>
@@ -30,15 +23,26 @@
         </v-col>
       </v-row>
     </template>
+
     <template v-slot:[`item.product_name`]="{ item }">
       <router-link :to="{ name: 'Product detail', params: {id: item.product_fk }}">
         {{item.product_name}}
       </router-link>
     </template>
+
     <template v-slot:[`item.discount`]="{ item }">
       <span v-if="item.discount">{{ Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0, minimumFractionDigits: 0}).format(item.discount) }}</span>
     </template>
-  </v-data-table-server>
+
+    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
+      <v-data-table-footer
+        :items-per-page-options="itemsPerPageOptions"
+        :page-text="getPageTextEstimated(totalItemsEstimated)"
+        :show-current-page=true
+      ></v-data-table-footer>
+    </template>
+
+</v-data-table-server>
 </template>
 
 <script lang="ts" setup>
