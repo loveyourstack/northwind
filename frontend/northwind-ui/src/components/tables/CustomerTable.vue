@@ -2,7 +2,7 @@
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
-    :headers="headers"
+    :headers="selectedHeaders"
     :hover=true
     :items-length="totalItems"
     :items="items"
@@ -15,6 +15,7 @@
     class="pa-4 rounded"
   >
     <template v-slot:[`top`]="{}">
+
       <v-row align="center" class="pb-2">
         <v-col>
           <div class="dt-title-block">
@@ -23,11 +24,27 @@
         </v-col>
         <v-col>
           <v-btn class="float-end" color="primary" :to="{ name: 'New customer'}">Add</v-btn>
+          
+          <v-menu :close-on-content-click=false>
+            <template v-slot:activator="{ props }">
+              <v-btn density="comfortable" flat class="float-right mr-7 mt-1" icon="mdi-dots-vertical" v-bind="props"></v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
+                <template v-slot:append>
+                  <v-icon :icon="excludedHeaders.includes(header.key) ? 'mdi-close' : 'mdi-check'" :color="excludedHeaders.includes(header.key) ? 'error' : 'success'"></v-icon>
+                </template>
+                <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
           <v-switch hide-details v-model="showFilters" class="float-right mr-7" :color="showFilters ? 'teal' : 'undefined'" density="compact"
           ></v-switch>
           <v-icon icon="mdi-filter-variant" class="float-right mt-2 mr-3"></v-icon>
         </v-col>
       </v-row>
+
       <v-row v-show="showFilters" class="mt-0">
         <v-col cols="12" sm="6" lg="3">
           <v-text-field label="Code search" v-model="filterCode" clearable
@@ -95,6 +112,8 @@ var headers = [
   { title: '# orders', key: 'order_count', align: 'end' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
+const excludedHeaders = ref<string[]>([])
+const selectedHeaders = ref()
 
 const items = ref<Customer[]>([])
 const itemsPerPage = ref(10)
@@ -152,7 +171,12 @@ function refreshItems() {
   search.value = String(Date.now())
 }
 
-watch([itemsPerPage, showFilters, search, sortBy], () => {
+function toggleHeader(key: string) {
+  excludedHeaders.value.includes(key) ? excludedHeaders.value = excludedHeaders.value.filter((v) => v != key) : excludedHeaders.value.push(key)
+  selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
+}
+
+watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
 
   if (!showFilters.value) {
     filterCode.value = undefined
@@ -170,9 +194,10 @@ watch([itemsPerPage, showFilters, search, sortBy], () => {
     'filterCompanyName': filterCompanyName.value,
     'filterContactName': filterContactName.value,
     'filterCountryID': filterCountryID.value,
+    'excludedHeaders': excludedHeaders.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
-})
+}, { deep: true }) // needed due to excludedHeaders array
 
 onBeforeMount(() => {
   var lsJSON = localStorage.getItem(lsKey)
@@ -188,6 +213,9 @@ onBeforeMount(() => {
   if (lsObj['filterCompanyName']) { filterCompanyName.value = lsObj['filterCompanyName'] }
   if (lsObj['filterContactName']) { filterContactName.value = lsObj['filterContactName'] }
   if (lsObj['filterCountryID']) { filterCountryID.value = lsObj['filterCountryID'] }
+  if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
+
+  selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
 })
 
 </script>
