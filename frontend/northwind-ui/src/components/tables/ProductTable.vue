@@ -55,7 +55,7 @@
         </v-col>
       </v-row>
     </template>
-    
+
     <template v-slot:[`item.category`]="{ item }">
       <span v-if="item.category_color_hex" 
         class="color-pill" 

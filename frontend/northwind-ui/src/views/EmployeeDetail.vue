@@ -1,13 +1,19 @@
 <template>
-  <v-container fluid class="cockpit">
-    <v-responsive class="">
+  <v-container fluid>
+    <v-responsive>
       <v-row>
         <v-col cols="auto">
-          <EmployeeForm :id="props.id"
-            @cancel="router.back"
-            @create="router.push({ name: 'Employees' })"
-            @delete="router.push({ name: 'Employees' })"
-          ></EmployeeForm>
+          <v-card>
+            <v-card-text class="pa-0">
+
+              <EmployeeForm :id="props.id"
+                @cancel="router.back"
+                @create="router.push({ name: 'Employees' })"
+                @delete="router.push({ name: 'Employees' })"
+              ></EmployeeForm>
+
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-responsive>

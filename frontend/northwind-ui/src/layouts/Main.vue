@@ -50,7 +50,7 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main class="d-flex" style="min-height: 300px;">
+    <v-main class="d-flex cockpit">
       <ApiError></ApiError>
       <router-view />
     </v-main>

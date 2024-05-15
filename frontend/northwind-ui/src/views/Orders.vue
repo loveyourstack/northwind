@@ -1,9 +1,15 @@
 <template>
-  <v-container fluid class="cockpit">
-    <v-responsive class="">
-      <v-row class="d-flex pt-1">
+  <v-container fluid>
+    <v-responsive>
+      <v-row>
         <v-col cols="auto">
-          <OrderTable :customer_id="0" />
+          <v-card>
+            <v-card-text class="pa-0">
+
+              <OrderTable :customer_id="0" />
+
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-responsive>

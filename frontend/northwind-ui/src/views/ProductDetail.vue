@@ -1,13 +1,19 @@
 <template>
-  <v-container fluid class="cockpit">
-    <v-responsive class="">
+  <v-container fluid>
+    <v-responsive>
       <v-row>
         <v-col cols="auto">
-          <ProductForm :id="props.id"
-            @cancel="router.back"
-            @create="router.push({ name: 'Products' })"
-            @delete="router.push({ name: 'Products' })"
-          ></ProductForm>
+          <v-card>
+            <v-card-text class="pa-0">
+
+              <ProductForm :id="props.id"
+                @cancel="router.back"
+                @create="router.push({ name: 'Products' })"
+                @delete="router.push({ name: 'Products' })"
+              ></ProductForm>
+
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-responsive>

@@ -1,46 +1,52 @@
 <template>
-  <v-container fluid class="cockpit">
-    <v-responsive class="">
+  <v-container fluid>
+    <v-responsive>
       <v-row>
         <v-col cols="auto">
-          <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab" class="rounded">
+          <v-card>
+            <v-card-text class="pa-0">
 
-            <v-tab class="ml-2" value="details">Details</v-tab>
+              <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab" class="rounded">
 
-            <v-tab value="orders"
-              v-if="props.id !== 0"
-              @click="setVisited('orders')"
-            >Orders
-            </v-tab>
-          </v-tabs>
+                <v-tab class="ml-2" value="details">Details</v-tab>
 
-          <v-window v-model="selectedTab">
+                <v-tab value="orders"
+                  v-if="props.id !== 0"
+                  @click="setVisited('orders')"
+                >Orders
+                </v-tab>
+              </v-tabs>
 
-            <v-window-item value="details">
-              <CustomerForm :id="props.id"
-                @cancel="router.back"
-                @create="router.push({ name: 'Customers' })"
-                @delete="router.push({ name: 'Customers' })"
-                @load="(name) => { itemName = name }"
-              ></CustomerForm>
-            </v-window-item>
-            
-            <v-window-item v-if="props.id !== 0 && visitedTabs.includes('orders')" value="orders">
-              <v-card>
-                <v-card-text class="pa-0">
-                  <OrderTable :customer_id="props.id" :title="itemName + ' > Orders'" />
-                  <v-row class="pt-4 pb-4 pl-4">
-                    <v-col>
-                      <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
-                        <v-icon icon="mdi-arrow-left"></v-icon>
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-            </v-window-item>
+              <v-window v-model="selectedTab">
 
-          </v-window>
+                <v-window-item value="details">
+                  <CustomerForm :id="props.id"
+                    @cancel="router.back"
+                    @create="router.push({ name: 'Customers' })"
+                    @delete="router.push({ name: 'Customers' })"
+                    @load="(name) => { itemName = name }"
+                  ></CustomerForm>
+                </v-window-item>
+                
+                <v-window-item v-if="props.id !== 0 && visitedTabs.includes('orders')" value="orders">
+                  <v-card>
+                    <v-card-text class="pa-0">
+                      <OrderTable :customer_id="props.id" :title="itemName + ' > Orders'" />
+                      <v-row class="pt-4 pb-4 pl-4">
+                        <v-col>
+                          <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
+                            <v-icon icon="mdi-arrow-left"></v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-window-item>
+
+              </v-window>
+
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-responsive>

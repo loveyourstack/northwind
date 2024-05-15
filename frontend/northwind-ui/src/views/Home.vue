@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="cockpit">
+  <v-container fluid>
     <v-responsive class="align-center text-center fill-height">
       <HomePage />
     </v-responsive>

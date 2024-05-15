@@ -1,50 +1,54 @@
 <template>
-  <v-container fluid class="cockpit">
-    <v-responsive class="">
+  <v-container fluid>
+    <v-responsive>
       <v-row>
         <v-col cols="auto">
+          <v-card>
+            <v-card-text class="pa-0">
 
-          <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab" class="rounded">
+              <v-tabs style="background: rgb(var(--v-theme-surface));" v-model="selectedTab" class="rounded">
 
-            <v-tab class="ml-2" value="details">Details</v-tab>
+                <v-tab class="ml-2" value="details">Details</v-tab>
 
-            <v-tab value="products"
-              v-if="props.id !== 0"
-              @click="setVisited('products')"
-            >Products
-            </v-tab>
+                <v-tab value="products"
+                  v-if="props.id !== 0"
+                  @click="setVisited('products')"
+                >Products
+                </v-tab>
 
-          </v-tabs>
+              </v-tabs>
 
-          <v-window v-model="selectedTab">
+              <v-window v-model="selectedTab">
 
-            <!-- details tab not lazy loaded, others are -->
-            <v-window-item value="details">
-              <SupplierForm :id="props.id"
-                @cancel="router.back"
-                @create="router.push({ name: 'Suppliers' })"
-                @delete="router.push({ name: 'Suppliers' })"
-                @load="(name) => { itemName = name }"
-              ></SupplierForm>
-            </v-window-item>
+                <!-- details tab not lazy loaded, others are -->
+                <v-window-item value="details">
+                  <SupplierForm :id="props.id"
+                    @cancel="router.back"
+                    @create="router.push({ name: 'Suppliers' })"
+                    @delete="router.push({ name: 'Suppliers' })"
+                    @load="(name) => { itemName = name }"
+                  ></SupplierForm>
+                </v-window-item>
 
-            <v-window-item v-if="props.id !== 0 && visitedTabs.includes('products')" value="products">
-              <v-card>
-                <v-card-text class="pa-0">
-                  <ProductTable :supplier_id="props.id" :title="itemName + ' > Products'" />
-                  <v-row class="pt-4 pb-4 pl-4">
-                    <v-col>
-                      <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
-                        <v-icon icon="mdi-arrow-left"></v-icon>
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-card-text>
-              </v-card>
-            </v-window-item>
+                <v-window-item v-if="props.id !== 0 && visitedTabs.includes('products')" value="products">
+                  <v-card>
+                    <v-card-text class="pa-0">
+                      <ProductTable :supplier_id="props.id" :title="itemName + ' > Products'" />
+                      <v-row class="pt-4 pb-4 pl-4">
+                        <v-col>
+                          <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
+                            <v-icon icon="mdi-arrow-left"></v-icon>
+                          </v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </v-window-item>
 
-          </v-window>
+              </v-window>
 
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-responsive>
