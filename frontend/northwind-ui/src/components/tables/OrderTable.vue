@@ -2,7 +2,7 @@
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
-    :headers="headers"
+    :headers="selectedHeaders"
     :hover=true
     :items-length="totalItems"
     :items="items"
@@ -23,13 +23,30 @@
             <div>Unshipped orders are marked red.</div>
           </div>
         </v-col>
+
         <v-col>
           <!--<v-btn class="float-end" color="primary" :to="{ name: 'New order'}">Add</v-btn>-->
+
+          <v-menu :close-on-content-click=false>
+            <template v-slot:activator="{ props }">
+              <v-btn density="comfortable" flat class="float-right mr-3" icon="mdi-table-column" v-bind="props"></v-btn>
+            </template>
+            <v-list>
+              <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
+                <template v-slot:append>
+                  <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
+                </template>
+                <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+
           <v-switch hide-details v-model="showFilters" class="float-right mr-7" :color="showFilters ? 'teal' : 'undefined'" density="compact"
           ></v-switch>
           <v-icon icon="mdi-filter-variant" class="float-right mt-2 mr-3"></v-icon>
         </v-col>
       </v-row>
+
       <v-row v-show="showFilters" class="mt-0">
         <v-col cols="12" sm="6" lg="4">
           <v-text-field label="Order # search" v-model="filterOrderNumber" clearable
@@ -100,9 +117,8 @@ import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Order } from '@/types/sales'
-import { debounceMs, maxDebounceMs, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
+import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { booleanOptions } from '@/composables/form'
-import { useCommonStore } from '@/stores/common'
 import { useDateFormat, useDebounceFn } from '@vueuse/core'
 
 const props = defineProps<{
@@ -111,7 +127,6 @@ const props = defineProps<{
 }>()
 
 const theme = useTheme()
-const commonStore = useCommonStore()
 
 var headers = [
   { title: 'Order #', key: 'order_number' },  
@@ -126,6 +141,8 @@ var headers = [
   { title: 'Shipped date', key: 'shipped_date' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
+const excludedHeaders = ref<string[]>([])
+const selectedHeaders = ref()
 
 const items = ref<Order[]>([])
 const itemsPerPage = ref(10)
@@ -191,7 +208,12 @@ function refreshItems() {
   search.value = String(Date.now())
 }
 
-watch([itemsPerPage, showFilters, search, sortBy], () => {
+function toggleHeader(key: string) {
+  excludedHeaders.value.includes(key) ? excludedHeaders.value = excludedHeaders.value.filter((v) => v != key) : excludedHeaders.value.push(key)
+  selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
+}
+
+watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
 
   if (!showFilters.value) {
     filterOrderNumber.value = undefined
@@ -207,9 +229,10 @@ watch([itemsPerPage, showFilters, search, sortBy], () => {
     'filterOrderNumber': filterOrderNumber.value,
     'filterCustomerName': filterCustomerName.value,
     'filterShipped': filterShipped.value,
+    'excludedHeaders': excludedHeaders.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
-})
+}, { deep: true })
 
 onBeforeMount(() => {
   var lsJSON = localStorage.getItem(lsKey)
@@ -224,6 +247,9 @@ onBeforeMount(() => {
   if (lsObj['filterOrderNumber']) { filterOrderNumber.value = lsObj['filterOrderNumber'] }
   if (lsObj['filterCustomerName']) { filterCustomerName.value = lsObj['filterCustomerName'] }
   if (lsObj['filterShipped']) { filterShipped.value = lsObj['filterShipped'] }
+  if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
+
+  selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
 })
 
 </script>

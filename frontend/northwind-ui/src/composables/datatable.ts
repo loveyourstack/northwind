@@ -12,6 +12,13 @@ export const itemsPerPageOptions = [
 export const debounceMs = 400
 export const maxDebounceMs = 5000
 
+export function getHeaderListIcon(excludedHeaders: string[], headerKey: string) {
+  return excludedHeaders.includes(headerKey) ? 'mdi-close' : 'mdi-check'
+}
+export function getHeaderListIconColor(excludedHeaders: string[], headerKey: string) {
+  return excludedHeaders.includes(headerKey) ? 'error' : 'success'
+}
+
 export function getPageTextEstimated(totalItemsEstimated: number) {
   return "~" + totalItemsEstimated.toLocaleString() + " items"
 }

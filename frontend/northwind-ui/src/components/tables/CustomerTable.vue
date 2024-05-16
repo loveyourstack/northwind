@@ -15,24 +15,24 @@
     class="pa-4 rounded"
   >
     <template v-slot:[`top`]="{}">
-
       <v-row align="center" class="pb-2">
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Customers' }}</div>
           </div>
         </v-col>
+        
         <v-col>
           <v-btn class="float-end" color="primary" :to="{ name: 'New customer'}">Add</v-btn>
           
           <v-menu :close-on-content-click=false>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" flat class="float-right mr-7 mt-1" icon="mdi-dots-vertical" v-bind="props"></v-btn>
+              <v-btn density="comfortable" flat class="float-right mr-7" icon="mdi-table-column" v-bind="props"></v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
                 <template v-slot:append>
-                  <v-icon :icon="excludedHeaders.includes(header.key) ? 'mdi-close' : 'mdi-check'" :color="excludedHeaders.includes(header.key) ? 'error' : 'success'"></v-icon>
+                  <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
                 </template>
                 <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
               </v-list-item>
@@ -92,7 +92,7 @@ import { ref, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Customer } from '@/types/sales'
-import { debounceMs, maxDebounceMs, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
+import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { useCommonStore } from '@/stores/common'
 import { useDebounceFn } from '@vueuse/core'
 
@@ -197,7 +197,7 @@ watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
     'excludedHeaders': excludedHeaders.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
-}, { deep: true }) // needed due to excludedHeaders array
+}, { deep: true }) // needed for excludedHeaders array
 
 onBeforeMount(() => {
   var lsJSON = localStorage.getItem(lsKey)
