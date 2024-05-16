@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount } from 'vue'
+import { ref, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Customer } from '@/types/sales'
@@ -214,7 +214,9 @@ onBeforeMount(() => {
   if (lsObj['filterContactName']) { filterContactName.value = lsObj['filterContactName'] }
   if (lsObj['filterCountryID']) { filterCountryID.value = lsObj['filterCountryID'] }
   if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
+})
 
+onMounted(() => {
   selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
 })
 
