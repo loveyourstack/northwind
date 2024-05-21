@@ -16,14 +16,14 @@ type DuModel struct {
 }
 
 var (
-	gDuDbTags, gDuJsonTags []string
-	gDuViewName            string
+	duMeta      lysmeta.Result
+	gDuViewName string
 )
 
 func init() {
-	gDuDbTags, gDuJsonTags, _ = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem(), reflect.ValueOf(&Model{}).Elem())
-	gDuDbTags = append(gDuDbTags, lyspg.DataUpdateColTags...)
-	gDuJsonTags = append(gDuJsonTags, lyspg.DataUpdateColTags...)
+	duMeta, _ = lysmeta.AnalyzeStructs(reflect.ValueOf(&Input{}).Elem(), reflect.ValueOf(&Model{}).Elem())
+	duMeta.DbTags = append(duMeta.DbTags, lyspg.DataUpdateColTags...)
+	duMeta.JsonTags = append(duMeta.JsonTags, lyspg.DataUpdateColTags...)
 
 	gDuViewName = viewName + lyspg.DataUpdateViewSuffix
 }
@@ -33,13 +33,13 @@ type DuStore struct {
 }
 
 func (s DuStore) GetJsonFields() []string {
-	return gDuJsonTags
+	return duMeta.JsonTags
 }
 
 func (s DuStore) Select(ctx context.Context, params lyspg.SelectParams) (items []DuModel, unpagedCount lyspg.TotalCount, stmt string, err error) {
-	return lyspg.Select[DuModel](ctx, s.Db, schemaName, gDuViewName, gDuViewName, defaultOrderBy, gDuDbTags, params)
+	return lyspg.Select[DuModel](ctx, s.Db, schemaName, gDuViewName, gDuViewName, defaultOrderBy, duMeta.DbTags, params)
 }
 
 func (s DuStore) SelectById(ctx context.Context, fields []string, id int64) (item DuModel, stmt string, err error) {
-	return lyspg.SelectUnique[DuModel](ctx, s.Db, schemaName, gDuViewName, pkColName, fields, gDuDbTags, id)
+	return lyspg.SelectUnique[DuModel](ctx, s.Db, schemaName, gDuViewName, pkColName, fields, duMeta.DbTags, id)
 }

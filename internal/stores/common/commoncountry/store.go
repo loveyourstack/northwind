@@ -36,18 +36,16 @@ type Model struct {
 }
 
 var (
-	gDbTags      []string
-	gJsonTags    []string
-	gInputDbTags []string
+	meta, inputMeta lysmeta.Result
 )
 
 func init() {
 	var err error
-	gDbTags, gJsonTags, err = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem(), reflect.ValueOf(&Model{}).Elem())
+	meta, err = lysmeta.AnalyzeStructs(reflect.ValueOf(&Input{}).Elem(), reflect.ValueOf(&Model{}).Elem())
 	if err != nil {
-		log.Fatalf("lysmeta.GetStructTags failed for %s.%s: %s", schemaName, tableName, err.Error())
+		log.Fatalf("lysmeta.AnalyzeStructs failed for %s.%s: %s", schemaName, tableName, err.Error())
 	}
-	gInputDbTags, _, _ = lysmeta.GetStructTags(reflect.ValueOf(&Input{}).Elem())
+	inputMeta, _ = lysmeta.AnalyzeStructs(reflect.ValueOf(&Input{}).Elem())
 }
 
 type Store struct {
@@ -55,15 +53,15 @@ type Store struct {
 }
 
 func (s Store) GetJsonFields() []string {
-	return gJsonTags
+	return meta.JsonTags
 }
 
 func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, stmt string, err error) {
-	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, gDbTags, params)
+	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, meta.DbTags, params)
 }
 
 func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
-	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, gDbTags, id)
+	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
@@ -80,5 +78,5 @@ func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any,
 
 	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
 
-	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, gInputDbTags, assignmentsMap, id)
+	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }

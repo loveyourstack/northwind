@@ -1,7 +1,6 @@
 package north
 
 import (
-	"context"
 	"os"
 
 	"github.com/loveyourstack/lys/lyspgdb"
@@ -32,8 +31,7 @@ var createDbCmd = &cobra.Command{
 		}
 
 		// (re-)create test db
-		ctx := context.Background()
-		if err := lyspgdb.CreateLocalDb(ctx, ddl.SQLAssets, cliApp.Config.Db, dbSuperUser, cliApp.Config.DbOwnerUser, true, false,
+		if err := lyspgdb.CreateLocalDb(cmd.Context(), ddl.SQLAssets, cliApp.Config.Db, dbSuperUser, cliApp.Config.DbOwnerUser, true, false,
 			nil, cliApp.InfoLog); err != nil {
 			cliApp.ErrorLog.Error("lyspgdb.CreateLocalDb failed: " + err.Error())
 			os.Exit(1)
