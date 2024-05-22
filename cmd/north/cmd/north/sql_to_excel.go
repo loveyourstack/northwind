@@ -20,7 +20,7 @@ var sqlToExcelCmd = &cobra.Command{
 		// select from db
 		catStore := corecategory.Store{Db: cliApp.Db}
 		items, _, _, err := catStore.Select(cmd.Context(), lyspg.SelectParams{
-			Fields: catStore.GetJsonFields(),
+			Fields: catStore.GetMeta().JsonTags,
 		})
 		if err != nil {
 			cliApp.ErrorLog.Error("catStore.Select failed: " + err.Error())
@@ -37,7 +37,7 @@ var sqlToExcelCmd = &cobra.Command{
 		defer os.Remove(f.Name())
 
 		// write items to Excel
-		err = lysexcel.WriteItemsToFile(items, catStore.GetJsonTagTypeMap(), f.Name(), "")
+		err = lysexcel.WriteItemsToFile(items, catStore.GetMeta().JsonTagTypeMap, f.Name(), "")
 		if err != nil {
 			cliApp.ErrorLog.Error("lysexcel.WriteItemsToFile failed: " + err.Error())
 			os.Exit(1)

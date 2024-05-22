@@ -21,6 +21,12 @@
             <div class="dt-title">{{ props.title ? props.title : 'Order details' }}</div>
           </div>
         </v-col>
+
+        <v-col>
+          <v-btn icon flat size="small" class="float-right mr-3" :href="excelDlUrl" download>
+            <v-icon icon="mdi-file-download-outline"></v-icon>
+          </v-btn>
+        </v-col>
       </v-row>
     </template>
 
@@ -46,19 +52,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount } from 'vue'
+import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { OrderDetail } from '@/types/sales'
 import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
-import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle
   title?: string
 }>()
-
-const coreStore = useCoreStore()
 
 var headers = [
   { title: 'Order number', key: 'order_number' },
@@ -67,6 +70,11 @@ var headers = [
   { title: 'Unit price', key: 'unit_price', align: 'end' },
   { title: 'Discount', key: 'discount', align: 'end' },
 ] as const
+
+const baseUrl = '/a/sales/order-details'
+const excelDlUrl = computed(() => {
+  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+}) 
 
 const items = ref<OrderDetail[]>([])
 const itemsPerPage = ref(10)
@@ -78,15 +86,21 @@ const totalItemsEstimated = ref(0)
 
 const lsKey = 'order_details_dt'
 
+function getFilterStr(): string {
+  var ret = ''
+
+  if (props.order_id > 0) {
+    ret += '&order_fk=' + props.order_id
+  }
+
+  return ret
+}
+
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
 
-  var myURL = '/a/sales/order-details'
+  var myURL = baseUrl
   myURL = processURIOptions(myURL, options)
-
-  // filters
-  if (props.order_id > 0) {
-    myURL += '&order_fk=' + props.order_id
-  }
+  myURL += getFilterStr()
 
   ax.get(myURL)
   .then(resp => {

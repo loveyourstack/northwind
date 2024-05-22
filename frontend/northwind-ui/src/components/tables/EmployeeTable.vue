@@ -25,9 +25,13 @@
         <v-col>
           <v-btn class="float-end" color="primary" :to="{ name: 'New employee'}">Add</v-btn>
 
+          <v-btn icon flat size="small" class="float-right mr-7" :href="excelDlUrl" download>
+            <v-icon icon="mdi-file-download-outline"></v-icon>
+          </v-btn>
+
           <v-menu :close-on-content-click=false>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" flat class="float-right mr-7" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn density="comfortable" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
@@ -81,19 +85,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount, onMounted } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Employee } from '@/types/hr'
 import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
-import { useCommonStore } from '@/stores/common'
 import { useDateFormat, useDebounceFn } from '@vueuse/core'
 
 const props = defineProps<{
   title?: string
 }>()
-
-const commonStore = useCommonStore()
 
 var headers = [
   { title: 'Title', key: 'title' },  
@@ -108,6 +109,11 @@ var headers = [
 const excludedHeaders = ref<string[]>([])
 const selectedHeaders = ref()
 
+const baseUrl = '/a/hr/employees'
+const excelDlUrl = computed(() => {
+  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+}) 
+
 const items = ref<Employee[]>([])
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
@@ -121,18 +127,24 @@ const filterFirstName = ref<string>()
 const filterLastName = ref<string>()
 const lsKey = 'employees_dt'
 
-function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
+function getFilterStr(): string {
+  var ret = ''
 
-  var myURL = '/a/hr/employees'
-  myURL = processURIOptions(myURL, options)
-
-  // filters
   if (filterFirstName.value) {
-    myURL += '&first_name=~' + filterFirstName.value + '~'
+    ret += '&first_name=~' + filterFirstName.value + '~'
   }
   if (filterLastName.value) {
-    myURL += '&last_name=~' + filterLastName.value + '~'
+    ret += '&last_name=~' + filterLastName.value + '~'
   }
+
+  return ret
+}
+
+function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
+
+  var myURL = baseUrl
+  myURL = processURIOptions(myURL, options)
+  myURL += getFilterStr()
 
   ax.get(myURL)
   .then(resp => {

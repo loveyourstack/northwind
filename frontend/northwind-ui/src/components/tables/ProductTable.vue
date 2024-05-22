@@ -25,9 +25,13 @@
         <v-col>
           <v-btn class="float-end" color="primary" :to="{ name: 'New product'}">Add</v-btn>
 
+          <v-btn icon flat size="small" class="float-right mr-7" :href="excelDlUrl" download>
+            <v-icon icon="mdi-file-download-outline"></v-icon>
+          </v-btn>
+
           <v-menu :close-on-content-click=false>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" flat class="float-right mr-7" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn density="comfortable" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
@@ -114,7 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount, onMounted } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Product } from '@/types/core'
@@ -145,6 +149,11 @@ var headers = [
 const excludedHeaders = ref<string[]>([])
 const selectedHeaders = ref()
 
+const baseUrl = '/a/core/products'
+const excelDlUrl = computed(() => {
+  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+}) 
+
 const items = ref<Product[]>([])
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
@@ -160,28 +169,34 @@ const filterSupplierID = ref<number>()
 const filterDiscontinued = ref(false)
 const lsKey = 'products_dt'
 
-function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
+function getFilterStr(): string {
+  var ret = ''
 
-  var myURL = '/a/core/products'
-  myURL = processURIOptions(myURL, options)
-
-  // filters
   if (filterName.value) {
-    myURL += '&name=~' + filterName.value + '~'
+    ret += '&name=~' + filterName.value + '~'
   }
   if (filterCategoryID.value) {
-    myURL += '&category_fk=' + filterCategoryID.value
+    ret += '&category_fk=' + filterCategoryID.value
   }
 
   // prop filter overrides regular filter
   if (props.supplier_id > 0) {
-    myURL += '&supplier_fk=' + props.supplier_id
+    ret += '&supplier_fk=' + props.supplier_id
   } else if (filterSupplierID.value) {
-    myURL += '&supplier_fk=' + filterSupplierID.value
+    ret += '&supplier_fk=' + filterSupplierID.value
   }
 
-  myURL += '&is_discontinued=' + filterDiscontinued.value
+  ret += '&is_discontinued=' + filterDiscontinued.value 
 
+  return ret
+}
+
+function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
+
+  var myURL = baseUrl
+  myURL = processURIOptions(myURL, options)
+  myURL += getFilterStr()
+  
   ax.get(myURL)
   .then(resp => {
       items.value = resp.data.data

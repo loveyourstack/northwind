@@ -91,11 +91,8 @@ func (s Store) DistinctSupplierCommonCountries(ctx context.Context) (countries [
 	return countries, "", nil
 }
 
-func (s Store) GetJsonFields() []string {
-	return meta.JsonTags
-}
-func (s Store) GetJsonTagTypeMap() map[string]string {
-	return meta.JsonTagTypeMap
+func (s Store) GetMeta() lysmeta.Result {
+	return meta
 }
 func (s Store) GetName() string {
 	return name

@@ -24,10 +24,14 @@
         
         <v-col>
           <v-btn class="float-end" color="primary" :to="{ name: 'New customer'}">Add</v-btn>
-          
+
+          <v-btn icon flat size="small" class="float-right mr-7" :href="excelDlUrl" download>
+            <v-icon icon="mdi-file-download-outline"></v-icon>
+          </v-btn>
+
           <v-menu :close-on-content-click=false>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" flat class="float-right mr-7" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn density="comfortable" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
@@ -88,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount, onMounted } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Customer } from '@/types/sales'
@@ -115,6 +119,11 @@ var headers = [
 const excludedHeaders = ref<string[]>([])
 const selectedHeaders = ref()
 
+const baseUrl = '/a/sales/customers'
+const excelDlUrl = computed(() => {
+  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+}) 
+
 const items = ref<Customer[]>([])
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
@@ -130,24 +139,30 @@ const filterContactName = ref<string>()
 const filterCountryID = ref<number>()
 const lsKey = 'customers_dt'
 
-function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
+function getFilterStr(): string {
+  var ret = ''
 
-  var myURL = '/a/sales/customers'
-  myURL = processURIOptions(myURL, options)
-
-  // filters
   if (filterCode.value) {
-    myURL += '&code=~' + filterCode.value + '~'
+    ret += '&code=~' + filterCode.value + '~'
   }
   if (filterCompanyName.value) {
-    myURL += '&company_name=~' + filterCompanyName.value + '~'
+    ret += '&company_name=~' + filterCompanyName.value + '~'
   }
   if (filterContactName.value) {
-    myURL += '&contact_name=~' + filterContactName.value + '~'
+    ret += '&contact_name=~' + filterContactName.value + '~'
   }
   if (filterCountryID.value) {
-    myURL += '&country_fk=' + filterCountryID.value
+    ret += '&country_fk=' + filterCountryID.value
   }
+
+  return ret
+}
+
+function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
+
+  var myURL = baseUrl
+  myURL = processURIOptions(myURL, options)
+  myURL += getFilterStr()
 
   ax.get(myURL)
     .then(resp => {

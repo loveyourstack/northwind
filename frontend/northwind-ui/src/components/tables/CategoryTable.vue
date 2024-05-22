@@ -30,8 +30,13 @@
             <div class="dt-title">{{ props.title ? props.title : 'Categories' }}</div>
           </div>
         </v-col>
+
         <v-col>
           <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
+
+          <v-btn icon flat size="small" class="float-right mr-7" :href="excelDlUrl" download>
+            <v-icon icon="mdi-file-download-outline"></v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </template>
@@ -87,6 +92,9 @@ var headers = [
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 
+const baseUrl = '/a/core/categories'
+const excelDlUrl = import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel'
+
 const items = ref<Category[]>([])
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
@@ -102,7 +110,7 @@ const lsKey = 'categories_dt'
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
 
-  var myURL = '/a/core/categories'
+  var myURL = baseUrl
   myURL = processURIOptions(myURL, options)
 
   // exclude None

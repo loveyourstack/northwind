@@ -36,11 +36,8 @@ type DuStore struct {
 	Db *pgxpool.Pool
 }
 
-func (s DuStore) GetJsonFields() []string {
-	return duMeta.JsonTags
-}
-func (s DuStore) GetJsonTagTypeMap() map[string]string {
-	return duMeta.JsonTagTypeMap
+func (s DuStore) GetMeta() lysmeta.Result {
+	return duMeta
 }
 func (s DuStore) GetName() string {
 	return duName

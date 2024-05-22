@@ -27,9 +27,13 @@
         <v-col>
           <!--<v-btn class="float-end" color="primary" :to="{ name: 'New order'}">Add</v-btn>-->
 
+          <v-btn icon flat size="small" class="float-right mr-3" :href="excelDlUrl" download>
+            <v-icon icon="mdi-file-download-outline"></v-icon>
+          </v-btn>
+
           <v-menu :close-on-content-click=false>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" flat class="float-right mr-3" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn density="comfortable" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
@@ -112,7 +116,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount, onMounted } from 'vue'
+import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
@@ -144,6 +148,11 @@ var headers = [
 const excludedHeaders = ref<string[]>([])
 const selectedHeaders = ref()
 
+const baseUrl = '/a/sales/orders'
+const excelDlUrl = computed(() => {
+  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+}) 
+
 const items = ref<Order[]>([])
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
@@ -158,6 +167,28 @@ const filterCustomerName = ref<string>()
 const filterShipped = ref<boolean>()
 const lsKey = 'orders_dt'
 
+function getFilterStr(): string {
+  var ret = ''
+
+  if (filterOrderNumber.value) {
+    ret += '&order_number=~' + filterOrderNumber.value + '~'
+  }
+
+  // prop filter overrides regular filter
+  if (props.customer_id > 0) {
+    ret += '&customer_fk=' + props.customer_id
+  } else if (filterCustomerName.value) {
+    ret += '&customer_company_name=~' + filterCustomerName.value + '~'
+  }
+
+  // checking bool filter like this so that undefined and null do not count as false
+  if (filterShipped.value == false || filterShipped.value == true) {
+    ret += '&is_shipped=' + filterShipped.value
+  }
+
+  return ret
+}
+
 function getRowClass(item: Order) {
   if (!item.is_shipped) {
     return theme.global.current.value.dark ? { style: 'background-color: #480505;' } : { class: 'bg-red-lighten-5' }
@@ -166,25 +197,9 @@ function getRowClass(item: Order) {
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
 
-  var myURL = '/a/sales/orders'
+  var myURL = baseUrl
   myURL = processURIOptions(myURL, options)
-
-  // filters
-  if (filterOrderNumber.value) {
-    myURL += '&order_number=~' + filterOrderNumber.value + '~'
-  }
-
-  // prop filter overrides regular filter
-  if (props.customer_id > 0) {
-    myURL += '&customer_fk=' + props.customer_id
-  } else if (filterCustomerName.value) {
-    myURL += '&customer_company_name=~' + filterCustomerName.value + '~'
-  }
-
-  // checking bool filter like this so that undefined and null do not count as false
-  if (filterShipped.value == false || filterShipped.value == true) {
-    myURL += '&is_shipped=' + filterShipped.value
-  }
+  myURL += getFilterStr()
 
   ax.get(myURL)
   .then(resp => {
