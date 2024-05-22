@@ -9,6 +9,10 @@ import (
 	"github.com/loveyourstack/lys/lyspg"
 )
 
+const (
+	duName string = "Suppliers data updates"
+)
+
 type DuModel struct {
 	Input
 	Model
@@ -34,6 +38,12 @@ type DuStore struct {
 
 func (s DuStore) GetJsonFields() []string {
 	return duMeta.JsonTags
+}
+func (s DuStore) GetJsonTagTypeMap() map[string]string {
+	return duMeta.JsonTagTypeMap
+}
+func (s DuStore) GetName() string {
+	return duName
 }
 
 func (s DuStore) Select(ctx context.Context, params lyspg.SelectParams) (items []DuModel, unpagedCount lyspg.TotalCount, stmt string, err error) {

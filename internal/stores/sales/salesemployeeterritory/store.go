@@ -14,6 +14,7 @@ import (
 )
 
 const (
+	name           string = "Employee territories"
 	schemaName     string = "sales"
 	tableName      string = "employee_territory"
 	viewName       string = "v_employee_territory"
@@ -58,6 +59,12 @@ func (s Store) Delete(ctx context.Context, id int64) (stmt string, err error) {
 
 func (s Store) GetJsonFields() []string {
 	return meta.JsonTags
+}
+func (s Store) GetJsonTagTypeMap() map[string]string {
+	return meta.JsonTagTypeMap
+}
+func (s Store) GetName() string {
+	return name
 }
 
 func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {

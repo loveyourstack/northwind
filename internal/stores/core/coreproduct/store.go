@@ -17,6 +17,7 @@ import (
 )
 
 const (
+	name           string = "Products"
 	schemaName     string = "core"
 	tableName      string = "product"
 	viewName       string = "v_product"
@@ -92,6 +93,12 @@ func (s Store) DistinctSupplierCommonCountries(ctx context.Context) (countries [
 
 func (s Store) GetJsonFields() []string {
 	return meta.JsonTags
+}
+func (s Store) GetJsonTagTypeMap() map[string]string {
+	return meta.JsonTagTypeMap
+}
+func (s Store) GetName() string {
+	return name
 }
 
 func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {

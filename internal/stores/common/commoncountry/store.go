@@ -15,6 +15,7 @@ import (
 )
 
 const (
+	name           string = "Countries"
 	schemaName     string = "common"
 	tableName      string = "country"
 	viewName       string = "country"
@@ -54,6 +55,12 @@ type Store struct {
 
 func (s Store) GetJsonFields() []string {
 	return meta.JsonTags
+}
+func (s Store) GetJsonTagTypeMap() map[string]string {
+	return meta.JsonTagTypeMap
+}
+func (s Store) GetName() string {
+	return name
 }
 
 func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, stmt string, err error) {
