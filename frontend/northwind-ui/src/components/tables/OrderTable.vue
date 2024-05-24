@@ -27,13 +27,13 @@
         <v-col>
           <!--<v-btn class="float-end" color="primary" :to="{ name: 'New order'}">Add</v-btn>-->
 
-          <v-btn icon flat size="small" class="float-right mr-3" :href="excelDlUrl" download>
+          <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
             <v-icon icon="mdi-file-download-outline"></v-icon>
           </v-btn>
 
           <v-menu :close-on-content-click=false>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn density="comfortable" v-tooltip="'Adjust columns'" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
             </template>
             <v-list>
               <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
@@ -45,7 +45,7 @@
             </v-list>
           </v-menu>
 
-          <v-switch hide-details v-model="showFilters" class="float-right mr-7" :color="showFilters ? 'teal' : 'undefined'" density="compact"
+          <v-switch hide-details v-model="showFilters" v-tooltip="'Show filters'" class="float-right mr-7" :color="showFilters ? 'teal' : 'undefined'" density="compact"
           ></v-switch>
           <v-icon icon="mdi-filter-variant" class="float-right mt-2 mr-3"></v-icon>
         </v-col>
@@ -122,6 +122,7 @@ import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Order } from '@/types/sales'
 import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
+import { fileDownload } from '@/composables/file'
 import { booleanOptions } from '@/composables/form'
 import { useDateFormat, useDebounceFn } from '@vueuse/core'
 
@@ -150,7 +151,7 @@ const selectedHeaders = ref()
 
 const baseUrl = '/a/sales/orders'
 const excelDlUrl = computed(() => {
-  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+  return baseUrl + '?xformat=excel' + getFilterStr()
 }) 
 
 const items = ref<Order[]>([])

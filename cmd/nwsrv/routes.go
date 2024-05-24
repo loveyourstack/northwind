@@ -55,8 +55,8 @@ func (srvApp *httpServerApplication) getRouter() http.Handler {
 	cors := handlers.CORS(
 		handlers.AllowedOrigins([]string{srvApp.Config.UI.Url}),
 		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}),
-		handlers.AllowedHeaders([]string{"Accept", "Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization"}),
-		handlers.ExposedHeaders([]string{"X-Total-Count", "X-Total-Count-Estimated"}),
+		handlers.AllowedHeaders([]string{"Accept", "Accept-Encoding", "Authorization", "Content-Length", "Content-Type", "X-CSRF-Token"}),
+		handlers.ExposedHeaders([]string{"Content-Disposition", "X-Total-Count", "X-Total-Count-Estimated"}),
 		handlers.AllowCredentials(),
 	)
 	return (cors)(r)

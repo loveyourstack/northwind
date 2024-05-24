@@ -23,7 +23,7 @@
         </v-col>
 
         <v-col>
-          <v-btn icon flat size="small" class="float-right mr-3" :href="excelDlUrl" download>
+          <v-btn icon flat size="small" class="float-right mr-3" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
             <v-icon icon="mdi-file-download-outline"></v-icon>
           </v-btn>
         </v-col>
@@ -57,6 +57,7 @@ import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { OrderDetail } from '@/types/sales'
 import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
+import { fileDownload } from '@/composables/file'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle
@@ -73,7 +74,7 @@ var headers = [
 
 const baseUrl = '/a/sales/order-details'
 const excelDlUrl = computed(() => {
-  return import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel' + getFilterStr()
+  return baseUrl + '?xformat=excel' + getFilterStr()
 }) 
 
 const items = ref<OrderDetail[]>([])

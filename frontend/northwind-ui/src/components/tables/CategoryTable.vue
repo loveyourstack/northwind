@@ -34,7 +34,7 @@
         <v-col>
           <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
 
-          <v-btn icon flat size="small" class="float-right mr-7" :href="excelDlUrl" download>
+          <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
             <v-icon icon="mdi-file-download-outline"></v-icon>
           </v-btn>
         </v-col>
@@ -72,11 +72,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onBeforeMount } from 'vue'
+import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { Category } from '@/types/core'
 import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
+import { fileDownload } from '@/composables/file'
 import CategoryForm from '@/components/forms/CategoryForm.vue'
 
 const props = defineProps<{
@@ -93,7 +94,9 @@ var headers = [
 ] as const
 
 const baseUrl = '/a/core/categories'
-const excelDlUrl = import.meta.env.VITE_API_URL +  baseUrl + '?xformat=excel'
+const excelDlUrl = computed(() => {
+  return baseUrl + '?xformat=excel' + getFilterStr()
+}) 
 
 const items = ref<Category[]>([])
 const itemsPerPage = ref(10)
@@ -108,10 +111,17 @@ const showDialog = ref(false)
 
 const lsKey = 'categories_dt'
 
+function getFilterStr(): string {
+  var ret = ''
+
+  return ret
+}
+
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
 
   var myURL = baseUrl
   myURL = processURIOptions(myURL, options)
+  myURL += getFilterStr()
 
   // exclude None
   myURL += '&id=!-1'
