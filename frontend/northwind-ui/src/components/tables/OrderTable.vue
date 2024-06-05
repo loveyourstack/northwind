@@ -22,9 +22,7 @@
             <div class="dt-title">{{ props.title ? props.title : 'Orders' }}</div>
             <div>Unshipped orders are marked red.</div>
           </div>
-        </v-col>
 
-        <v-col>
           <!--<v-btn class="float-end" color="primary" :to="{ name: 'New order'}">Add</v-btn>-->
 
           <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">

@@ -152,13 +152,16 @@ onMounted(() => {
 }
 
 .dt-title-block {
-  padding: 0.5rem 1rem 0.5rem 0;
+  float: left;
+  padding: 0.3rem 2rem 0.5rem 0;
 }
 
+.form-col-s {
+  min-width: 350px;
+}
 .form-col {
   min-width: 450px;
 }
-
 .form-col-l {
   min-width: 550px;
 }

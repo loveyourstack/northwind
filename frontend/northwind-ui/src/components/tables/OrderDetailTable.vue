@@ -20,9 +20,7 @@
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Order details' }}</div>
           </div>
-        </v-col>
 
-        <v-col>
           <v-btn icon flat size="small" class="float-right mr-3" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
             <v-icon icon="mdi-file-download-outline"></v-icon>
           </v-btn>

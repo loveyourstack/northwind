@@ -29,9 +29,7 @@
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Categories' }}</div>
           </div>
-        </v-col>
-
-        <v-col>
+          
           <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
 
           <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
