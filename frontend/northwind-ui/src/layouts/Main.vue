@@ -143,6 +143,12 @@ onMounted(() => {
   padding: 5px 10px 5px 10px;
 }
 
+.dt {
+  border-radius: 4px !important;
+  min-width: 680px;
+  padding: 16px !important;
+}
+
 .dt-title {
   font-size: 1.25rem;
   font-weight: 500;

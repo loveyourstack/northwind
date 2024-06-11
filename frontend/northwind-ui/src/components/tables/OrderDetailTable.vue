@@ -12,7 +12,7 @@
     item-value="id"
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
-    class="pa-4 rounded"
+    class="dt"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
@@ -54,6 +54,7 @@ import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
 import { OrderDetail } from '@/types/sales'
+import { GetMetadata } from '@/types/system'
 import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { fileDownload } from '@/composables/file'
 
@@ -76,6 +77,7 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<OrderDetail[]>([])
+const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')
@@ -104,12 +106,14 @@ function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataT
   ax.get(myURL)
   .then(resp => {
       items.value = resp.data.data
-      totalItemsIsEstimate.value = resp.headers['x-total-count-estimated'] === 'true' ? true : false
+      metadata.value = resp.data.metadata
+
+      totalItemsIsEstimate.value = metadata.value!.total_count_is_estimated
       if (totalItemsIsEstimate.value) {
-        totalItemsEstimated.value = Number(resp.headers['x-total-count'])
+        totalItemsEstimated.value = metadata.value!.total_count
         totalItems.value = 101 // workaround so that next page button is enabled even if estimate is too low
       } else {
-        totalItems.value = Number(resp.headers['x-total-count'])
+        totalItems.value = metadata.value!.total_count
       }
     })
     .catch() // handled by interceptor

@@ -26,5 +26,5 @@ func (srvApp *httpServerApplication) coreAddCategoryTest(w http.ResponseWriter, 
 		Status: lys.ReqSucceeded,
 		Data:   "success",
 	}
-	lys.JsonResponse(resp, http.StatusOK, nil, w)
+	lys.JsonResponse(resp, http.StatusOK, w)
 }
