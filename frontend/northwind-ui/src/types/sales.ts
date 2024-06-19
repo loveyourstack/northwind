@@ -139,3 +139,11 @@ export interface OrderDetail {
   quantity: number
   unit_price: number
 }
+
+// ------------------------------------------------------------------------------------------------------
+
+export interface Shipper {
+  id: number
+  company_name: string
+  phone: string
+}

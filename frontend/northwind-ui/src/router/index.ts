@@ -90,6 +90,12 @@ const routes = [
             component: () => import('@/views/Orders.vue'),
           },
           {
+            path: 'new',
+            props: () => { return { id: 0 } },
+            name: 'New order',
+            component: () => import('@/views/OrderDetail.vue'),
+          },
+          {
             path: ':id',
             props: (route: any) => {
               return {

@@ -23,7 +23,7 @@
             <div>Unshipped orders are marked red.</div>
           </div>
 
-          <!--<v-btn class="float-end" color="primary" :to="{ name: 'New order'}">Add</v-btn>-->
+          <v-btn class="float-end" color="primary" :to="{ name: 'New order'}">Add</v-btn>
 
           <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
             <v-icon icon="mdi-file-download-outline"></v-icon>

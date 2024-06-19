@@ -80,6 +80,7 @@ import ax from '@/api'
 import { Customer, CustomerInput, NewCustomer, GetCustomerInputFromItem } from '@/types/sales'
 import { fadeMs } from '@/composables/form'
 import { useCommonStore } from '@/stores/common'
+import { useSalesStore } from '@/stores/sales'
 
 const props = defineProps<{
   id: number
@@ -94,6 +95,7 @@ const emit = defineEmits<{
 }>()
 
 const commonStore = useCommonStore()
+const salesStore = useSalesStore()
 
 const saving = ref(false)
 
@@ -121,6 +123,7 @@ function deleteItem() {
 
   ax.delete(itemURL)
     .then(() => {
+      salesStore.loadCustomersList()
       emit('delete')
     })
     .catch() // handled by interceptor
@@ -148,6 +151,7 @@ async function saveItem() {
   if (props.id !== 0) {
     await ax.put(itemURL, saveItem)
       .then(() => {
+        salesStore.loadCustomersList()
         showSaved.value = true
         setTimeout(() => { showSaved.value = false }, fadeMs)
         loadItem()
@@ -160,6 +164,7 @@ async function saveItem() {
 
   await ax.post(baseURL, saveItem)
     .then(response => {
+      salesStore.loadCustomersList()
       saveBtnLabel.value = 'Save'
       showSaved.value = true
       setTimeout(() => { showSaved.value = false }, fadeMs)

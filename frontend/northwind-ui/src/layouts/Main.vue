@@ -12,7 +12,7 @@
 
       <div class="text-body-1 mr-2">Username</div>
 
-      <v-btn icon="mdi-theme-light-dark" @click="toggleTheme"></v-btn>
+      <v-btn icon="mdi-theme-light-dark" v-tooltip="'Toggle theme'" @click="toggleTheme"></v-btn>
 
       <v-menu>
         <template v-slot:activator="{ props }">
@@ -64,6 +64,7 @@ import { useAppStore } from '@/stores/app'
 import { useCommonStore } from '@/stores/common'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
+import { useSalesStore } from '@/stores/sales'
 import ApiError from '@/components/ApiError.vue'
 
 const theme = useTheme()
@@ -71,6 +72,7 @@ const appStore = useAppStore()
 const commonStore = useCommonStore()
 const coreStore = useCoreStore()
 const hrStore = useHRStore()
+const salesStore = useSalesStore()
 
 const showNav = ref(true)
 
@@ -104,6 +106,8 @@ onMounted(() => {
   coreStore.loadCategoriesList()
   coreStore.loadSuppliersList()
   hrStore.loadEmployeesList()
+  salesStore.loadCustomersList()
+  salesStore.loadShippersList()
 })
 </script>
 

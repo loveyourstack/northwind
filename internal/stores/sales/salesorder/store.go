@@ -35,11 +35,11 @@ type Input struct {
 	DestCountryFk   int64            `db:"dest_country_fk" json:"dest_country_fk,omitempty" validate:"required"`
 	DestPostalCode  string           `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"required"`
 	DestState       string           `db:"dest_state" json:"dest_state,omitempty"`
-	FreightCost     float32          `db:"freight_cost" json:"freight_cost,omitempty" validate:"required,number,gte=0"`
+	FreightCost     float32          `db:"freight_cost" json:"freight_cost,omitempty" validate:"number,gte=0"`
 	IsShipped       bool             `db:"is_shipped" json:"is_shipped,omitempty"`
 	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
 	OrderDate       lystype.Date     `db:"order_date" json:"order_date,omitempty" validate:"required"`
-	OrderNumber     int32            `db:"order_number" json:"order_number,omitempty" validate:"required"`
+	OrderNumber     int32            `db:"order_number" json:"order_number,omitempty"` // assigned in Insert
 	RequiredDate    lystype.Date     `db:"required_date" json:"required_date,omitempty" validate:"required"`
 	SalesmanFk      int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
 	ShippedDate     lystype.Date     `db:"shipped_date" json:"shipped_date,omitempty"`
@@ -92,6 +92,16 @@ func (s Store) GetName() string {
 }
 
 func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {
+
+	// get next order number and add it to input
+	stmt = fmt.Sprintf("SELECT max(order_number)+1 FROM %s.%s;", schemaName, tableName)
+	rows, _ := s.Db.Query(ctx, stmt)
+	nextOrderNum, err := pgx.CollectExactlyOneRow(rows, pgx.RowTo[int32])
+	if err != nil {
+		return Model{}, stmt, fmt.Errorf("pgx.CollectExactlyOneRow failed: %w", err)
+	}
+	input.OrderNumber = nextOrderNum
+
 	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, meta.DbTags, input)
 }
 

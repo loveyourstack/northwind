@@ -31,6 +31,9 @@ func (srvApp *httpServerApplication) getRouter() http.Handler {
 		PostOptions: srvApp.PostOptions,
 	}
 
+	// increase default max # results from GET
+	apiEnv.GetOptions.MaxPerPage = 5000
+
 	r := mux.NewRouter()
 	r.NotFoundHandler = http.HandlerFunc(lys.NotFound())
 
