@@ -1,6 +1,7 @@
 [general]
 appName = "Northwind"
 env     = "dev"
+debug   = true
 
 [database]
 host   = "localhost"

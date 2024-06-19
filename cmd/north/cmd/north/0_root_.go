@@ -43,11 +43,21 @@ func initApp() {
 
 	ctx := context.Background()
 
+	// declare and configure logs
+	var infoLog, errorLog *slog.Logger
+	if conf.General.Debug {
+		infoLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
+		errorLog = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
+	} else {
+		infoLog = slog.New(slog.NewTextHandler(os.Stdout, nil))
+		errorLog = slog.New(slog.NewTextHandler(os.Stderr, nil))
+	}
+
 	// create non-specific app
 	app := &cmd.Application{
 		Config:   &conf,
-		InfoLog:  slog.New(slog.NewTextHandler(os.Stdout, nil)),
-		ErrorLog: slog.New(slog.NewTextHandler(os.Stderr, nil)),
+		InfoLog:  infoLog,
+		ErrorLog: errorLog,
 		Validate: validator.New(validator.WithRequiredStructEnabled()),
 	}
 

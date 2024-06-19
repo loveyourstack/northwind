@@ -12,6 +12,7 @@ import (
 type general struct {
 	AppName string
 	Env     string
+	Debug   bool
 }
 
 // api contains the API config
