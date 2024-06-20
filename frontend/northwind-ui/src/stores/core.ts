@@ -6,6 +6,7 @@ import ax from '@/api'
 export const useCoreStore = defineStore('core', () => {
 
   const categoriesList = ref<SelectionItem[]>([])
+  const productsList = ref<SelectionItem[]>([])
   const suppliersList = ref<SelectionItem[]>([])
 
   function loadCategoriesList() {
@@ -13,6 +14,15 @@ export const useCoreStore = defineStore('core', () => {
     ax.get(myURL)
     .then(response => {
       categoriesList.value = response.data.data
+    })
+    .catch() // handled by interceptor
+  }
+
+  function loadProductsList() {
+    var myURL = '/a/core/products?xfields=id,name&xsort=name&xper_page=5000'
+    ax.get(myURL)
+    .then(response => {
+      productsList.value = response.data.data
     })
     .catch() // handled by interceptor
   }
@@ -26,6 +36,6 @@ export const useCoreStore = defineStore('core', () => {
     .catch() // handled by interceptor
   }
 
-  return { categoriesList, suppliersList, loadCategoriesList, loadSuppliersList }
+  return { categoriesList, suppliersList, loadCategoriesList, loadSuppliersList, loadProductsList, productsList }
 })
 

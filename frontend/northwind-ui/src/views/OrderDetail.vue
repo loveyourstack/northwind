@@ -24,7 +24,7 @@
                     @cancel="router.back"
                     @create="router.push({ name: 'Orders' })"
                     @delete="router.push({ name: 'Orders' })"
-                    @load="(name) => { itemName = name }"
+                    @load=""
                   ></OrderForm>
                 </v-window-item>
                 

@@ -104,6 +104,7 @@ onMounted(() => {
   // refresh stores on page reload
   commonStore.loadCountriesList()
   coreStore.loadCategoriesList()
+  coreStore.loadProductsList()
   coreStore.loadSuppliersList()
   hrStore.loadEmployeesList()
   salesStore.loadCustomersList()

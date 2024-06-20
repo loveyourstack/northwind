@@ -1,3 +1,4 @@
+import { useDateFormat, useNow } from "@vueuse/core"
 
 export interface CustomerInput {
   address?: string
@@ -63,11 +64,11 @@ export interface OrderInput {
   dest_state?: string
   freight_cost: number
   is_shipped: boolean
-  order_date: Date | undefined
+  order_date: string | undefined // string, not Date: use additional Date object with _d suffix for date picker element
   order_number: number
-  required_date: Date | undefined
+  required_date: string | undefined
   salesman_fk: number | undefined
-  shipped_date?: Date | undefined
+  shipped_date?: string | undefined
   shipper_fk?: number | undefined
 }
 export interface Order extends OrderInput {
@@ -79,6 +80,11 @@ export interface Order extends OrderInput {
   shipper_company_name: string
   order_detail_count: number
   order_value: number
+
+  // date objects: to be assigned after load
+  order_date_d: Date | undefined
+  required_date_d: Date | undefined
+  shipped_date_d: Date | undefined
 }
 export function NewOrder(): Order {
   return  {
@@ -105,6 +111,10 @@ export function NewOrder(): Order {
     shipper_company_name: '',
     order_detail_count: 0,
     order_value: 0,
+
+    order_date_d: useNow().value, // new order date defaults to today
+    required_date_d: undefined,
+    shipped_date_d: undefined
   }
 }
 export function GetOrderInputFromItem(item: Order): OrderInput {
@@ -118,11 +128,11 @@ export function GetOrderInputFromItem(item: Order): OrderInput {
     dest_state: item.dest_state,
     freight_cost: item.freight_cost,
     is_shipped: item.is_shipped,
-    order_date: item.order_date,
+    order_date: useDateFormat(item.order_date_d, 'YYYY-MM-DD').value, // format corresponding Date object for db input
     order_number: item.order_number,
-    required_date: item.required_date,
+    required_date: useDateFormat(item.required_date_d, 'YYYY-MM-DD').value,
     salesman_fk: item.salesman_fk,
-    shipped_date: item.shipped_date,
+    shipped_date: useDateFormat(item.shipped_date_d, 'YYYY-MM-DD').value,
     shipper_fk: item.shipper_fk,
   }
 }
@@ -130,14 +140,38 @@ export function GetOrderInputFromItem(item: Order): OrderInput {
 
 // ------------------------------------------------------------------------------------------------------
 
-export interface OrderDetail {
+export interface OrderDetailInput {
   discount: number
-  order_fk: number
-  order_number: string
-  product_fk: number
-  product_name: string
+  order_fk: number | undefined
+  product_fk: number | undefined
   quantity: number
   unit_price: number
+}
+export interface OrderDetail extends OrderDetailInput  {
+  id: number
+  order_number: string
+  product_name: string
+}
+export function NewOrderDetail(order_id: number): OrderDetail {
+  return  {
+    discount: 0,
+    order_fk: order_id,
+    product_fk: undefined,
+    quantity: 0,
+    unit_price: 0,
+    id: 0,
+    order_number: '',
+    product_name: '',
+  }
+}
+export function GetOrderDetailInputFromItem(item: OrderDetail): OrderDetailInput {
+  return  {
+    discount: item.discount,
+    order_fk: item.order_fk,
+    product_fk: item.product_fk,
+    quantity: item.quantity,
+    unit_price: item.unit_price,
+  }
 }
 
 // ------------------------------------------------------------------------------------------------------

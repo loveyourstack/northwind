@@ -3,6 +3,9 @@
     <v-card-title class="pt-6">
       {{ cardTitle }}
     </v-card-title>
+    <v-card-subtitle v-if="props.id !== 0">
+      {{ item.order_detail_count }} items with total value: {{ item.order_value }}
+    </v-card-subtitle>
     <v-card-text class="pa-5">
       <v-form ref="itemForm">
 
@@ -10,36 +13,58 @@
 
           <v-col cols="12" md="6" class="form-col">
 
-            <v-text-field v-if="props.id !== 0" label="Number" v-model="item.order_number" disabled
-            ></v-text-field>
-
             <v-autocomplete label="Customer" v-model="item.customer_fk"
               :items="salesStore.customersList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Customer is required']"
             ></v-autocomplete>
 
-            <v-text-field label="Order date" v-model="item.order_date"
-              :rules="[(v: string) => !!v || 'Order date is required']"
-            ></v-text-field>
+            <v-dialog v-model="showOrderDateDp">
+              <template #activator="{ props }">
+                <v-text-field v-bind="props" label="Order date" prepend-icon="mdi-calendar" readonly 
+                  :model-value="item.order_date_d ? useDateFormat(item.order_date_d, 'DD MMM YYYY').value : undefined"
+                  :rules="[(v: string) => !!v || 'Order date is required']"
+                ></v-text-field>
+              </template>
+              <template #default>
+                <v-date-picker v-model="item.order_date_d" @update:model-value="showOrderDateDp = false"></v-date-picker>
+              </template>
+            </v-dialog>
 
             <v-autocomplete label="Salesman" v-model="item.salesman_fk"
               :items="hrStore.employeesList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Salesman is required']"
             ></v-autocomplete>
 
-            <v-text-field label="Required date" v-model="item.required_date"
-              :rules="[(v: string) => !!v || 'Required date is required']"
-            ></v-text-field>
+            <v-dialog v-model="showRequiredDateDp">
+              <template #activator="{ props }">
+                <v-text-field v-bind="props" label="Required date" prepend-icon="mdi-calendar" readonly 
+                  :model-value="item.required_date_d ? useDateFormat(item.required_date_d, 'DD MMM YYYY').value : undefined"
+                  :rules="[(v: string) => !!v || 'Required date is required']"
+                ></v-text-field>
+              </template>
+              <template #default>
+                <v-date-picker v-model="item.required_date_d" @update:model-value="showRequiredDateDp = false"></v-date-picker>
+              </template>
+            </v-dialog>
 
             <v-autocomplete label="Shipper" v-model="item.shipper_fk"
               :items="salesStore.shippersList" item-title="company_name" item-value="id"
               :rules="[(v: number) => !!v || 'Shipper is required']"
             ></v-autocomplete>
 
-            <v-checkbox label="Shipped" v-model="item.is_shipped"></v-checkbox>
+            <v-checkbox v-if="props.id !== 0" label="Shipped" v-model="item.is_shipped" @update:model-value="item.shipped_date_d = useNow().value"></v-checkbox>
 
-            <v-text-field v-if="item.is_shipped" label="Shipped date" v-model="item.shipped_date"
-            ></v-text-field>
+            <v-dialog v-if="item.is_shipped" v-model="showShippedDateDp">
+              <template #activator="{ props }">
+                <v-text-field v-bind="props" label="Shipped date" prepend-icon="mdi-calendar" readonly 
+                  :model-value="item.shipped_date_d ? useDateFormat(item.shipped_date_d, 'DD MMM YYYY').value : undefined"
+                  :rules="[(v: string) => !!v || 'Shipped date is required']"
+                ></v-text-field>
+              </template>
+              <template #default>
+                <v-date-picker v-model="item.shipped_date_d" @update:model-value="showShippedDateDp = false"></v-date-picker>
+              </template>
+            </v-dialog>
 
           </v-col>
           <v-col cols="12" md="6" class="form-col">
@@ -48,7 +73,7 @@
 
               <legend class="pl-2 pr-2">Delivery address</legend>
 
-              <v-btn :disabled="!item.customer_fk" color="primary" class="mb-4" density="compact" @click="fillFromCustomer">Fill from customer</v-btn>
+              <v-btn :disabled="!item.customer_fk" class="mb-4" density="compact" @click="fillFromCustomer">Fill from customer</v-btn>
 
               <v-text-field label="Company" v-model="item.dest_company_name"
               ></v-text-field>
@@ -100,6 +125,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
+import { useDateFormat, useNow } from '@vueuse/core'
 import ax from '@/api'
 import { Customer, Order, OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
 import { fadeMs } from '@/composables/form'
@@ -115,7 +141,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void
   (e: 'create', newID: number): void
   (e: 'delete'): void
-  (e: 'load', name: string): void
+  (e: 'load', order_number: number): void
   (e: 'update'): void
 }>()
 
@@ -132,8 +158,12 @@ const itemForm = ref()
 const saveBtnLabel = ref('Save')
 const showSaved = ref(false)
 
+const showOrderDateDp = ref(false)
+const showRequiredDateDp = ref(false)
+const showShippedDateDp = ref(false)
+
 const cardTitle = computed(() => {
-  return props.id !== 0 ? item.value!.name : 'New Order'
+  return props.id !== 0 ? 'Order #' + item.value!.order_number : 'New Order'
 })
 
 function deleteItem() {
@@ -149,19 +179,19 @@ function deleteItem() {
 }
 
 function fillFromCustomer() {
-  if (!item.value.customer_fk) {
+  if (!item.value?.customer_fk) {
     return
   }
 
-  ax.get('/a/sales/customers/' + item.value.customer_fk)
+  ax.get('/a/sales/customers/' + item.value!.customer_fk)
     .then(response => {
       var cust:Customer = response.data.data
-      item.value.dest_company_name = cust.company_name
-      item.value.dest_address = cust.address
-      item.value.dest_city = cust.city
-      item.value.dest_state = cust.state
-      item.value.dest_postal_code = cust.postal_code
-      item.value.dest_country_fk = cust.country_fk
+      item.value!.dest_company_name = cust.company_name
+      item.value!.dest_address = cust.address ? cust.address : ''
+      item.value!.dest_city = cust.city ? cust.city : ''
+      item.value!.dest_state = cust.state
+      item.value!.dest_postal_code = cust.postal_code
+      item.value!.dest_country_fk = cust.country_fk
     })
     .catch() // handled by interceptor
 }
@@ -170,7 +200,15 @@ function loadItem() {
   ax.get(itemURL)
     .then(response => {
       item.value = response.data.data
-      emit('load', item.value!.name)
+
+      // assign date objects from YYYY-MM-DD strings
+      item.value!.order_date_d = new Date(item.value!.order_date!)
+      item.value!.required_date_d = new Date(item.value!.required_date!)
+      if (item.value!.shipped_date) {
+        item.value!.shipped_date_d = new Date(item.value!.shipped_date!)
+      }
+
+      emit('load', item.value!.order_number)
     })
     .catch() // handled by interceptor
 }

@@ -1,4 +1,13 @@
 <template>
+  <v-dialog v-model="showDialog" persistent width="auto">
+    <OrderDetailForm :order_id="order_id" :id="editID"
+      @cancel="showDialog = false"
+      @create="showDialog = false; refreshItems()"
+      @delete="showDialog = false; refreshItems()"
+      @update="showDialog = false; refreshItems()"
+    ></OrderDetailForm>
+  </v-dialog>
+
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
@@ -21,7 +30,9 @@
             <div class="dt-title">{{ props.title ? props.title : 'Order details' }}</div>
           </div>
 
-          <v-btn icon flat size="small" class="float-right mr-3" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
+          <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
+
+          <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
             <v-icon icon="mdi-file-download-outline"></v-icon>
           </v-btn>
         </v-col>
@@ -36,6 +47,12 @@
 
     <template v-slot:[`item.discount`]="{ item }">
       <span v-if="item.discount">{{ Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0, minimumFractionDigits: 0}).format(item.discount) }}</span>
+    </template>
+
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
+        <v-icon color="primary" icon="mdi-pencil"></v-icon>
+      </v-btn>
     </template>
 
     <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
@@ -57,6 +74,7 @@ import { OrderDetail } from '@/types/sales'
 import { GetMetadata } from '@/types/system'
 import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { fileDownload } from '@/composables/file'
+import OrderDetailForm from '@/components/forms/OrderDetailForm.vue'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle
@@ -69,6 +87,7 @@ var headers = [
   { title: 'Quantity', key: 'quantity', align: 'end' },
   { title: 'Unit price', key: 'unit_price', align: 'end' },
   { title: 'Discount', key: 'discount', align: 'end' },
+  { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 
 const baseUrl = '/a/sales/order-details'
@@ -84,6 +103,9 @@ const search = ref('')
 const totalItems = ref(0)
 const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
+
+const editID = ref(0)
+const showDialog = ref(false)
 
 const lsKey = 'order_details_dt'
 
@@ -117,6 +139,10 @@ function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataT
       }
     })
     .catch() // handled by interceptor
+}
+
+function refreshItems() {
+  search.value = String(Date.now())
 }
 
 watch([itemsPerPage, search, sortBy], () => {
