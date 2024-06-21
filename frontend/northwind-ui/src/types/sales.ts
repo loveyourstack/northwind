@@ -176,6 +176,11 @@ export function GetOrderDetailInputFromItem(item: OrderDetail): OrderDetailInput
 
 // ------------------------------------------------------------------------------------------------------
 
+export interface OrderValueLatestWeeks {
+  order_week: number
+  total_value: number
+}
+
 export interface Shipper {
   id: number
   company_name: string

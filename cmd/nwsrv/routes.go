@@ -198,6 +198,10 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderStore)).Methods("DELETE")
 		r.HandleFunc(endpoint+"/{id}/soft", lys.SoftDelete(apiEnv, srvApp.Db, orderStore)).Methods("DELETE")
 
+		endpoint = "/order-value-latest-weeks"
+
+		r.HandleFunc(endpoint, lys.GetSimple[salesorder.OrderValueLatestWeeksModel](apiEnv, orderStore.SelectOrderValueLatestWeeks)).Methods("GET")
+
 		endpoint = "/order-details"
 
 		orderDetailStore := salesorderdetail.Store{Db: srvApp.Db}

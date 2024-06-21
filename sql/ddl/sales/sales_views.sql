@@ -25,6 +25,22 @@ CREATE OR REPLACE VIEW sales.v_customer AS
   LEFT JOIN (SELECT customer_fk, count(*) AS order_count FROM sales.order GROUP BY 1) s_o ON s_o.customer_fk = s_c.id;
 
 
+CREATE OR REPLACE VIEW sales.v_employee_territory AS
+	SELECT 
+    s_et.id,
+    s_et.employee_fk,
+    hr_e.name AS employee_name,
+    s_et.entry_at,
+    s_et.entry_by,
+    s_et.last_modified_at,
+    s_et.last_modified_by,
+    s_et.territory_fk,
+    s_t.name AS territory_name
+  FROM sales.employee_territory s_et
+  JOIN hr.employee hr_e ON s_et.employee_fk = hr_e.id
+  JOIN sales.territory s_t ON s_et.territory_fk = s_t.id;
+
+
 CREATE OR REPLACE VIEW sales.v_order AS
 	SELECT 
     s_o.id,
@@ -81,17 +97,11 @@ CREATE OR REPLACE VIEW sales.v_order_detail AS
   JOIN core.product c_p ON s_od.product_fk = c_p.id;
 
 
-CREATE OR REPLACE VIEW sales.v_employee_territory AS
-	SELECT 
-    s_et.id,
-    s_et.employee_fk,
-    hr_e.name AS employee_name,
-    s_et.entry_at,
-    s_et.entry_by,
-    s_et.last_modified_at,
-    s_et.last_modified_by,
-    s_et.territory_fk,
-    s_t.name AS territory_name
-  FROM sales.employee_territory s_et
-  JOIN hr.employee hr_e ON s_et.employee_fk = hr_e.id
-  JOIN sales.territory s_t ON s_et.territory_fk = s_t.id;
+CREATE OR REPLACE VIEW sales.v_order_value_latest_weeks AS
+	WITH latest_weeks AS (
+	  SELECT EXTRACT('week' FROM order_date)::int AS order_week, ROUND((SUM(order_value)/1000),1) AS total_value 
+	  FROM sales.v_order WHERE order_date BETWEEN '2021-01-03' AND '2021-12-31'
+	  GROUP BY 1 ORDER BY 1 DESC LIMIT 10
+	)
+	SELECT * FROM latest_weeks ORDER BY order_week;
+
