@@ -9,20 +9,21 @@
         <v-row>
 
           <v-col class="form-col">
-            <v-autocomplete label="Product" v-model="item.product_fk"
+            <v-autocomplete label="Product" v-model="item.product_fk" @update:model-value="loadProduct"
               :items="coreStore.productsList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Product is required']"
             ></v-autocomplete>
 
-            <v-text-field label="Quantity" v-model.number="item.quantity"
-              :rules="[(v: string) => !!v || 'Quantity is required']"
+            <v-text-field label="Quantity" v-model.number="item.quantity" type="number"
+              :rules="[(v: number) => v > 0 || 'Quantity is required']"
             ></v-text-field>
 
-            <v-text-field label="Unit price" v-model.number="item.unit_price"
-              :rules="[(v: string) => !!v || 'Description is required']"
+            <v-text-field label="Unit price" v-model.number="item.unit_price" type="number" prefix="$"
+              :rules="[(v: number) => v > 0 || 'Unit price is required']"
             ></v-text-field>
 
-            <v-text-field label="Discount" v-model.number="item.discount"
+            <v-text-field label="Discount" v-model.number="item.discount" type="number"
+              :rules="[(v: number) => (v >= 0 && v <= 1) || 'Discount must be between 0 and 1']"
             ></v-text-field>
 
           </v-col>
@@ -54,12 +55,14 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
+import { Product } from '@/types/core'
 import { OrderDetail, OrderDetailInput, NewOrderDetail, GetOrderDetailInputFromItem } from '@/types/sales'
 import { fadeMs } from '@/composables/form'
 import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{
   order_id: number
+  order_number: number
   id: number
 }>()
 
@@ -83,7 +86,7 @@ const saveBtnLabel = ref('Save')
 const showSaved = ref(false)
 
 const cardTitle = computed(() => {
-  var ret = 'Order id: ' + props.order_id + ': '
+  var ret = 'Order #' + props.order_number + ': '
   props.id !== 0 ? ret += 'detail id ' + props.id : ret += 'new detail'
   return ret
 })
@@ -106,6 +109,20 @@ function loadItem() {
     .then(response => {
       item.value = response.data.data
       emit('load')
+    })
+    .catch() // handled by interceptor
+}
+
+function loadProduct() {
+  if (!item.value!.product_fk) {
+    return
+  }
+
+  ax.get('/a/core/products/' + item.value!.product_fk)
+    .then(response => {
+      var p: Product
+      p = response.data.data
+      item.value!.unit_price = p.unit_price
     })
     .catch() // handled by interceptor
 }

@@ -157,7 +157,7 @@ export function NewOrderDetail(order_id: number): OrderDetail {
     discount: 0,
     order_fk: order_id,
     product_fk: undefined,
-    quantity: 0,
+    quantity: 1,
     unit_price: 0,
     id: 0,
     order_number: '',

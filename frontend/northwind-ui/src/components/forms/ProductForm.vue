@@ -35,7 +35,7 @@
           </v-col>
           <v-col cols="12" md="6" class="form-col">
 
-            <v-text-field label="Unit price" v-model.number="item.unit_price"
+            <v-text-field label="Unit price" v-model.number="item.unit_price" prefix="$"
               :rules="[(v: number) => !!v || 'Unit price is required']"
             ></v-text-field>
 

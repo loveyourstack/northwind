@@ -26,7 +26,7 @@
                 ></v-text-field>
               </template>
               <template #default>
-                <v-date-picker v-model="item.order_date_d" @update:model-value="showOrderDateDp = false"></v-date-picker>
+                <v-date-picker color="primary" v-model="item.order_date_d" @update:model-value="showOrderDateDp = false"></v-date-picker>
               </template>
             </v-dialog>
 
@@ -43,7 +43,7 @@
                 ></v-text-field>
               </template>
               <template #default>
-                <v-date-picker v-model="item.required_date_d" @update:model-value="showRequiredDateDp = false"></v-date-picker>
+                <v-date-picker color="primary" v-model="item.required_date_d" @update:model-value="showRequiredDateDp = false"></v-date-picker>
               </template>
             </v-dialog>
 
@@ -62,7 +62,7 @@
                 ></v-text-field>
               </template>
               <template #default>
-                <v-date-picker v-model="item.shipped_date_d" @update:model-value="showShippedDateDp = false"></v-date-picker>
+                <v-date-picker color="primary" v-model="item.shipped_date_d" @update:model-value="showShippedDateDp = false"></v-date-picker>
               </template>
             </v-dialog>
 

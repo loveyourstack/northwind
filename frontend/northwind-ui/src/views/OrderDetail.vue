@@ -31,7 +31,7 @@
                 <v-window-item v-if="props.id !== 0 && visitedTabs.includes('orderDetails')" value="orderDetails">
                   <v-card>
                     <v-card-text class="pa-0">
-                      <OrderDetailTable :order_id="props.id" />
+                      <OrderDetailTable v-if="item" :order_id="props.id" :order_number="item.order_number" />
                       <v-row class="pt-4 pb-4 pl-4">
                         <v-col>
                           <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
@@ -56,6 +56,8 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import ax from '@/api'
+import { Order } from '@/types/sales'
 import OrderForm from '@/components/forms/OrderForm.vue'
 import OrderDetailTable from '@/components/tables/OrderDetailTable.vue';
 
@@ -65,9 +67,21 @@ const props = defineProps<{
 
 const router = useRouter()
 
+const item = ref<Order>()
+const baseUrl = '/a/sales/orders'
+const itemURL = baseUrl + '/' + props.id
+
 const selectedTab = ref('details')
 const visitedTabs = ref<string[]>([]) // allows for lazy loading of tab content
 const lsKey = 'order_detail'
+
+function loadItem() {
+  ax.get(itemURL)
+    .then(response => {
+      item.value = response.data.data
+    })
+    .catch() // handled by interceptor
+}
 
 function setVisited(tab: string) {
   if (visitedTabs.value.indexOf(tab) === -1) { visitedTabs.value.push(tab) }
@@ -81,6 +95,12 @@ watch([selectedTab], () => {
 })
 
 onMounted(() => {
+  // if editing
+  if (props.id !== 0) {
+    // load order to get order_number
+    loadItem()
+  }
+
   var lsJSON = localStorage.getItem(lsKey)
   if (!lsJSON) {
     return

@@ -93,7 +93,7 @@
     </template>
 
     <template v-slot:[`item.order_value`]="{ item }">
-      <span>{{ item.order_value.toFixed(2) }}</span>
+      <span>{{ '$' + item.order_value.toFixed(2) }}</span>
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">

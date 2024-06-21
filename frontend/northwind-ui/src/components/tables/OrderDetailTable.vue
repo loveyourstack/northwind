@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <OrderDetailForm :order_id="order_id" :id="editID"
+    <OrderDetailForm :order_id="order_id" :order_number="props.order_number" :id="editID"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @delete="showDialog = false; refreshItems()"
@@ -45,6 +45,10 @@
       </router-link>
     </template>
 
+    <template v-slot:[`item.unit_price`]="{ item }">
+      <span>{{ '$' + item.unit_price.toFixed(2) }}</span>
+    </template>
+
     <template v-slot:[`item.discount`]="{ item }">
       <span v-if="item.discount">{{ Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0, minimumFractionDigits: 0}).format(item.discount) }}</span>
     </template>
@@ -78,6 +82,7 @@ import OrderDetailForm from '@/components/forms/OrderDetailForm.vue'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle
+  order_number: number
   title?: string
 }>()
 

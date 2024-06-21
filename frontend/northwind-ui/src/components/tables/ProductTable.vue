@@ -91,7 +91,7 @@
     </template>
 
     <template v-slot:[`item.unit_price`]="{ item }">
-      <span>{{ item.unit_price.toFixed(2) }}</span>
+      <span>{{ '$' + item.unit_price.toFixed(2) }}</span>
     </template>
 
     <template v-slot:[`item.is_discontinued`]="{ item }">
