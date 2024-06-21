@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/loveyourstack/lys/lyspg"
 )
 
 const (
@@ -17,13 +17,5 @@ type OrderValueLatestWeeksModel struct {
 }
 
 func (s Store) SelectOrderValueLatestWeeks(ctx context.Context) (items []OrderValueLatestWeeksModel, stmt string, err error) {
-
-	stmt = fmt.Sprintf("SELECT * FROM %s.%s;", schemaName, orderValueLatestWeeksViewName)
-	rows, _ := s.Db.Query(ctx, stmt)
-	items, err = pgx.CollectRows(rows, pgx.RowToStructByNameLax[OrderValueLatestWeeksModel])
-	if err != nil {
-		return nil, stmt, fmt.Errorf("pgx.CollectRows failed: %w", err)
-	}
-
-	return items, "", nil
+	return lyspg.SelectT[OrderValueLatestWeeksModel](ctx, s.Db, fmt.Sprintf("SELECT * FROM %s.%s;", schemaName, orderValueLatestWeeksViewName))
 }

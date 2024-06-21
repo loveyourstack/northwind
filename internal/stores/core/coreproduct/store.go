@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
@@ -82,13 +81,8 @@ func (s Store) DistinctSupplierCommonCountries(ctx context.Context) (countries [
 		) t1 ON co.id = t1.country_fk 
 		ORDER BY co.name;`,
 		schemaName, tableName)
-	rows, _ := s.Db.Query(ctx, stmt)
-	countries, err = pgx.CollectRows(rows, pgx.RowToStructByNameLax[commoncountry.Model])
-	if err != nil {
-		return nil, stmt, fmt.Errorf("pgx.CollectRows failed: %w", err)
-	}
 
-	return countries, "", nil
+	return lyspg.SelectT[commoncountry.Model](ctx, s.Db, stmt)
 }
 
 func (s Store) GetMeta() lysmeta.Result {
