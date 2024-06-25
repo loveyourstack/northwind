@@ -939,7 +939,7 @@ INSERT INTO sales.order (order_number, order_date, required_date, shipped_date, 
   (11077,'2021-05-06','2021-06-03','0001-01-01',8.53,'Rattlesnake Canyon Grocery','2817 Milton Dr.','Albuquerque','NM','87110',FALSE,(SELECT id FROM hr.employee WHERE last_name = 'Davolio'),(SELECT id FROM sales.shipper WHERE company_name = 'United Package'),(SELECT id FROM sales.customer WHERE code = 'RATTC'),(SELECT id FROM common.country WHERE iso2 = 'US'));
 
 
-INSERT INTO sales.order_detail (unit_price, quantity, discount, order_fk, product_fk) VALUES 
+INSERT INTO sales.order_item (unit_price, quantity, discount, order_fk, product_fk) VALUES 
   (14,12,0,(SELECT id FROM sales.order WHERE order_number = 10248),(SELECT id FROM core.product WHERE name = 'Queso Cabrales')),
   (9.8,10,0,(SELECT id FROM sales.order WHERE order_number = 10248),(SELECT id FROM core.product WHERE name = 'Singaporean Hokkien Fried Mee')),
   (34.8,5,0,(SELECT id FROM sales.order WHERE order_number = 10248),(SELECT id FROM core.product WHERE name = 'Mozzarella di Giovanni')),

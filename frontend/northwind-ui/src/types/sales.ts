@@ -78,7 +78,7 @@ export interface Order extends OrderInput {
   dest_country_iso2: string
   salesman: string
   shipper_company_name: string
-  order_detail_count: number
+  order_item_count: number
   order_value: number
 
   // date objects: to be assigned after load
@@ -109,7 +109,7 @@ export function NewOrder(): Order {
     dest_country_iso2: '',
     salesman: '',
     shipper_company_name: '',
-    order_detail_count: 0,
+    order_item_count: 0,
     order_value: 0,
 
     order_date_d: useNow().value, // new order date defaults to today
@@ -140,19 +140,19 @@ export function GetOrderInputFromItem(item: Order): OrderInput {
 
 // ------------------------------------------------------------------------------------------------------
 
-export interface OrderDetailInput {
+export interface OrderItemInput {
   discount: number
   order_fk: number | undefined
   product_fk: number | undefined
   quantity: number
   unit_price: number
 }
-export interface OrderDetail extends OrderDetailInput  {
+export interface OrderItem extends OrderItemInput  {
   id: number
   order_number: string
   product_name: string
 }
-export function NewOrderDetail(order_id: number): OrderDetail {
+export function NewOrderItem(order_id: number): OrderItem {
   return  {
     discount: 0,
     order_fk: order_id,
@@ -164,7 +164,7 @@ export function NewOrderDetail(order_id: number): OrderDetail {
     product_name: '',
   }
 }
-export function GetOrderDetailInputFromItem(item: OrderDetail): OrderDetailInput {
+export function GetOrderItemInputFromItem(item: OrderItem): OrderItemInput {
   return  {
     discount: item.discount,
     order_fk: item.order_fk,

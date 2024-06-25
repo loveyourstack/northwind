@@ -68,33 +68,33 @@ CREATE OR REPLACE VIEW sales.v_order AS
     s_o.shipped_date,
     s_o.shipper_fk,
     s_s.company_name AS shipper_company_name,
-    COALESCE(s_od.count,0) AS order_detail_count,
-    COALESCE(s_od.value,0) AS order_value
+    COALESCE(s_oi.count,0) AS order_item_count,
+    COALESCE(s_oi.value,0) AS order_value
   FROM sales.order s_o
   JOIN sales.customer s_c ON s_o.customer_fk = s_c.id
   JOIN common.country co ON s_o.dest_country_fk = co.id
   JOIN hr.employee hr_e ON s_o.salesman_fk = hr_e.id
   JOIN sales.shipper s_s ON s_o.shipper_fk = s_s.id
-  LEFT JOIN (SELECT order_fk, count(*), SUM(quantity * unit_price * (1 - discount)) AS value FROM sales.order_detail GROUP BY 1) s_od ON s_od.order_fk = s_o.id;;
+  LEFT JOIN (SELECT order_fk, count(*), SUM(quantity * unit_price * (1 - discount)) AS value FROM sales.order_item GROUP BY 1) s_oi ON s_oi.order_fk = s_o.id;
 
 
-CREATE OR REPLACE VIEW sales.v_order_detail AS
+CREATE OR REPLACE VIEW sales.v_order_item AS
 	SELECT 
-    s_od.id,
-    s_od.discount,
-    s_od.entry_at,
-    s_od.entry_by,
-    s_od.last_modified_at,
-    s_od.last_modified_by,
-    s_od.order_fk,
+    s_oi.id,
+    s_oi.discount,
+    s_oi.entry_at,
+    s_oi.entry_by,
+    s_oi.last_modified_at,
+    s_oi.last_modified_by,
+    s_oi.order_fk,
     s_o.order_number,
-    s_od.product_fk,
+    s_oi.product_fk,
     c_p.name AS product_name,
-    s_od.quantity,
-    s_od.unit_price
-  FROM sales.order_detail s_od
-  JOIN sales.order s_o ON s_od.order_fk = s_o.id
-  JOIN core.product c_p ON s_od.product_fk = c_p.id;
+    s_oi.quantity,
+    s_oi.unit_price
+  FROM sales.order_item s_oi
+  JOIN sales.order s_o ON s_oi.order_fk = s_o.id
+  JOIN core.product c_p ON s_oi.product_fk = c_p.id;
 
 
 CREATE OR REPLACE VIEW sales.v_order_value_latest_weeks AS

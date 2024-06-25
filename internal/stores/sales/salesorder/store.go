@@ -14,7 +14,7 @@ import (
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
 	"github.com/loveyourstack/northwind/internal/nw"
-	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderdetail"
+	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderitem"
 	"github.com/loveyourstack/northwind/pkg/lyspmath"
 )
 
@@ -54,7 +54,7 @@ type Model struct {
 	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
 	Salesman            string           `db:"salesman" json:"salesman,omitempty"`
 	ShipperCompanyName  string           `db:"shipper_company_name" json:"shipper_company_name,omitempty"`
-	OrderDetailCount    int              `db:"order_detail_count" json:"order_detail_count"`
+	OrderItemCount      int              `db:"order_item_count" json:"order_item_count"`
 	OrderValue          float32          `db:"order_value" json:"order_value"`
 	Input
 }
@@ -112,11 +112,11 @@ func (s Store) Restore(ctx context.Context, tx pgx.Tx, id int64) (stmt string, e
 		return stmt, fmt.Errorf("lyspg.Restore failed: %w", err)
 	}
 
-	// cascade to order details
-	orderDetailStore := salesorderdetail.Store{Db: s.Db}
-	stmt, err = orderDetailStore.RestoreCascadedByOrder(ctx, tx, id)
+	// cascade to order items
+	orderItemStore := salesorderitem.Store{Db: s.Db}
+	stmt, err = orderItemStore.RestoreCascadedByOrder(ctx, tx, id)
 	if err != nil {
-		return stmt, fmt.Errorf("orderDetailStore.RestoreCascadedByOrder failed: %w", err)
+		return stmt, fmt.Errorf("orderItemStore.RestoreCascadedByOrder failed: %w", err)
 	}
 
 	return "", nil
@@ -132,11 +132,11 @@ func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item 
 
 func (s Store) SoftDelete(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
 
-	// cascade to order details
-	orderDetailStore := salesorderdetail.Store{Db: s.Db}
-	stmt, err = orderDetailStore.SoftDeleteCascadedByOrder(ctx, tx, id)
+	// cascade to order items
+	orderItemStore := salesorderitem.Store{Db: s.Db}
+	stmt, err = orderItemStore.SoftDeleteCascadedByOrder(ctx, tx, id)
 	if err != nil {
-		return stmt, fmt.Errorf("orderDetailStore.SoftDeleteCascadedByOrder failed: %w", err)
+		return stmt, fmt.Errorf("orderItemStore.SoftDeleteCascadedByOrder failed: %w", err)
 	}
 
 	return lyspg.SoftDelete(ctx, tx, schemaName, tableName, pkColName, id, false)

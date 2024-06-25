@@ -135,7 +135,7 @@ const theme = useTheme()
 var headers = [
   { title: 'Order #', key: 'order_number' },  
   { title: 'Customer', key: 'customer_company_name' },
-  { title: '# details', key: 'order_detail_count', align: 'end' },
+  { title: '# items', key: 'order_item_count', align: 'end' },
   { title: 'Value', key: 'order_value', align: 'end' },
   { title: 'Order date', key: 'order_date' },
   { title: 'Salesman', key: 'salesman' },

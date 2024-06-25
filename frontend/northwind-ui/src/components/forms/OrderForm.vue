@@ -4,7 +4,7 @@
       {{ cardTitle }}
     </v-card-title>
     <v-card-subtitle v-if="props.id !== 0">
-      {{ item.order_detail_count }} items with total value: {{ item.order_value }}
+      {{ item.order_item_count }} item(s) with total value: ${{ item.order_value }}
     </v-card-subtitle>
     <v-card-text class="pa-5">
       <v-form ref="itemForm">
@@ -65,6 +65,9 @@
                 <v-date-picker color="primary" v-model="item.shipped_date_d" @update:model-value="showShippedDateDp = false"></v-date-picker>
               </template>
             </v-dialog>
+
+            <v-text-field label="Freight cost" v-model.number="item.freight_cost" type="number" prefix="$" disabled
+            ></v-text-field>
 
           </v-col>
           <v-col cols="12" md="6" class="form-col">

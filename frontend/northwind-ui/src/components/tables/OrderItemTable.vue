@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <OrderDetailForm :order_id="order_id" :order_number="props.order_number" :id="editID"
+    <OrderItemForm :order_id="order_id" :order_number="props.order_number" :id="editID"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @delete="showDialog = false; refreshItems()"
       @update="showDialog = false; refreshItems()"
-    ></OrderDetailForm>
+    ></OrderItemForm>
   </v-dialog>
 
   <v-data-table-server
@@ -27,7 +27,7 @@
       <v-row align="center" class="pb-2">
         <v-col>
           <div class="dt-title-block">
-            <div class="dt-title">{{ props.title ? props.title : 'Order details' }}</div>
+            <div class="dt-title">{{ props.title ? props.title : 'Order items' }}</div>
           </div>
 
           <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
@@ -74,11 +74,11 @@
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
-import { OrderDetail } from '@/types/sales'
+import { OrderItem } from '@/types/sales'
 import { GetMetadata } from '@/types/system'
 import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { fileDownload } from '@/composables/file'
-import OrderDetailForm from '@/components/forms/OrderDetailForm.vue'
+import OrderItemForm from '@/components/forms/OrderItemForm.vue'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle
@@ -87,7 +87,6 @@ const props = defineProps<{
 }>()
 
 var headers = [
-  { title: 'Order number', key: 'order_number' },
   { title: 'Product', key: 'product_name' },
   { title: 'Quantity', key: 'quantity', align: 'end' },
   { title: 'Unit price', key: 'unit_price', align: 'end' },
@@ -95,12 +94,12 @@ var headers = [
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 
-const baseUrl = '/a/sales/order-details'
+const baseUrl = '/a/sales/order-items'
 const excelDlUrl = computed(() => {
   return baseUrl + '?xformat=excel' + getFilterStr()
 }) 
 
-const items = ref<OrderDetail[]>([])
+const items = ref<OrderItem[]>([])
 const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
@@ -112,7 +111,7 @@ const totalItemsEstimated = ref(0)
 const editID = ref(0)
 const showDialog = ref(false)
 
-const lsKey = 'order_details_dt'
+const lsKey = 'order_items_dt'
 
 function getFilterStr(): string {
   var ret = ''

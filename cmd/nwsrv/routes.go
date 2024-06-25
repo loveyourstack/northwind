@@ -15,7 +15,7 @@ import (
 	"github.com/loveyourstack/northwind/internal/stores/sales/salescustomer"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesemployeeterritory"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorder"
-	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderdetail"
+	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderitem"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesshipper"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesterritory"
 )
@@ -202,17 +202,17 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 
 		r.HandleFunc(endpoint, lys.GetSimple[salesorder.OrderValueLatestWeeksModel](apiEnv, orderStore.SelectOrderValueLatestWeeks)).Methods("GET")
 
-		endpoint = "/order-details"
+		endpoint = "/order-items"
 
-		orderDetailStore := salesorderdetail.Store{Db: srvApp.Db}
-		r.HandleFunc(endpoint, lys.Get[salesorderdetail.Model](apiEnv, orderDetailStore)).Methods("GET")
-		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesorderdetail.Model](apiEnv, orderDetailStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salesorderdetail.Input, salesorderdetail.Model](apiEnv, orderDetailStore)).Methods("POST")
-		r.HandleFunc(endpoint+"/{id}/restore", lys.Restore(apiEnv, srvApp.Db, orderDetailStore)).Methods("POST")
-		r.HandleFunc(endpoint+"/{id}", lys.Put[salesorderdetail.Input](apiEnv, orderDetailStore)).Methods("PUT")
-		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderDetailStore)).Methods("PATCH")
-		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderDetailStore)).Methods("DELETE")
-		r.HandleFunc(endpoint+"/{id}/soft", lys.SoftDelete(apiEnv, srvApp.Db, orderDetailStore)).Methods("DELETE")
+		orderItemStore := salesorderitem.Store{Db: srvApp.Db}
+		r.HandleFunc(endpoint, lys.Get[salesorderitem.Model](apiEnv, orderItemStore)).Methods("GET")
+		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesorderitem.Model](apiEnv, orderItemStore)).Methods("GET")
+		r.HandleFunc(endpoint, lys.Post[salesorderitem.Input, salesorderitem.Model](apiEnv, orderItemStore)).Methods("POST")
+		r.HandleFunc(endpoint+"/{id}/restore", lys.Restore(apiEnv, srvApp.Db, orderItemStore)).Methods("POST")
+		r.HandleFunc(endpoint+"/{id}", lys.Put[salesorderitem.Input](apiEnv, orderItemStore)).Methods("PUT")
+		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderItemStore)).Methods("PATCH")
+		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderItemStore)).Methods("DELETE")
+		r.HandleFunc(endpoint+"/{id}/soft", lys.SoftDelete(apiEnv, srvApp.Db, orderItemStore)).Methods("DELETE")
 
 		r.HandleFunc("/regions", lys.GetEnumValues(apiEnv, srvApp.Db, schemaName, "region")).Methods("GET")
 

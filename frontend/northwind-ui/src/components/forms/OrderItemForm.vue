@@ -56,7 +56,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { Product } from '@/types/core'
-import { OrderDetail, OrderDetailInput, NewOrderDetail, GetOrderDetailInputFromItem } from '@/types/sales'
+import { OrderItem, OrderItemInput, NewOrderItem, GetOrderItemInputFromItem } from '@/types/sales'
 import { fadeMs } from '@/composables/form'
 import { useCoreStore } from '@/stores/core'
 
@@ -78,8 +78,8 @@ const coreStore = useCoreStore()
 
 const saving = ref(false)
 
-const item = ref<OrderDetail>()
-const baseURL = '/a/sales/order-details'
+const item = ref<OrderItem>()
+const baseURL = '/a/sales/order-items'
 const itemURL = baseURL + '/' + props.id
 const itemForm = ref()
 const saveBtnLabel = ref('Save')
@@ -135,7 +135,7 @@ async function saveItem() {
 
   saving.value = true
 
-  var saveItem: OrderDetailInput = GetOrderDetailInputFromItem(item.value!)
+  var saveItem: OrderItemInput = GetOrderItemInputFromItem(item.value!)
 
   if (props.id !== 0) {
     await ax.put(itemURL, saveItem)
@@ -155,7 +155,7 @@ async function saveItem() {
       saveBtnLabel.value = 'Save'
       showSaved.value = true
       setTimeout(() => { showSaved.value = false }, fadeMs)
-      var newItem: OrderDetail = response.data.data
+      var newItem: OrderItem = response.data.data
       emit('create', newItem.id)
     })
     .catch() // handled by interceptor
@@ -167,7 +167,7 @@ onMounted(() => {
     loadItem()
   } else {
     saveBtnLabel.value = 'Create'
-    item.value = NewOrderDetail(props.order_id)
+    item.value = NewOrderItem(props.order_id)
   }
 })
 </script>

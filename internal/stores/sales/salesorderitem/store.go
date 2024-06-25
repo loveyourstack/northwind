@@ -1,4 +1,4 @@
-package salesorderdetail
+package salesorderitem
 
 import (
 	"context"
@@ -15,10 +15,10 @@ import (
 )
 
 const (
-	name           string = "Order details"
+	name           string = "Order items"
 	schemaName     string = "sales"
-	tableName      string = "order_detail"
-	viewName       string = "v_order_detail"
+	tableName      string = "order_item"
+	viewName       string = "v_order_item"
 	pkColName      string = "id"
 	defaultOrderBy string = "id"
 )

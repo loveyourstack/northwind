@@ -10,10 +10,10 @@
 
                 <v-tab class="ml-2" value="details">Details</v-tab>
 
-                <v-tab value="orderDetails"
+                <v-tab value="orderItems"
                   v-if="props.id !== 0"
-                  @click="setVisited('orderDetails')"
-                >Order details
+                  @click="setVisited('orderItems')"
+                >Order items
                 </v-tab>
               </v-tabs>
 
@@ -28,10 +28,10 @@
                   ></OrderForm>
                 </v-window-item>
                 
-                <v-window-item v-if="props.id !== 0 && visitedTabs.includes('orderDetails')" value="orderDetails">
+                <v-window-item v-if="props.id !== 0 && visitedTabs.includes('orderItems')" value="orderItems">
                   <v-card>
                     <v-card-text class="pa-0">
-                      <OrderDetailTable v-if="item" :order_id="props.id" :order_number="item.order_number" />
+                      <OrderItemTable v-if="item" :order_id="props.id" :order_number="item.order_number" :title="'Order #' + item.order_number + ' > Items'" />
                       <v-row class="pt-4 pb-4 pl-4">
                         <v-col>
                           <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
@@ -59,7 +59,7 @@ import { useRouter } from 'vue-router'
 import ax from '@/api'
 import { Order } from '@/types/sales'
 import OrderForm from '@/components/forms/OrderForm.vue'
-import OrderDetailTable from '@/components/tables/OrderDetailTable.vue';
+import OrderItemTable from '@/components/tables/OrderItemTable.vue';
 
 const props = defineProps<{
   id: number
