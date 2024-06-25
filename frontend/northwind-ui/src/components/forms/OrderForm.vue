@@ -52,6 +52,11 @@
               :rules="[(v: number) => !!v || 'Shipper is required']"
             ></v-autocomplete>
 
+            <v-btn v-if="item.order_item_count" class="mb-4" density="compact" @click="calculateFreightCost">Calculate freight cost</v-btn>
+
+            <v-text-field v-if="item.order_item_count" label="Freight cost" v-model.number="item.freight_cost" type="number" prefix="$" disabled
+            ></v-text-field>
+
             <v-checkbox v-if="props.id !== 0" label="Shipped" v-model="item.is_shipped" @update:model-value="item.shipped_date_d = useNow().value"></v-checkbox>
 
             <v-dialog v-if="item.is_shipped" v-model="showShippedDateDp">
@@ -65,9 +70,6 @@
                 <v-date-picker color="primary" v-model="item.shipped_date_d" @update:model-value="showShippedDateDp = false"></v-date-picker>
               </template>
             </v-dialog>
-
-            <v-text-field label="Freight cost" v-model.number="item.freight_cost" type="number" prefix="$" disabled
-            ></v-text-field>
 
           </v-col>
           <v-col cols="12" md="6" class="form-col">
@@ -168,6 +170,15 @@ const showShippedDateDp = ref(false)
 const cardTitle = computed(() => {
   return props.id !== 0 ? 'Order #' + item.value!.order_number : 'New Order'
 })
+
+function calculateFreightCost() {
+  if (!item.value?.order_value) {
+    return
+  }
+
+  // enter dummy cost based on order value, round to 2 dp
+  item.value!.freight_cost = Math.round(item.value!.order_value * (Math.random() + 0.1) * 100) / 100
+}
 
 function deleteItem() {
   if (!confirm('Are you sure?')) {
