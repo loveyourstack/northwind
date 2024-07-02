@@ -13,7 +13,7 @@
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
     class="dt"
-    :row-props="({ item }) => getRowClass(item)"
+    :row-props="(item: Order) => getRowClass(item)"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2">
@@ -68,6 +68,24 @@
           ></v-autocomplete>
         </v-col>
       </v-row>
+
+      <v-row v-show="showFilters" class="mt-0">
+        <v-col cols="12" sm="6" lg="4">
+          <v-menu v-model="showOrderDateDp" :close-on-content-click="false">
+            <template #activator="{ props }">
+              <v-text-field id="order-date-text" v-bind="props" label="Order date >" prepend-icon="mdi-calendar" readonly clearable
+                :model-value="filterOrderDate ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : undefined"
+                @click:clear="filterOrderDate = undefined; refreshItems()"
+              ></v-text-field>
+            </template>
+            <template #default>
+              <v-date-picker color="primary" v-model="filterOrderDate" 
+                @update:model-value="showOrderDateDp = false; refreshItems()" popover-align="'center'"
+              ></v-date-picker>
+            </template>
+          </v-menu>
+        </v-col>
+      </v-row>
     </template>
 
     <template v-slot:[`item.customer_company_name`]="{ item }">
@@ -115,6 +133,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
+import { useDateFormat, useDebounceFn } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import ax from '@/api'
@@ -123,7 +142,6 @@ import { GetMetadata } from '@/types/system'
 import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { fileDownload } from '@/composables/file'
 import { booleanOptions } from '@/composables/form'
-import { useDateFormat, useDebounceFn } from '@vueuse/core'
 
 const props = defineProps<{
   customer_id: number // pass 0 rather than null/undefined, easier to handle
@@ -166,7 +184,18 @@ const showFilters = ref(false)
 const filterOrderNumber = ref<string>()
 const filterCustomerName = ref<string>()
 const filterShipped = ref<boolean>()
+/*
+  filter type Date:
+  - use menu/text/date picker with a "show" bool variable to control menu visibility
+  - useDateFormat in getFilterStr
+  - save as YYYY-MM-DD string in LS
+  - default empty string when writing to LS in watch (ideally undefined, but this causes type error), useDateFormat if truthy
+  - new Date() when reading from LS in onBeforeMount
+*/
+const filterOrderDate = ref<Date>()
 const lsKey = 'orders_dt'
+
+const showOrderDateDp = ref(false)
 
 function getFilterStr(): string {
   var ret = ''
@@ -185,6 +214,10 @@ function getFilterStr(): string {
   // checking bool filter like this so that undefined and null do not count as false
   if (filterShipped.value == false || filterShipped.value == true) {
     ret += '&is_shipped=' + filterShipped.value
+  }
+
+  if (filterOrderDate.value) {
+    ret += '&order_date=>' + useDateFormat(filterOrderDate, 'YYYY-MM-DD').value
   }
 
   return ret
@@ -237,6 +270,7 @@ watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
     filterOrderNumber.value = undefined
     filterCustomerName.value = undefined
     filterShipped.value = undefined
+    filterOrderDate.value = undefined
     refreshItems()
   }
 
@@ -247,7 +281,11 @@ watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
     'filterOrderNumber': filterOrderNumber.value,
     'filterCustomerName': filterCustomerName.value,
     'filterShipped': filterShipped.value,
+    'filterOrderDate': '',
     'excludedHeaders': excludedHeaders.value,
+  }
+  if (filterOrderDate.value) {
+    lsObj.filterOrderDate = useDateFormat(filterOrderDate, 'YYYY-MM-DD').value
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
 }, { deep: true })
@@ -265,6 +303,7 @@ onBeforeMount(() => {
   if (lsObj['filterOrderNumber']) { filterOrderNumber.value = lsObj['filterOrderNumber'] }
   if (lsObj['filterCustomerName']) { filterCustomerName.value = lsObj['filterCustomerName'] }
   if (lsObj['filterShipped']) { filterShipped.value = lsObj['filterShipped'] }
+  if (lsObj['filterOrderDate']) { filterOrderDate.value = new Date(lsObj['filterOrderDate']) }
   if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
 })
 
