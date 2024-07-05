@@ -79,9 +79,7 @@
               ></v-text-field>
             </template>
             <template #default>
-              <v-date-picker color="primary" v-model="filterOrderDate" 
-                @update:model-value="showOrderDateDp = false; refreshItems()" popover-align="'center'"
-              ></v-date-picker>
+              <v-date-picker color="primary" v-model="filterOrderDate" @update:model-value="showOrderDateDp = false; refreshItems()"></v-date-picker>
             </template>
           </v-menu>
         </v-col>

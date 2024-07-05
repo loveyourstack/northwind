@@ -6,6 +6,11 @@ export function fileDownload(url: string) {
     ax.get(url, { responseType: 'blob' })
       .then(resp => {
 
+        // exit if json response type
+        if (resp.data.type == 'application/json') {
+          return
+        }
+
         // get attachment filename from content-disposition header if possible
         var fileName = 'unknown'
         var contDispVal: string = resp.headers['content-disposition']
