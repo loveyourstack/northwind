@@ -76,7 +76,7 @@ type Store struct {
 	Db *pgxpool.Pool
 }
 
-func (s Store) Archive(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
+func (s Store) ArchiveById(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
 
 	// cascade to order items
 	orderItemStore := salesorderitem.Store{Db: s.Db}
@@ -117,7 +117,7 @@ func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt str
 	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, meta.DbTags, input)
 }
 
-func (s Store) Restore(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
+func (s Store) RestoreById(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
 
 	stmt, err = lyspg.Restore(ctx, tx, schemaName, tableName, pkColName, id, false)
 	if err != nil {
