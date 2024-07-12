@@ -118,7 +118,7 @@
               <v-btn color="green darken-1" variant="text" v-show="showSaved">Saved</v-btn>
             </v-fade-transition>
 
-            <v-btn v-if="props.id !== 0" color="error" class="mt-2" style="float: right;" @click="deleteItem">Delete</v-btn>
+            <v-btn v-if="props.id !== 0" color="error" class="mt-2" style="float: right;" @click="archiveItem">Archive</v-btn>
 
           </v-col>
         </v-row>
@@ -143,9 +143,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  (e: 'archive'): void
   (e: 'cancel'): void
   (e: 'create', newID: number): void
-  (e: 'delete'): void
   (e: 'load', order_number: number): void
   (e: 'update'): void
 }>()
@@ -171,6 +171,18 @@ const cardTitle = computed(() => {
   return props.id !== 0 ? 'Order #' + item.value!.order_number : 'New Order'
 })
 
+function archiveItem() {
+  if (!confirm('Are you sure?')) {
+    return
+  }
+
+  ax.delete(itemURL + '/archive')
+    .then(() => {
+      emit('archive')
+    })
+    .catch() // handled by interceptor
+}
+
 function calculateFreightCost() {
   if (!item.value?.order_value) {
     return
@@ -178,18 +190,6 @@ function calculateFreightCost() {
 
   // enter dummy cost based on order value, round to 2 dp
   item.value!.freight_cost = Math.round(item.value!.order_value * (Math.random() + 0.1) * 100) / 100
-}
-
-function deleteItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL)
-    .then(() => {
-      emit('delete')
-    })
-    .catch() // handled by interceptor
 }
 
 function fillFromCustomer() {

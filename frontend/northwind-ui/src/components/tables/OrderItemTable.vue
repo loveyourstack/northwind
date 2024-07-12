@@ -1,9 +1,9 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
     <OrderItemForm :order_id="order_id" :order_number="props.order_number" :id="editID"
+      @archive="showDialog = false; refreshItems()"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
-      @delete="showDialog = false; refreshItems()"
       @update="showDialog = false; refreshItems()"
     ></OrderItemForm>
   </v-dialog>

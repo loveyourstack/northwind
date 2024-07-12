@@ -12,7 +12,7 @@ const (
 )
 
 type OrderValueLatestWeeksModel struct {
-	OrderWeek  int     `db:"order_week" json:"order_week,omitempty"`
+	OrderWeek  int     `db:"order_week" json:"order_week"`
 	TotalValue float32 `db:"total_value" json:"total_value"`
 }
 

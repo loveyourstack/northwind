@@ -42,7 +42,7 @@
               <v-btn color="green darken-1" variant="text" v-show="showSaved">Saved</v-btn>
             </v-fade-transition>
 
-            <v-btn v-if="props.id !== 0" color="error" class="mt-2" style="float: right;" @click="deleteItem">Delete</v-btn>
+            <v-btn v-if="props.id !== 0" color="error" class="mt-2" style="float: right;" @click="archiveItem">Archive</v-btn>
 
           </v-col>
         </v-row>
@@ -67,9 +67,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  (e: 'archive'): void
   (e: 'cancel'): void
   (e: 'create', newID: number): void
-  (e: 'delete'): void
   (e: 'load'): void
   (e: 'update'): void
 }>()
@@ -91,15 +91,15 @@ const cardTitle = computed(() => {
   return ret
 })
 
-function deleteItem() {
+function archiveItem() {
   if (!confirm('Are you sure?')) {
     return
   }
 
-  ax.delete(itemURL)
+  ax.delete(itemURL + '/archive')
     .then(() => {
       coreStore.loadCategoriesList()
-      emit('delete')
+      emit('archive')
     })
     .catch() // handled by interceptor
 }

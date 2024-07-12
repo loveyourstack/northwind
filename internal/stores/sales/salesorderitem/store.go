@@ -57,6 +57,14 @@ type Store struct {
 	Db *pgxpool.Pool
 }
 
+func (s Store) Archive(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
+	return lyspg.Archive(ctx, tx, schemaName, tableName, pkColName, id, false)
+}
+
+func (s Store) ArchiveCascadedByOrder(ctx context.Context, tx pgx.Tx, orderId int64) (stmt string, err error) {
+	return lyspg.Archive(ctx, tx, schemaName, tableName, "order_fk", orderId, true)
+}
+
 func (s Store) Delete(ctx context.Context, id int64) (stmt string, err error) {
 	return lyspg.DeleteUnique(ctx, s.Db, schemaName, tableName, pkColName, id)
 }
@@ -86,14 +94,6 @@ func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []M
 
 func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
 	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
-}
-
-func (s Store) SoftDelete(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
-	return lyspg.SoftDelete(ctx, tx, schemaName, tableName, pkColName, id, false)
-}
-
-func (s Store) SoftDeleteCascadedByOrder(ctx context.Context, tx pgx.Tx, orderId int64) (stmt string, err error) {
-	return lyspg.SoftDelete(ctx, tx, schemaName, tableName, "order_fk", orderId, true)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {

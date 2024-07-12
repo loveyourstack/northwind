@@ -76,6 +76,18 @@ type Store struct {
 	Db *pgxpool.Pool
 }
 
+func (s Store) Archive(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
+
+	// cascade to order items
+	orderItemStore := salesorderitem.Store{Db: s.Db}
+	stmt, err = orderItemStore.ArchiveCascadedByOrder(ctx, tx, id)
+	if err != nil {
+		return stmt, fmt.Errorf("orderItemStore.ArchiveCascadedByOrder failed: %w", err)
+	}
+
+	return lyspg.Archive(ctx, tx, schemaName, tableName, pkColName, id, false)
+}
+
 func (s Store) BulkInsert(ctx context.Context, inputs []Input) (rowsAffected int64, err error) {
 	return lyspg.BulkInsert[Input](ctx, s.Db, schemaName, tableName, inputs)
 }
@@ -128,18 +140,6 @@ func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []M
 
 func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
 	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
-}
-
-func (s Store) SoftDelete(ctx context.Context, tx pgx.Tx, id int64) (stmt string, err error) {
-
-	// cascade to order items
-	orderItemStore := salesorderitem.Store{Db: s.Db}
-	stmt, err = orderItemStore.SoftDeleteCascadedByOrder(ctx, tx, id)
-	if err != nil {
-		return stmt, fmt.Errorf("orderItemStore.SoftDeleteCascadedByOrder failed: %w", err)
-	}
-
-	return lyspg.SoftDelete(ctx, tx, schemaName, tableName, pkColName, id, false)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {

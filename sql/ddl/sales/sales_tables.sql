@@ -59,7 +59,7 @@ CREATE TABLE sales.order
 );
 COMMENT ON TABLE sales.order IS 'shortname: s_o';
 --- change columns with ---
-CREATE TABLE sales.order_deleted
+CREATE TABLE sales.order_archived
 (
   id bigint NOT NULL PRIMARY KEY,
   is_shipped boolean NOT NULL,
@@ -81,11 +81,11 @@ CREATE TABLE sales.order_deleted
   dest_state text NOT NULL,
   entry_by tracking_by,
   last_modified_by tracking_by,
-  deleted_at tracking_at,
-  deleted_by tracking_by,
-  deleted_by_cascade bool NOT NULL
+  archived_at tracking_at,
+  archived_by tracking_by,
+  archived_by_cascade bool NOT NULL
 );
-COMMENT ON TABLE sales.order_deleted IS 'shortname: s_o_del';
+COMMENT ON TABLE sales.order_archived IS 'shortname: s_o_arc';
 
 
 CREATE TABLE sales.order_item
@@ -104,7 +104,7 @@ CREATE TABLE sales.order_item
 );
 COMMENT ON TABLE sales.order_item IS 'shortname: s_oi';
 --- change columns with ---
-CREATE TABLE sales.order_item_deleted
+CREATE TABLE sales.order_item_archived
 (
   id bigint NOT NULL PRIMARY KEY,
   quantity int NOT NULL,
@@ -116,11 +116,11 @@ CREATE TABLE sales.order_item_deleted
   last_modified_at tracking_at,
   entry_by tracking_by,
   last_modified_by tracking_by,
-  deleted_at tracking_at,
-  deleted_by tracking_by,
-  deleted_by_cascade bool NOT NULL
+  archived_at tracking_at,
+  archived_by tracking_by,
+  archived_by_cascade bool NOT NULL
 );
-COMMENT ON TABLE sales.order_item_deleted IS 'shortname: s_oi_del';
+COMMENT ON TABLE sales.order_item_archived IS 'shortname: s_oi_arc';
 
 CREATE INDEX order_item_order_fk_idx ON sales.order_item USING btree(order_fk);
 CLUSTER sales.order_item USING order_item_order_fk_idx;

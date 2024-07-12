@@ -21,9 +21,9 @@
 
                 <v-window-item value="details">
                   <OrderForm :id="props.id"
+                    @archive="router.push({ name: 'Orders' })"
                     @cancel="router.back"
                     @create="router.push({ name: 'Orders' })"
-                    @delete="router.push({ name: 'Orders' })"
                     @load=""
                   ></OrderForm>
                 </v-window-item>

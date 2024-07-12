@@ -195,8 +195,8 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		r.HandleFunc(endpoint+"/{id}/restore", lys.Restore(apiEnv, srvApp.Db, orderStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salesorder.Input](apiEnv, orderStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderStore)).Methods("PATCH")
-		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderStore)).Methods("DELETE")
-		r.HandleFunc(endpoint+"/{id}/soft", lys.SoftDelete(apiEnv, srvApp.Db, orderStore)).Methods("DELETE")
+		//r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderStore)).Methods("DELETE")
+		r.HandleFunc(endpoint+"/{id}/archive", lys.Archive(apiEnv, srvApp.Db, orderStore)).Methods("DELETE")
 
 		endpoint = "/order-value-latest-weeks"
 
@@ -211,8 +211,8 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		r.HandleFunc(endpoint+"/{id}/restore", lys.Restore(apiEnv, srvApp.Db, orderItemStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salesorderitem.Input](apiEnv, orderItemStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderItemStore)).Methods("PATCH")
-		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderItemStore)).Methods("DELETE")
-		r.HandleFunc(endpoint+"/{id}/soft", lys.SoftDelete(apiEnv, srvApp.Db, orderItemStore)).Methods("DELETE")
+		//r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderItemStore)).Methods("DELETE")
+		r.HandleFunc(endpoint+"/{id}/archive", lys.Archive(apiEnv, srvApp.Db, orderItemStore)).Methods("DELETE")
 
 		r.HandleFunc("/regions", lys.GetEnumValues(apiEnv, srvApp.Db, schemaName, "region")).Methods("GET")
 
