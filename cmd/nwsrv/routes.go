@@ -6,7 +6,8 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/loveyourstack/lys"
-	"github.com/loveyourstack/northwind/internal/const/sysrole"
+	"github.com/loveyourstack/lys/lysstring"
+	"github.com/loveyourstack/northwind/internal/enums/sysrole"
 	"github.com/loveyourstack/northwind/internal/stores/common/commoncountry"
 	"github.com/loveyourstack/northwind/internal/stores/core/corecategory"
 	"github.com/loveyourstack/northwind/internal/stores/core/coreproduct"
@@ -145,7 +146,7 @@ func (srvApp *httpServerApplication) hrRoutes(apiEnv lys.Env) lys.RouteAdderFunc
 	return func(r *mux.Router) *mux.Router {
 
 		// restrict this subroute
-		r.Use(lys.AuthorizeRole(sysrole.RestrictedActions[:]))
+		r.Use(lys.AuthorizeRole(lysstring.DeAlias(sysrole.RestrictedActions[:])))
 
 		endpoint := "/employees"
 

@@ -11,6 +11,7 @@ import (
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
+	"github.com/loveyourstack/northwind/internal/enums/salesregion"
 )
 
 const (
@@ -26,7 +27,7 @@ type Input struct {
 	Code           string           `db:"code" json:"code,omitempty" validate:"required"`
 	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
 	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
-	Region         string           `db:"region" json:"region,omitempty" validate:"required"`
+	Region         salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
 }
 
 type Model struct {

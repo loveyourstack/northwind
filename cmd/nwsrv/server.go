@@ -8,7 +8,7 @@ import (
 
 	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/northwind/cmd"
-	"github.com/loveyourstack/northwind/internal/const/sysrole"
+	"github.com/loveyourstack/northwind/internal/enums/sysrole"
 )
 
 type httpServerApplication struct {
@@ -25,7 +25,7 @@ func (srvApp *httpServerApplication) authenticate(next http.Handler) http.Handle
 
 		// no auth: just assume dummy user
 		reqUserInfo := lys.ReqUserInfo{
-			Roles:    []string{sysrole.Tech},
+			Roles:    []string{sysrole.Tech.String()},
 			UserId:   1,
 			UserName: "Unauthed Dev",
 		}
