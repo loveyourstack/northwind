@@ -186,3 +186,29 @@ export interface Shipper {
   company_name: string
   phone: string
 }
+
+// ------------------------------------------------------------------------------------------------------
+
+export interface TerritoryInput {
+  code: string
+  name: string
+  region: string
+}
+export interface Territory extends TerritoryInput  {
+  id: number
+}
+export function NewTerritory(): Territory {
+  return  {
+    code: '',
+    name: '',
+    region: '',
+    id: 0,
+  }
+}
+export function GetTerritoryInputFromItem(item: Territory): TerritoryInput {
+  return  {
+    code: item.code,
+    name: item.name,
+    region: item.region,
+  }
+}

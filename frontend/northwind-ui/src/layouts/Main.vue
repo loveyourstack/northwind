@@ -42,6 +42,7 @@
         <v-list-subheader title="Sales" class="text-uppercase mt-2"></v-list-subheader>
         <v-list-item link title="Customers" to="/customers" prepend-icon="mdi-account-box-outline"></v-list-item>
         <v-list-item link title="Orders" to="/orders" prepend-icon="mdi-hand-extended"></v-list-item>
+        <v-list-item link title="Territories" to="/territories" prepend-icon="mdi-land-plots"></v-list-item>
 
         <v-divider></v-divider>
         <v-list-subheader title="HR" class="text-uppercase mt-2"></v-list-subheader>

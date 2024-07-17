@@ -159,6 +159,16 @@ const routes = [
           },
         ],
       },
+      {
+        path: '/territories',
+        children: [
+          {
+            path: '',
+            name: 'Territories',
+            component: () => import('@/views/Territories.vue'),
+          },
+        ]
+      },
     ],
   },
 ]

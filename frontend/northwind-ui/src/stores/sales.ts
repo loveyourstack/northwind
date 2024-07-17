@@ -7,6 +7,7 @@ import ax from '@/api'
 export const useSalesStore = defineStore('sales', () => {
 
   const customersList = ref<SelectionItem[]>([])
+  const regions = ['Northern', 'Eastern', 'Southern', 'Western']
   const shippersList = ref<Shipper[]>([])
 
   function loadCustomersList() {
@@ -27,6 +28,6 @@ export const useSalesStore = defineStore('sales', () => {
     .catch() // handled by interceptor
   }
 
-  return { customersList, loadCustomersList, loadShippersList, shippersList }
+  return { customersList, loadCustomersList, loadShippersList, regions, shippersList }
 })
 
