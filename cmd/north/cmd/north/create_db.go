@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/loveyourstack/lys/lyspgdb"
-	"github.com/loveyourstack/northwind/internal/const/appenv"
+	"github.com/loveyourstack/northwind/internal/enums/appenv"
 	"github.com/loveyourstack/northwind/sql/ddl"
 	"github.com/spf13/cobra"
 )

@@ -8,7 +8,7 @@ require (
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v5 v5.5.5
-	github.com/loveyourstack/lys v0.1.18
+	github.com/loveyourstack/lys v0.1.19
 	github.com/spf13/cobra v1.8.0
 	golang.org/x/exp v0.0.0-20240506185415-9bf2ced13842
 )

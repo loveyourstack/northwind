@@ -6,12 +6,13 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/loveyourstack/lys/lyspgdb"
+	"github.com/loveyourstack/northwind/internal/enums/appenv"
 )
 
 // general contains the general application config
 type general struct {
 	AppName string
-	Env     string
+	Env     appenv.Enum
 	Debug   bool
 }
 
