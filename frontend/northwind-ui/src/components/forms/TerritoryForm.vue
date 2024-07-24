@@ -21,6 +21,11 @@
               :items="salesStore.regions"
               :rules="[(v: string) => !!v || 'Region is required']"
             ></v-autocomplete>
+            
+            <v-autocomplete label="Salesman" v-model="item.salesman_fk"
+              :items="hrStore.employeesList" item-title="name" item-value="id"
+              :rules="[(v: number) => !!v || 'Salesman is required']"
+            ></v-autocomplete>
           </v-col>
         </v-row>
 
@@ -52,6 +57,7 @@ import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { Territory, TerritoryInput, NewTerritory, GetTerritoryInputFromItem } from '@/types/sales'
 import { fadeMs } from '@/composables/form'
+import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 
 const props = defineProps<{
@@ -66,6 +72,7 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>()
 
+const hrStore = useHRStore()
 const salesStore = useSalesStore()
 
 const saving = ref(false)

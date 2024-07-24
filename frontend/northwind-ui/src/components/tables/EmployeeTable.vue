@@ -131,6 +131,9 @@ const lsKey = 'employees_dt'
 function getFilterStr(): string {
   var ret = ''
 
+  // exclude None
+  ret += '&id=!-1'
+
   if (filterFirstName.value) {
     ret += '&first_name=~' + filterFirstName.value + '~'
   }

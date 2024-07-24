@@ -24,7 +24,7 @@
     class="dt"
   >
     <template v-slot:[`top`]="{}">
-      <v-row align="center" class="pb-2">
+      <v-row align="center" class="pb-2" style="min-width: 800px;">
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Territories' }}</div>
@@ -57,19 +57,25 @@
       </v-row>
 
       <v-row v-show="showFilters" class="mt-0">
-        <v-col cols="12" sm="6" lg="4">
+        <v-col cols="12" sm="6" lg="3">
           <v-text-field label="Name search" v-model="filterName" clearable
             @update:model-value="debouncedRefreshItems"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" lg="4">
+        <v-col cols="12" sm="6" lg="3">
           <v-text-field label="Code search" v-model="filterCode" clearable
             @update:model-value="debouncedRefreshItems"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" sm="6" lg="4">
+        <v-col cols="12" sm="6" lg="3">
           <v-autocomplete label="Region" v-model="filterRegion" clearable
             :items="salesStore.regions"
+            @update:model-value="refreshItems"
+          ></v-autocomplete>
+        </v-col>
+        <v-col cols="12" sm="6" lg="3" v-if="props.salesman_id == 0">
+          <v-autocomplete label="Salesman" v-model="filterSalesmanID" clearable
+            :items="hrStore.employeesList" item-title="name" item-value="id"
             @update:model-value="refreshItems"
           ></v-autocomplete>
         </v-col>
@@ -102,19 +108,23 @@ import { Territory } from '@/types/sales'
 import { GetMetadata } from '@/types/system'
 import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
 import { fileDownload } from '@/composables/file'
+import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 import TerritoryForm from '@/components/forms/TerritoryForm.vue'
 
 const props = defineProps<{
+  salesman_id: number
   title?: string
 }>()
 
+const hrStore = useHRStore()
 const salesStore = useSalesStore()
 
 var headers = [
   { title: 'Name', key: 'name' },  
   { title: 'Code', key: 'code' },
   { title: 'Region', key: 'region' },
+  { title: 'Salesman', key: 'salesman' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 const excludedHeaders = ref<string[]>([])
@@ -141,10 +151,18 @@ const showFilters = ref(false)
 const filterCode = ref<string>()
 const filterName = ref<string>()
 const filterRegion = ref<string>()
+const filterSalesmanID = ref<number>()
 const lsKey = 'territories_dt'
 
 function getFilterStr(): string {
   var ret = ''
+
+  // prop filter overrides regular filter
+  if (props.salesman_id > 0) {
+    ret += '&salesman_fk=' + props.salesman_id
+  } else if (filterSalesmanID.value) {
+    ret += '&salesman_fk=' + filterSalesmanID.value
+  }
 
   if (filterCode.value) {
     ret += '&code=~' + filterCode.value + '~'
@@ -202,6 +220,7 @@ watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
     filterCode.value = undefined
     filterName.value = undefined
     filterRegion.value = undefined
+    filterSalesmanID.value = undefined
     refreshItems()
   }
 
@@ -212,6 +231,7 @@ watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
     'filterCode': filterCode.value,
     'filterName': filterName.value,
     'filterRegion': filterRegion.value,
+    'filterSalesmanID': filterSalesmanID.value,
     'excludedHeaders': excludedHeaders.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
@@ -230,6 +250,7 @@ onBeforeMount(() => {
   if (lsObj['filterCode']) { filterCode.value = lsObj['filterCode'] }
   if (lsObj['filterName']) { filterName.value = lsObj['filterName'] }
   if (lsObj['filterRegion']) { filterRegion.value = lsObj['filterRegion'] }
+  if (lsObj['filterSalesmanID']) { filterSalesmanID.value = lsObj['filterSalesmanID'] }
   if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
 })
 

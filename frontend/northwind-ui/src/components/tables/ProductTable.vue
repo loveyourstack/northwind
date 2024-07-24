@@ -59,11 +59,10 @@
             @update:model-value="refreshItems"
           ></v-autocomplete>
         </v-col>
-        <v-col cols="12" sm="6" lg="3">
+        <v-col cols="12" sm="6" lg="3" v-if="props.supplier_id == 0">
           <v-autocomplete label="Supplier" v-model="filterSupplierID" clearable
             :items="coreStore.suppliersList" item-title="name" item-value="id"
             @update:model-value="refreshItems"
-            :disabled="props.supplier_id > 0"
           ></v-autocomplete>
         </v-col>
         <v-col cols="12" sm="6" lg="3">

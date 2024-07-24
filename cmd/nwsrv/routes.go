@@ -14,7 +14,6 @@ import (
 	"github.com/loveyourstack/northwind/internal/stores/core/coresupplier"
 	"github.com/loveyourstack/northwind/internal/stores/hr/hremployee"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salescustomer"
-	"github.com/loveyourstack/northwind/internal/stores/sales/salesemployeeterritory"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorder"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderitem"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesshipper"
@@ -176,16 +175,6 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salescustomer.Input](apiEnv, customerStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, customerStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, customerStore)).Methods("DELETE")
-
-		endpoint = "/employee-territories"
-
-		emplTerrStore := salesemployeeterritory.Store{Db: srvApp.Db}
-		r.HandleFunc(endpoint, lys.Get[salesemployeeterritory.Model](apiEnv, emplTerrStore)).Methods("GET")
-		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesemployeeterritory.Model](apiEnv, emplTerrStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salesemployeeterritory.Input, salesemployeeterritory.Model](apiEnv, emplTerrStore)).Methods("POST")
-		r.HandleFunc(endpoint+"/{id}", lys.Put[salesemployeeterritory.Input](apiEnv, emplTerrStore)).Methods("PUT")
-		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, emplTerrStore)).Methods("PATCH")
-		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, emplTerrStore)).Methods("DELETE")
 
 		endpoint = "/orders"
 

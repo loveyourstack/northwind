@@ -25,22 +25,6 @@ CREATE OR REPLACE VIEW sales.v_customer AS
   LEFT JOIN (SELECT customer_fk, count(*) AS order_count FROM sales.order GROUP BY 1) s_o ON s_o.customer_fk = s_c.id;
 
 
-CREATE OR REPLACE VIEW sales.v_employee_territory AS
-	SELECT 
-    s_et.id,
-    s_et.employee_fk,
-    hr_e.name AS employee_name,
-    s_et.entry_at,
-    s_et.entry_by,
-    s_et.last_modified_at,
-    s_et.last_modified_by,
-    s_et.territory_fk,
-    s_t.name AS territory_name
-  FROM sales.employee_territory s_et
-  JOIN hr.employee hr_e ON s_et.employee_fk = hr_e.id
-  JOIN sales.territory s_t ON s_et.territory_fk = s_t.id;
-
-
 CREATE OR REPLACE VIEW sales.v_order AS
 	SELECT 
     s_o.id,
@@ -104,4 +88,20 @@ CREATE OR REPLACE VIEW sales.v_order_value_latest_weeks AS
 	  GROUP BY 1 ORDER BY 1 DESC LIMIT 10
 	)
 	SELECT * FROM latest_weeks ORDER BY order_week;
+
+
+CREATE OR REPLACE VIEW sales.v_territory AS
+	SELECT 
+    s_t.id,
+    s_t.code,
+    salesman_fk,
+    hr_e.name AS salesman,
+    s_t.entry_at,
+    s_t.entry_by,
+    s_t.last_modified_at,
+    s_t.last_modified_by,
+    s_t.name,
+    s_t.region::text -- cast so that sorting works as expected
+  FROM sales.territory s_t
+  LEFT JOIN hr.employee hr_e ON s_t.salesman_fk = hr_e.id;
 

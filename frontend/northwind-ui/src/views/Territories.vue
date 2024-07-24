@@ -6,7 +6,7 @@
           <v-card>
             <v-card-text class="pa-0">
 
-              <TerritoryTable />
+              <TerritoryTable :salesman_id="0" />
 
             </v-card-text>
           </v-card>

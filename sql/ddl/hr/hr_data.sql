@@ -1,4 +1,7 @@
 
+INSERT INTO hr.employee (id, first_name, last_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) 
+  VALUES (-1, '', '', '', '', '1970-01-01', '2010-01-01', '', '', '', '', -1, '', '', 'None');
+
 INSERT INTO hr.employee (first_name, last_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) VALUES
   ('Nancy','Davolio','Sales Representative','Ms.','1971-12-08','2015-05-01','507 - 20th Ave. E. Apt. 2A','Seattle','WA','98122',(SELECT id FROM common.country WHERE iso2 = 'US'),'(206) 555-9857','Education includes a BA in psychology from Colorado State University in 1970.  She also completed The Art of the Cold Call.  Nancy is a member of Toastmasters International.','N Davolio'),
   ('Andrew','Fuller','Vice President, Sales','Dr.','1975-02-19','2015-08-14','908 W. Capital Way','Tacoma','WA','98401',(SELECT id FROM common.country WHERE iso2 = 'US'),'(206) 555-9482','Andrew received his BTS commercial in 1974 and a Ph.D. in international marketing from the University of Dallas in 1981.  He is fluent in French and Italian and reads German.  He joined the company as a sales representative, was promoted to sales manager in January 1992 and to vice president of sales in March 1993.  Andrew is a member of the Sales Management Roundtable, the Seattle Chamber of Commerce, and the Pacific Rim Importers Association.','A Fuller'),

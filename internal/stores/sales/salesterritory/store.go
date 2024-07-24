@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
@@ -18,21 +19,25 @@ const (
 	name           string = "Territories"
 	schemaName     string = "sales"
 	tableName      string = "territory"
-	viewName       string = "territory"
+	viewName       string = "v_territory"
 	pkColName      string = "id"
 	defaultOrderBy string = "name"
 )
 
 type Input struct {
 	Code           string           `db:"code" json:"code,omitempty" validate:"required"`
+	SalesmanFk     int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
+	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
 	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"` // assigned in Update funcs
 	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
 	Region         salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
 }
 
 type Model struct {
-	Id      int64            `db:"id" json:"id"`
-	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	Id       int64            `db:"id" json:"id"`
+	EntryAt  lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	Salesman string           `db:"salesman" json:"salesman"`
 	Input
 }
 
@@ -65,6 +70,7 @@ func (s Store) GetName() string {
 }
 
 func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {
+	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, meta.DbTags, input)
 }
 
@@ -78,11 +84,13 @@ func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item 
 
 func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {
 	input.LastModifiedAt = lystype.Datetime(time.Now())
-	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id)
+	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
 	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["last_modified_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

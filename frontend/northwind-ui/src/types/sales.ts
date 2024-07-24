@@ -193,16 +193,20 @@ export interface TerritoryInput {
   code: string
   name: string
   region: string
+  salesman_fk: number | undefined
 }
 export interface Territory extends TerritoryInput  {
   id: number
+  salesman: string
 }
 export function NewTerritory(): Territory {
   return  {
     code: '',
     name: '',
     region: '',
+    salesman_fk: undefined,
     id: 0,
+    salesman: '',
   }
 }
 export function GetTerritoryInputFromItem(item: Territory): TerritoryInput {
@@ -210,5 +214,6 @@ export function GetTerritoryInputFromItem(item: Territory): TerritoryInput {
     code: item.code,
     name: item.name,
     region: item.region,
+    salesman_fk: item.salesman_fk,
   }
 }
