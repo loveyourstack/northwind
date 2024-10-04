@@ -1,12 +1,9 @@
-package north
+package main
 
 import (
 	"context"
 	"log"
-	"log/slog"
-	"os"
 
-	"github.com/go-playground/validator/v10"
 	"github.com/loveyourstack/lys/lyspgdb"
 	"github.com/loveyourstack/northwind/cmd"
 	"github.com/loveyourstack/northwind/internal/nw"
@@ -43,23 +40,8 @@ func initApp() {
 
 	ctx := context.Background()
 
-	// declare and configure logs
-	var infoLog, errorLog *slog.Logger
-	if conf.General.Debug {
-		infoLog = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
-		errorLog = slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelDebug}))
-	} else {
-		infoLog = slog.New(slog.NewTextHandler(os.Stdout, nil))
-		errorLog = slog.New(slog.NewTextHandler(os.Stderr, nil))
-	}
-
 	// create non-specific app
-	app := &cmd.Application{
-		Config:   &conf,
-		InfoLog:  infoLog,
-		ErrorLog: errorLog,
-		Validate: validator.New(validator.WithRequiredStructEnabled()),
-	}
+	app := cmd.NewApplication(&conf)
 
 	// create cli app
 	cliApp = &cliApplication{app}

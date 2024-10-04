@@ -1,4 +1,4 @@
-package north
+package main
 
 import (
 	"os"
