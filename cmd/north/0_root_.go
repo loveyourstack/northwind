@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 
+	"github.com/loveyourstack/connectors/apiclients/ecbapi"
 	"github.com/loveyourstack/lys/lyspgdb"
 	"github.com/loveyourstack/northwind/cmd"
 	"github.com/loveyourstack/northwind/internal/nw"
@@ -21,6 +22,7 @@ var rootCmd = &cobra.Command{
 
 type cliApplication struct {
 	*cmd.Application
+	EcbClient ecbapi.Client
 }
 
 var cliApp *cliApplication
@@ -44,7 +46,10 @@ func initApp() {
 	app := cmd.NewApplication(&conf)
 
 	// create cli app
-	cliApp = &cliApplication{app}
+	cliApp = &cliApplication{
+		Application: app,
+		EcbClient:   ecbapi.NewClient(app.InfoLog, app.ErrorLog),
+	}
 
 	// connect to db and assign pool to cliApp
 	cliApp.Db, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbCliUser)
