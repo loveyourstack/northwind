@@ -1,11 +1,9 @@
-package northgen
+package main
 
 import (
-	"context"
 	"fmt"
 	"log/slog"
 	"os"
-	"strings"
 
 	"github.com/loveyourstack/lys/lysgen"
 	"github.com/spf13/cobra"
@@ -13,15 +11,11 @@ import (
 
 var genViewCmd = &cobra.Command{
 	Use:   "view",
-	Short: "im - generate PostgreSQL view from the supplied schema.table",
-	Args:  cobra.ExactArgs(1),
+	Short: "generates PostgreSQL view from the supplied schema + table",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defer cliApp.Db.Close()
-
-		argA := strings.Split(args[0], ".")
-
-		res, stmt, err := lysgen.View(context.Background(), cliApp.Db, argA[0], argA[1])
+		res, stmt, err := lysgen.View(cmd.Context(), cliApp.Db, args[0], args[1])
 		if err != nil {
 			cliApp.ErrorLog.Error("lysgen.View failed: "+err.Error(), slog.String("stmt", stmt))
 			os.Exit(1)
@@ -32,5 +26,5 @@ var genViewCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(genViewCmd)
+	genCmd.AddCommand(genViewCmd)
 }

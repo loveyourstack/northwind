@@ -5,12 +5,6 @@ cli:
 	sudo cp nw_config.toml /usr/local/etc
 	go install ./cmd/north
 
-# install CLI gen
-.PHONY: clig
-clig:
-	sudo cp nw_config.toml /usr/local/etc
-	go install ./cmd/northgen
-
 # (re-)create database
 .PHONY: db
 db: cli
