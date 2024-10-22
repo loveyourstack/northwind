@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// example: north ecb sync xr 2024-10-10 2024-10-21
 var ecbSyncExRatesCmd = &cobra.Command{
 	Use:   "xr",
 	Short: "Sync exchange rates with base currency EUR from ECB API into database. Arguments are from and to date, in format YYYY-MM-DD.",
@@ -31,14 +32,14 @@ var ecbSyncExRatesCmd = &cobra.Command{
 		}
 
 		// daily
-		_, err = csyncdb.EcbExchangeRates(context.Background(), cliApp.Db, cliApp.EcbClient, "EUR", ecbapi.Daily, startDate, endDate)
+		err = csyncdb.EcbExchangeRates(context.Background(), cliApp.Db, cliApp.EcbClient, "EUR", ecbapi.Daily, startDate, endDate)
 		if err != nil {
 			cliApp.ErrorLog.Error("csyncdb.EcbExchangeRates (Daily) failed: " + err.Error())
 			os.Exit(1)
 		}
 
 		// monthly
-		/*_, err = csyncdb.EcbExchangeRates(context.Background(), cliApp.Db, cliApp.EcbClient, "EUR", ecbapi.Monthly, startDate, endDate)
+		/*err = csyncdb.EcbExchangeRates(context.Background(), cliApp.Db, cliApp.EcbClient, "EUR", ecbapi.Monthly, startDate, endDate)
 		if err != nil {
 			cliApp.ErrorLog.Error("csyncdb.EcbExchangeRates (Monthly) failed: " + err.Error())
 			os.Exit(1)

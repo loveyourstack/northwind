@@ -17,7 +17,7 @@ var ecbSyncCurrCmd = &cobra.Command{
 
 		defer cliApp.Db.Close()
 
-		_, err := csyncdb.EcbCurrencies(context.Background(), cliApp.Db, cliApp.EcbClient)
+		err := csyncdb.EcbCurrencies(context.Background(), cliApp.Db, cliApp.EcbClient)
 		if err != nil {
 			cliApp.ErrorLog.Error("csyncdb.EcbCurrencies failed: " + err.Error())
 			os.Exit(1)

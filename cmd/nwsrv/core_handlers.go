@@ -16,9 +16,9 @@ func (srvApp *httpServerApplication) coreAddCategoryTest(w http.ResponseWriter, 
 		Name:        "name2",
 		Description: "desc2",
 	}
-	_, stmt, err := catStore.Insert(context.Background(), input)
+	_, err := catStore.Insert(context.Background(), input)
 	if err != nil {
-		lys.HandleDbError(r.Context(), stmt, fmt.Errorf("catStore.Insert failed: %w", err), srvApp.ErrorLog, w)
+		lys.HandleError(r.Context(), fmt.Errorf("catStore.Insert failed: %w", err), srvApp.ErrorLog, w)
 		return
 	}
 

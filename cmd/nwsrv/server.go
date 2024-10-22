@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/loveyourstack/connectors/apiclients/ecbapi"
 	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/northwind/cmd"
 	"github.com/loveyourstack/northwind/internal/enums/sysrole"
@@ -15,6 +16,7 @@ type httpServerApplication struct {
 	*cmd.Application
 	GetOptions  lys.GetOptions
 	PostOptions lys.PostOptions
+	EcbClient   ecbapi.Client
 }
 
 // authenticate is middleware that authenticates the user and adds his information to request context

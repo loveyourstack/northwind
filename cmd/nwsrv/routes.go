@@ -70,6 +70,7 @@ func (srvApp *httpServerApplication) getSubRoutes(apiEnv lys.Env) (subRoutes []l
 
 	subRoutes = append(subRoutes, lys.SubRoute{Url: "/common", RouteAdder: srvApp.commonRoutes(apiEnv)})
 	subRoutes = append(subRoutes, lys.SubRoute{Url: "/core", RouteAdder: srvApp.coreRoutes(apiEnv)})
+	subRoutes = append(subRoutes, lys.SubRoute{Url: "/ecb", RouteAdder: srvApp.ecbRoutes()})
 	subRoutes = append(subRoutes, lys.SubRoute{Url: "/hr", RouteAdder: srvApp.hrRoutes(apiEnv)})
 	subRoutes = append(subRoutes, lys.SubRoute{Url: "/sales", RouteAdder: srvApp.salesRoutes(apiEnv)})
 
@@ -135,6 +136,18 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 
 		supplierStoreDU := coresupplier.DuStore{Db: srvApp.Db}
 		r.HandleFunc(endpoint+"-data-updates", lys.Get[coresupplier.DuModel](apiEnv, supplierStoreDU)).Methods("GET")
+
+		return r
+	}
+}
+
+func (srvApp *httpServerApplication) ecbRoutes() lys.RouteAdderFunc {
+
+	return func(r *mux.Router) *mux.Router {
+
+		endpoint := "/sync-currencies"
+
+		r.HandleFunc(endpoint, srvApp.ecbSyncCurrencies).Methods("POST")
 
 		return r
 	}

@@ -16,6 +16,6 @@ type OrderValueLatestWeeksModel struct {
 	TotalValue float32 `db:"total_value" json:"total_value"`
 }
 
-func (s Store) SelectOrderValueLatestWeeks(ctx context.Context) (items []OrderValueLatestWeeksModel, stmt string, err error) {
+func (s Store) SelectOrderValueLatestWeeks(ctx context.Context) (items []OrderValueLatestWeeksModel, err error) {
 	return lyspg.SelectT[OrderValueLatestWeeksModel](ctx, s.Db, fmt.Sprintf("SELECT * FROM %s.%s;", schemaName, orderValueLatestWeeksViewName))
 }

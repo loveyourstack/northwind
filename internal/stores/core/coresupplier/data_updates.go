@@ -43,10 +43,10 @@ func (s DuStore) GetName() string {
 	return duName
 }
 
-func (s DuStore) Select(ctx context.Context, params lyspg.SelectParams) (items []DuModel, unpagedCount lyspg.TotalCount, stmt string, err error) {
+func (s DuStore) Select(ctx context.Context, params lyspg.SelectParams) (items []DuModel, unpagedCount lyspg.TotalCount, err error) {
 	return lyspg.Select[DuModel](ctx, s.Db, schemaName, gDuViewName, gDuViewName, defaultOrderBy, duMeta.DbTags, params)
 }
 
-func (s DuStore) SelectById(ctx context.Context, fields []string, id int64) (item DuModel, stmt string, err error) {
+func (s DuStore) SelectById(ctx context.Context, fields []string, id int64) (item DuModel, err error) {
 	return lyspg.SelectUnique[DuModel](ctx, s.Db, schemaName, gDuViewName, pkColName, fields, duMeta.DbTags, id)
 }

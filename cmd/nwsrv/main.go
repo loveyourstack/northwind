@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/loveyourstack/connectors/apiclients/ecbapi"
 	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lyspgdb"
 	"github.com/loveyourstack/northwind/cmd"
@@ -37,6 +38,7 @@ func main() {
 		Application: app,
 		GetOptions:  lys.FillGetOptions(lys.GetOptions{}),   // use defaults
 		PostOptions: lys.FillPostOptions(lys.PostOptions{}), // use defaults
+		EcbClient:   ecbapi.NewClient(app.InfoLog, app.ErrorLog),
 	}
 
 	// connect to db and assign pool to srvApp

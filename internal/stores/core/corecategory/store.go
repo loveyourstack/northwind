@@ -59,7 +59,7 @@ type Store struct {
 	Db *pgxpool.Pool
 }
 
-func (s Store) Delete(ctx context.Context, id int64) (stmt string, err error) {
+func (s Store) Delete(ctx context.Context, id int64) error {
 	return lyspg.DeleteUnique(ctx, s.Db, schemaName, tableName, pkColName, id)
 }
 
@@ -70,42 +70,42 @@ func (s Store) GetName() string {
 	return name
 }
 
-func (s Store) Insert(ctx context.Context, input Input) (newItem Model, stmt string, err error) {
+func (s Store) Insert(ctx context.Context, input Input) (newItem Model, err error) {
 	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	if input.ColorHex != "" {
 		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
 		if err != nil {
-			return newItem, "", fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
+			return newItem, fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
 		}
 	}
 
 	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, meta.DbTags, input)
 }
 
-func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, stmt string, err error) {
+func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, err error) {
 	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, meta.DbTags, params)
 }
 
-func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
+func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, err error) {
 	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
 }
 
-func (s Store) Update(ctx context.Context, input Input, id int64) (stmt string, err error) {
+func (s Store) Update(ctx context.Context, input Input, id int64) (err error) {
 	input.LastModifiedAt = lystype.Datetime(time.Now())
 	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	if input.ColorHex != "" {
 		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
 		if err != nil {
-			return "", fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
+			return fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
 		}
 	}
 
 	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
-func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
+func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (err error) {
 	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
 	assignmentsMap["last_modified_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 
@@ -113,12 +113,12 @@ func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any,
 	if ok {
 		colorHexStr, isStr := colorHex.(string)
 		if !isStr {
-			return "", fmt.Errorf("colorHex must be a string")
+			return fmt.Errorf("colorHex must be a string")
 		}
 
 		assignmentsMap["color_is_light"], err = lyspcolor.HexIsLight(colorHexStr)
 		if err != nil {
-			return "", fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
+			return fmt.Errorf("lyspcolor.HexIsLight failed: %w", err)
 		}
 	}
 

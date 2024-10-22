@@ -60,24 +60,24 @@ func (s Store) GetName() string {
 	return name
 }
 
-func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, stmt string, err error) {
+func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, err error) {
 	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, meta.DbTags, params)
 }
 
-func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, stmt string, err error) {
+func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, err error) {
 	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
 }
 
-func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (stmt string, err error) {
+func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
 
 	// only allowed to update is_active
 
 	if len(assignmentsMap) != 1 {
-		return "", fmt.Errorf("assignmentsMap length must be 1")
+		return fmt.Errorf("assignmentsMap length must be 1")
 	}
 
 	if maps.Keys(assignmentsMap)[0] != "is_active" {
-		return "", fmt.Errorf(`assignmentsMap key must be "is_active"`)
+		return fmt.Errorf(`assignmentsMap key must be "is_active"`)
 	}
 
 	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())

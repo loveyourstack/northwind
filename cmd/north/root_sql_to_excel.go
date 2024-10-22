@@ -19,7 +19,7 @@ var sqlToExcelCmd = &cobra.Command{
 
 		// select from db
 		catStore := corecategory.Store{Db: cliApp.Db}
-		items, _, _, err := catStore.Select(cmd.Context(), lyspg.SelectParams{
+		items, _, err := catStore.Select(cmd.Context(), lyspg.SelectParams{
 			Fields: catStore.GetMeta().JsonTags,
 		})
 		if err != nil {
