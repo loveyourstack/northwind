@@ -69,9 +69,9 @@ func (s Store) GetName() string {
 	return name
 }
 
-func (s Store) Insert(ctx context.Context, input Input) (newItem Model, err error) {
+func (s Store) Insert(ctx context.Context, input Input) (newId int64, err error) {
 	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
-	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, meta.DbTags, input)
+	return lyspg.Insert[Input, int64](ctx, s.Db, schemaName, tableName, pkColName, input)
 }
 
 func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, err error) {

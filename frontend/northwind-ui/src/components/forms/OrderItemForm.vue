@@ -155,8 +155,7 @@ async function saveItem() {
       saveBtnLabel.value = 'Save'
       showSaved.value = true
       setTimeout(() => { showSaved.value = false }, fadeMs)
-      var newItem: OrderItem = response.data.data
-      emit('create', newItem.id)
+      emit('create', response.data.data)
     })
     .catch() // handled by interceptor
     .finally(() => saving.value = false)

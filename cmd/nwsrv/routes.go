@@ -101,7 +101,7 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 		categoryStore := corecategory.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[corecategory.Model](apiEnv, categoryStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[corecategory.Model](apiEnv, categoryStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[corecategory.Input, corecategory.Model](apiEnv, categoryStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[corecategory.Input, int64](apiEnv, categoryStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[corecategory.Input](apiEnv, categoryStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, categoryStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, categoryStore)).Methods("DELETE")
@@ -117,7 +117,7 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 		productStore := coreproduct.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[coreproduct.Model](apiEnv, productStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[coreproduct.Model](apiEnv, productStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[coreproduct.Input, coreproduct.Model](apiEnv, productStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[coreproduct.Input, int64](apiEnv, productStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[coreproduct.Input](apiEnv, productStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, productStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, productStore)).Methods("DELETE")
@@ -129,7 +129,7 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 		supplierStore := coresupplier.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[coresupplier.Model](apiEnv, supplierStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[coresupplier.Model](apiEnv, supplierStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[coresupplier.Input, coresupplier.Model](apiEnv, supplierStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[coresupplier.Input, int64](apiEnv, supplierStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[coresupplier.Input](apiEnv, supplierStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, supplierStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, supplierStore)).Methods("DELETE")
@@ -165,7 +165,7 @@ func (srvApp *httpServerApplication) hrRoutes(apiEnv lys.Env) lys.RouteAdderFunc
 		employeeStore := hremployee.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[hremployee.Model](apiEnv, employeeStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[hremployee.Model](apiEnv, employeeStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[hremployee.Input, hremployee.Model](apiEnv, employeeStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[hremployee.Input, int64](apiEnv, employeeStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[hremployee.Input](apiEnv, employeeStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, employeeStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, employeeStore)).Methods("DELETE")
@@ -184,7 +184,7 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		customerStore := salescustomer.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[salescustomer.Model](apiEnv, customerStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[salescustomer.Model](apiEnv, customerStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salescustomer.Input, salescustomer.Model](apiEnv, customerStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[salescustomer.Input, int64](apiEnv, customerStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salescustomer.Input](apiEnv, customerStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, customerStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, customerStore)).Methods("DELETE")
@@ -194,7 +194,7 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		orderStore := salesorder.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[salesorder.Model](apiEnv, orderStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesorder.Model](apiEnv, orderStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salesorder.Input, salesorder.Model](apiEnv, orderStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[salesorder.Input, int64](apiEnv, orderStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}/restore", lys.RestoreById(apiEnv, srvApp.Db, orderStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salesorder.Input](apiEnv, orderStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderStore)).Methods("PATCH")
@@ -210,7 +210,7 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		orderItemStore := salesorderitem.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[salesorderitem.Model](apiEnv, orderItemStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesorderitem.Model](apiEnv, orderItemStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salesorderitem.Input, salesorderitem.Model](apiEnv, orderItemStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[salesorderitem.Input, int64](apiEnv, orderItemStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}/restore", lys.RestoreById(apiEnv, srvApp.Db, orderItemStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salesorderitem.Input](apiEnv, orderItemStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderItemStore)).Methods("PATCH")
@@ -224,7 +224,7 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		shipperStore := salesshipper.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[salesshipper.Model](apiEnv, shipperStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesshipper.Model](apiEnv, shipperStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salesshipper.Input, salesshipper.Model](apiEnv, shipperStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[salesshipper.Input, int64](apiEnv, shipperStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salesshipper.Input](apiEnv, shipperStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, shipperStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, shipperStore)).Methods("DELETE")
@@ -234,7 +234,7 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		territoryStore := salesterritory.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get[salesterritory.Model](apiEnv, territoryStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById[salesterritory.Model](apiEnv, territoryStore)).Methods("GET")
-		r.HandleFunc(endpoint, lys.Post[salesterritory.Input, salesterritory.Model](apiEnv, territoryStore)).Methods("POST")
+		r.HandleFunc(endpoint, lys.Post[salesterritory.Input, int64](apiEnv, territoryStore)).Methods("POST")
 		r.HandleFunc(endpoint+"/{id}", lys.Put[salesterritory.Input](apiEnv, territoryStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, territoryStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, territoryStore)).Methods("DELETE")

@@ -104,18 +104,18 @@ func (s Store) GetName() string {
 	return name
 }
 
-func (s Store) Insert(ctx context.Context, input Input) (newItem Model, err error) {
+func (s Store) Insert(ctx context.Context, input Input) (newId int64, err error) {
 
 	// get next order number and add it to input
 	stmt := fmt.Sprintf("SELECT max(order_number)+1 FROM %s.%s;", schemaName, tableName)
 	rows, _ := s.Db.Query(ctx, stmt)
 	nextOrderNum, err := pgx.CollectExactlyOneRow(rows, pgx.RowTo[int32])
 	if err != nil {
-		return Model{}, lyserr.Db{Err: fmt.Errorf("pgx.CollectExactlyOneRow failed: %w", err), Stmt: stmt}
+		return 0, lyserr.Db{Err: fmt.Errorf("pgx.CollectExactlyOneRow failed: %w", err), Stmt: stmt}
 	}
 	input.OrderNumber = nextOrderNum
 
-	return lyspg.Insert[Input, Model](ctx, s.Db, schemaName, tableName, viewName, pkColName, meta.DbTags, input)
+	return lyspg.Insert[Input, int64](ctx, s.Db, schemaName, tableName, pkColName, input)
 }
 
 func (s Store) RestoreById(ctx context.Context, tx pgx.Tx, id int64) error {
