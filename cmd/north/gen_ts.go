@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var genImCmd = &cobra.Command{
-	Use:   "im",
-	Short: "generates Go Input and Model structs from the supplied schema + table",
+var genTsCmd = &cobra.Command{
+	Use:   "ts",
+	Short: "generates Typescript definition from the supplied schema + table",
 	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -32,9 +32,9 @@ var genImCmd = &cobra.Command{
 		}
 		defer ownerDb.Close()
 
-		res, err := lysgen.InputModel(cmd.Context(), ownerDb, args[0], args[1], true)
+		res, err := lysgen.TsDefinition(cmd.Context(), ownerDb, args[0], args[1])
 		if err != nil {
-			cliApp.ErrorLog.Error("lysgen.InputModel failed: " + err.Error())
+			cliApp.ErrorLog.Error("lysgen.TsDefinition failed: " + err.Error())
 			os.Exit(1)
 		}
 
@@ -43,5 +43,5 @@ var genImCmd = &cobra.Command{
 }
 
 func init() {
-	genCmd.AddCommand(genImCmd)
+	genCmd.AddCommand(genTsCmd)
 }
