@@ -33,20 +33,26 @@
         <v-list-item link title="Home" to="/home"></v-list-item>
 
         <v-divider></v-divider>
-        <v-list-subheader title="Import" class="text-uppercase mt-2"></v-list-subheader>
-        <v-list-item link title="Categories" to="/categories" prepend-icon="mdi-food-variant"></v-list-item>
-        <v-list-item link title="Products" to="/products" prepend-icon="mdi-food-apple"></v-list-item>
-        <v-list-item link title="Suppliers" to="/suppliers" prepend-icon="mdi-chef-hat"></v-list-item>
+        <v-list-subheader title="Import" class="text-uppercase mt-2 clickable" @click="showImportItems = !showImportItems"></v-list-subheader>
+        <div v-if="showImportItems">
+          <v-list-item link title="Categories" to="/categories" prepend-icon="mdi-food-variant"></v-list-item>
+          <v-list-item link title="Products" to="/products" prepend-icon="mdi-food-apple"></v-list-item>
+          <v-list-item link title="Suppliers" to="/suppliers" prepend-icon="mdi-chef-hat"></v-list-item>
+        </div>
 
         <v-divider></v-divider>
-        <v-list-subheader title="Sales" class="text-uppercase mt-2"></v-list-subheader>
-        <v-list-item link title="Customers" to="/customers" prepend-icon="mdi-account-box-outline"></v-list-item>
-        <v-list-item link title="Orders" to="/orders" prepend-icon="mdi-hand-extended"></v-list-item>
-        <v-list-item link title="Territories" to="/territories" prepend-icon="mdi-land-plots"></v-list-item>
+        <v-list-subheader title="Sales" class="text-uppercase mt-2 clickable" @click="showSalesItems = !showSalesItems"></v-list-subheader>
+        <div v-if="showSalesItems">
+          <v-list-item link title="Customers" to="/customers" prepend-icon="mdi-account-box-outline"></v-list-item>
+          <v-list-item link title="Orders" to="/orders" prepend-icon="mdi-hand-extended"></v-list-item>
+          <v-list-item link title="Territories" to="/territories" prepend-icon="mdi-land-plots"></v-list-item>
+        </div>
 
         <v-divider></v-divider>
-        <v-list-subheader title="HR" class="text-uppercase mt-2"></v-list-subheader>
-        <v-list-item link title="Employees" to="/employees" prepend-icon="mdi-account-circle"></v-list-item>
+        <v-list-subheader title="HR" class="text-uppercase mt-2 clickable" @click="showHrItems = !showHrItems"></v-list-subheader>
+        <div v-if="showHrItems">
+          <v-list-item link title="Employees" to="/employees" prepend-icon="mdi-account-circle"></v-list-item>
+        </div>
 
       </v-list>
     </v-navigation-drawer>
@@ -77,15 +83,22 @@ const salesStore = useSalesStore()
 
 const showNav = ref(true)
 
+const showHrItems = ref(false)
+const showImportItems = ref(false)
+const showSalesItems = ref(false)
+
 const lsKey = 'main'
 
 function toggleTheme () {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
 
-watch([theme.global.name], () => {
+watch([theme.global.name, showHrItems, showImportItems, showSalesItems], () => {
 
   let lsObj = {
+    'showHrItems': showHrItems.value,
+    'showImportItems': showImportItems.value,
+    'showSalesItems': showSalesItems.value,
     'theme': theme.global.name.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
@@ -98,6 +111,9 @@ onBeforeMount(() => {
   }
 
   let lsObj = JSON.parse(lsJSON)
+  if (lsObj['showHrItems']) { showHrItems.value = lsObj['showHrItems'] }
+  if (lsObj['showImportItems']) { showImportItems.value = lsObj['showImportItems'] }
+  if (lsObj['showSalesItems']) { showSalesItems.value = lsObj['showSalesItems'] }
   if (lsObj['theme']) { theme.global.name.value = lsObj['theme'] }
 })
 
