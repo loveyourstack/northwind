@@ -29,7 +29,7 @@
             ></v-text-field>
 
             <v-autocomplete label="Discontinued" v-model="item.is_discontinued"
-              :items="booleanOptions"
+              :items="coreStore.booleanOptions"
             ></v-autocomplete>
 
           </v-col>
@@ -77,8 +77,8 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
+import { useFetch } from '@/composables/fetch'
 import { Product, ProductInput, NewProduct, GetProductInputFromItem } from '@/types/core'
-import { booleanOptions, fadeMs } from '@/composables/form'
 import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{
@@ -122,12 +122,7 @@ function deleteItem() {
 }
 
 function loadItem() {
-  ax.get(itemURL)
-    .then(response => {
-      item.value = response.data.data
-      emit('load', item.value!.name)
-    })
-    .catch() // handled by interceptor
+  useFetch(itemURL, item, () => { emit('load', item.value!.name) })
 }
 
 async function saveItem() {
@@ -145,7 +140,7 @@ async function saveItem() {
       .then(() => {
         coreStore.loadProductsList()
         showSaved.value = true
-        setTimeout(() => { showSaved.value = false }, fadeMs)
+        setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)
         loadItem()
         emit('update')
       })
@@ -160,7 +155,7 @@ async function saveItem() {
       // component does not get remounted, need to make Save button changes here
       saveBtnLabel.value = 'Save'
       showSaved.value = true
-      setTimeout(() => { showSaved.value = false }, fadeMs)
+      setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)
       emit('create', response.data.data)
     })
     .catch() // handled by interceptor

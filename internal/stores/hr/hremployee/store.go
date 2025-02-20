@@ -42,12 +42,14 @@ type Input struct {
 }
 
 type Model struct {
-	Id          int64            `db:"id" json:"id"`
-	Age         int              `db:"age" json:"age,omitempty"`
-	Country     string           `db:"country" json:"country,omitempty"`
-	CountryIso2 string           `db:"country_iso2" json:"country_iso2,omitempty"`
-	EntryAt     lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
-	ReportsTo   string           `db:"reports_to" json:"reports_to,omitempty"`
+	Id             int64            `db:"id" json:"id"`
+	Age            int              `db:"age" json:"age,omitempty"`
+	Country        string           `db:"country" json:"country,omitempty"`
+	CountryIso2    string           `db:"country_iso2" json:"country_iso2,omitempty"`
+	EntryAt        lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`
+	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
+	ReportsTo      string           `db:"reports_to" json:"reports_to,omitempty"`
 	Input
 }
 
@@ -87,8 +89,8 @@ func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []M
 	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, meta.DbTags, params)
 }
 
-func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, err error) {
-	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
+func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error) {
+	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, id)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {

@@ -5,6 +5,11 @@ import ax from '@/api'
 
 export const useCoreStore = defineStore('core', () => {
 
+  const booleanOptions = [
+    {value: true, title: 'Yes'},
+    {value: false, title: 'No'}
+  ]
+
   const categoriesList = ref<SelectionItem[]>([])
   const productsList = ref<SelectionItem[]>([])
   const suppliersList = ref<SelectionItem[]>([])
@@ -36,6 +41,6 @@ export const useCoreStore = defineStore('core', () => {
     .catch() // handled by interceptor
   }
 
-  return { categoriesList, suppliersList, loadCategoriesList, loadSuppliersList, loadProductsList, productsList }
+  return { booleanOptions, categoriesList, suppliersList, loadCategoriesList, loadSuppliersList, loadProductsList, productsList }
 })
 

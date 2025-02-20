@@ -44,6 +44,8 @@ type Model struct {
 	CategoryColorHex     string           `db:"category_color_hex" json:"category_color_hex,omitempty"`
 	CategoryColorIsLight bool             `db:"category_color_is_light" json:"category_color_is_light"`
 	EntryAt              lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryBy              string           `db:"entry_by" json:"entry_by,omitempty"`
+	LastModifiedBy       string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	SupplierCompanyName  string           `db:"supplier_company_name" json:"supplier_company_name,omitempty"`
 	SupplierCountryIso2  string           `db:"supplier_country_iso2" json:"supplier_country_iso2,omitempty"`
 	Input
@@ -100,8 +102,8 @@ func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []M
 	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, meta.DbTags, params)
 }
 
-func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, err error) {
-	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
+func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error) {
+	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, id)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {

@@ -32,31 +32,43 @@
 
           <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
 
-          <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
-            <v-icon icon="mdi-file-download-outline"></v-icon>
-          </v-btn>
-
-          <v-menu :close-on-content-click=false>
+          <v-menu>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" v-tooltip="'Adjust columns'" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn class="float-right mr-5" icon="mdi-dots-vertical" v-bind="props"></v-btn>
             </template>
             <v-list>
-              <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
-                <template v-slot:append>
-                  <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
-                </template>
-                <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
+
+              <v-list-item prepend-icon="mdi-selection-ellipse-remove">
+                <v-list-item-title class="clickable" @click="resetTable()">Reset table</v-list-item-title>
               </v-list-item>
+
+              <v-list-item prepend-icon="mdi-download-outline">
+                <v-list-item-title class="clickable" @click="fileDownload(excelDlUrl)">Download to Excel</v-list-item-title>
+              </v-list-item>
+
+              <v-menu :close-on-content-click=false location="start">
+                <template v-slot:activator="{ props }">
+                  <v-list-item v-bind="props" prepend-icon="mdi-table-column">
+                    <v-list-item-title class="clickable">Adjust columns</v-list-item-title>
+                  </v-list-item>
+                </template>
+                <v-list>
+                  <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
+                    <template v-slot:append>
+                      <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
+                    </template>
+                    <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
             </v-list>
           </v-menu>
 
-          <v-switch hide-details v-model="showFilters" v-tooltip="'Show filters'" class="float-right mr-7" :color="showFilters ? 'teal' : 'undefined'" density="compact"
-          ></v-switch>
-          <v-icon icon="mdi-filter-variant" class="float-right mt-2 mr-3"></v-icon>
         </v-col>
       </v-row>
 
-      <v-row v-show="showFilters" class="mt-0">
+      <v-row class="mt-0">
         <v-col cols="12" sm="6" lg="3">
           <v-text-field label="Name search" v-model="filterName" clearable
             @update:model-value="debouncedRefreshItems"
@@ -88,12 +100,8 @@
       </v-btn>
     </template>
 
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
+    <template v-slot:[`bottom`]="{}">
+      <DtFooter :totalItemsIsEstimate="totalItemsIsEstimate" :totalItemsEstimated="totalItemsEstimated"></DtFooter>
     </template>
     
   </v-data-table-server>
@@ -103,13 +111,14 @@
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { VDataTable } from 'vuetify/components'
-import ax from '@/api'
+import { useFetchDt } from '@/composables/fetch'
 import { Territory } from '@/types/sales'
 import { GetMetadata } from '@/types/system'
-import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
-import { fileDownload } from '@/composables/file'
+import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { fileDownload } from '@/functions/file'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
+import DtFooter from '@/components/DtFooter.vue'
 import TerritoryForm from '@/components/forms/TerritoryForm.vue'
 
 const props = defineProps<{
@@ -147,7 +156,6 @@ const totalItemsEstimated = ref(0)
 const editID = ref(0)
 const showDialog = ref(false)
 
-const showFilters = ref(false)
 const filterCode = ref<string>()
 const filterName = ref<string>()
 const filterRegion = ref<string>()
@@ -180,33 +188,22 @@ function getFilterStr(): string {
 }
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
-
-  var myURL = baseUrl
-  myURL = processURIOptions(myURL, options)
+  var myURL = processURIOptions(baseUrl, options)
   myURL += getFilterStr()
-
-  ax.get(myURL)
-  .then(resp => {
-      items.value = resp.data.data
-      metadata.value = resp.data.metadata
-
-      totalItemsIsEstimate.value = metadata.value!.total_count_is_estimated
-      if (totalItemsIsEstimate.value) {
-        totalItemsEstimated.value = metadata.value!.total_count
-        totalItems.value = 101 // workaround so that next page button is enabled even if estimate is too low
-      } else {
-        totalItems.value = metadata.value!.total_count
-      }
-    })
-    .catch() // handled by interceptor
+  useFetchDt(myURL, items, totalItems, totalItemsIsEstimate, totalItemsEstimated)
 }
 
 const debouncedRefreshItems = useDebounceFn(() => {
   search.value = String(Date.now())
-}, debounceMs, { maxWait: maxDebounceMs })
+}, import.meta.env.VITE_DEBOUNCE_MS, { maxWait: import.meta.env.VITE_MAX_DEBOUNCE_MS })
 
 function refreshItems() {
   search.value = String(Date.now())
+}
+
+function resetTable() {
+  localStorage.removeItem(lsKey)
+  window.location.reload()
 }
 
 function toggleHeader(key: string) {
@@ -214,20 +211,11 @@ function toggleHeader(key: string) {
   selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
 }
 
-watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
-
-  if (!showFilters.value) {
-    filterCode.value = undefined
-    filterName.value = undefined
-    filterRegion.value = undefined
-    filterSalesmanID.value = undefined
-    refreshItems()
-  }
+watch([itemsPerPage, search, sortBy, excludedHeaders], () => {
 
   let lsObj = {
     'itemsPerPage': itemsPerPage.value,
     'sortBy': sortBy.value,
-    'showFilters': showFilters.value,
     'filterCode': filterCode.value,
     'filterName': filterName.value,
     'filterRegion': filterRegion.value,
@@ -246,7 +234,6 @@ onBeforeMount(() => {
   let lsObj = JSON.parse(lsJSON)
   if (lsObj['itemsPerPage']) { itemsPerPage.value = lsObj['itemsPerPage'] }
   if (lsObj['sortBy']) { sortBy.value = lsObj['sortBy'] }
-  if (lsObj['showFilters']) { showFilters.value = lsObj['showFilters'] }
   if (lsObj['filterCode']) { filterCode.value = lsObj['filterCode'] }
   if (lsObj['filterName']) { filterName.value = lsObj['filterName'] }
   if (lsObj['filterRegion']) { filterRegion.value = lsObj['filterRegion'] }

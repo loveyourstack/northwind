@@ -15,7 +15,7 @@
     class="dt"
   >
     <template v-slot:[`top`]="{}">
-      <v-row align="center" class="pb-2">
+      <v-row align="center">
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Products' }}</div>
@@ -23,31 +23,43 @@
 
           <v-btn class="float-end" color="primary" :to="{ name: 'New product'}">Add</v-btn>
 
-          <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
-            <v-icon icon="mdi-file-download-outline"></v-icon>
-          </v-btn>
-
-          <v-menu :close-on-content-click=false>
+          <v-menu>
             <template v-slot:activator="{ props }">
-              <v-btn density="comfortable" v-tooltip="'Adjust columns'" flat class="float-right mr-5" icon="mdi-table-column" v-bind="props"></v-btn>
+              <v-btn class="float-right mr-5" icon="mdi-dots-vertical" v-bind="props"></v-btn>
             </template>
             <v-list>
-              <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
-                <template v-slot:append>
-                  <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
-                </template>
-                <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
+              
+              <v-list-item prepend-icon="mdi-selection-ellipse-remove">
+                <v-list-item-title class="clickable" @click="resetTable()">Reset table</v-list-item-title>
               </v-list-item>
+
+              <v-list-item prepend-icon="mdi-download-outline">
+                <v-list-item-title class="clickable" @click="fileDownload(excelDlUrl)">Download to Excel</v-list-item-title>
+              </v-list-item>
+
+              <v-menu :close-on-content-click=false location="start">
+                <template v-slot:activator="{ props }">
+                  <v-list-item v-bind="props" prepend-icon="mdi-table-column">
+                    <v-list-item-title class="clickable">Adjust columns</v-list-item-title>
+                  </v-list-item>
+                </template>
+                <v-list>
+                  <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
+                    <template v-slot:append>
+                      <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
+                    </template>
+                    <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
             </v-list>
           </v-menu>
           
-          <v-switch hide-details v-model="showFilters" v-tooltip="'Show filters'" class="float-right mr-7" :color="showFilters ? 'teal' : 'undefined'" density="compact"
-          ></v-switch>
-          <v-icon icon="mdi-filter-variant" class="float-right mt-2 mr-3"></v-icon>
         </v-col>
       </v-row>
 
-      <v-row v-show="showFilters" class="mt-0">
+      <v-row class="mt-0">
         <v-col cols="12" sm="6" lg="3">
           <v-text-field label="Name search" v-model="filterName" clearable
             @update:model-value="debouncedRefreshItems"
@@ -67,7 +79,7 @@
         </v-col>
         <v-col cols="12" sm="6" lg="3">
           <v-autocomplete label="Discontinued" v-model="filterDiscontinued"
-            :items="booleanOptions"
+            :items="coreStore.booleanOptions"
             @update:model-value="refreshItems"
           ></v-autocomplete>
         </v-col>
@@ -103,12 +115,8 @@
       </v-btn>
     </template>
 
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
+    <template v-slot:[`bottom`]="{}">
+      <DtFooter :totalItemsIsEstimate="totalItemsIsEstimate" :totalItemsEstimated="totalItemsEstimated"></DtFooter>
     </template>
 
   </v-data-table-server>
@@ -117,14 +125,14 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
-import ax from '@/api'
+import { useFetchDt } from '@/composables/fetch'
 import { Product } from '@/types/core'
 import { GetMetadata } from '@/types/system'
-import { debounceMs, maxDebounceMs, getHeaderListIcon, getHeaderListIconColor, getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
-import { fileDownload } from '@/composables/file'
-import { booleanOptions } from '@/composables/form'
+import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { fileDownload } from '@/functions/file'
 import { useCoreStore } from '@/stores/core'
 import { useDebounceFn } from '@vueuse/core'
+import DtFooter from '@/components/DtFooter.vue'
 
 const props = defineProps<{
   supplier_id: number // pass 0 rather than null/undefined, easier to handle
@@ -162,7 +170,6 @@ const totalItems = ref(0)
 const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
 
-const showFilters = ref(false)
 const filterName = ref<string>()
 const filterCategoryID = ref<number>()
 const filterSupplierID = ref<number>()
@@ -192,34 +199,23 @@ function getFilterStr(): string {
 }
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
-
-  var myURL = baseUrl
-  myURL = processURIOptions(myURL, options)
+  var myURL = processURIOptions(baseUrl, options)
   myURL += getFilterStr()
-  
-  ax.get(myURL)
-  .then(resp => {
-      items.value = resp.data.data
-      metadata.value = resp.data.metadata
-
-      totalItemsIsEstimate.value = metadata.value!.total_count_is_estimated
-      if (totalItemsIsEstimate.value) {
-        totalItemsEstimated.value = metadata.value!.total_count
-        totalItems.value = 101 // workaround so that next page button is enabled even if estimate is too low
-      } else {
-        totalItems.value = metadata.value!.total_count
-      }
-    })
-    .catch() // handled by interceptor
+  useFetchDt(myURL, items, totalItems, totalItemsIsEstimate, totalItemsEstimated)
 }
 
 const debouncedRefreshItems = useDebounceFn(() => {
   search.value = String(Date.now())
-}, debounceMs, { maxWait: maxDebounceMs })
+}, import.meta.env.VITE_DEBOUNCE_MS, { maxWait: import.meta.env.VITE_MAX_DEBOUNCE_MS })
 
 function refreshItems() {
   // changing data-table search property to a new value triggers loadItems
   search.value = String(Date.now())
+}
+
+function resetTable() {
+  localStorage.removeItem(lsKey)
+  window.location.reload()
 }
 
 function toggleHeader(key: string) {
@@ -227,20 +223,11 @@ function toggleHeader(key: string) {
   selectedHeaders.value = headers.filter((v) => !excludedHeaders.value.includes(v.key))
 }
 
-watch([itemsPerPage, showFilters, search, sortBy, excludedHeaders], () => {
-
-  if (!showFilters.value) {
-    filterName.value = undefined
-    filterCategoryID.value = undefined
-    filterSupplierID.value = undefined
-    filterDiscontinued.value = false
-    refreshItems()
-  }
+watch([itemsPerPage, search, sortBy, excludedHeaders], () => {
 
   let lsObj = {
     'itemsPerPage': itemsPerPage.value,
     'sortBy': sortBy.value,
-    'showFilters': showFilters.value,
     'filterName': filterName.value,
     'filterCategoryID': filterCategoryID.value,
     'filterSupplierID': filterSupplierID.value,
@@ -260,7 +247,6 @@ onBeforeMount(() => {
   let lsObj = JSON.parse(lsJSON)
   if (lsObj['itemsPerPage']) { itemsPerPage.value = lsObj['itemsPerPage'] }
   if (lsObj['sortBy']) { sortBy.value = lsObj['sortBy'] }
-  if (lsObj['showFilters']) { showFilters.value = lsObj['showFilters'] }
   if (lsObj['filterName']) { filterName.value = lsObj['filterName'] }
   if (lsObj['filterCategoryID']) { filterCategoryID.value = lsObj['filterCategoryID'] }
   if (lsObj['filterSupplierID']) { filterSupplierID.value = lsObj['filterSupplierID'] }

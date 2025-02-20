@@ -57,6 +57,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ax from '@/api'
+import { useFetch } from '@/composables/fetch'
 import { Order } from '@/types/sales'
 import OrderForm from '@/components/forms/OrderForm.vue'
 import OrderItemTable from '@/components/tables/OrderItemTable.vue';
@@ -76,11 +77,7 @@ const visitedTabs = ref<string[]>([]) // allows for lazy loading of tab content
 const lsKey = 'order_detail'
 
 function loadItem() {
-  ax.get(itemURL)
-    .then(response => {
-      item.value = response.data.data
-    })
-    .catch() // handled by interceptor
+  useFetch(itemURL, item)
 }
 
 function setVisited(tab: string) {

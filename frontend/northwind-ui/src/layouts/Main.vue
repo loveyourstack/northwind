@@ -20,7 +20,7 @@
         </template>
         
         <v-list>
-          <v-list-item>
+          <v-list-item prepend-icon="mdi-logout">
             <v-list-item-title class="clickable">Logout</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -218,6 +218,7 @@ tbody tr:nth-of-type(even) {
 }
 
 .v-data-table-footer {
+  float: left !important;
   justify-content: flex-start;
   margin-top: 1rem;
 }

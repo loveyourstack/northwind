@@ -24,7 +24,7 @@
     class="dt"
   >
     <template v-slot:[`top`]="{}">
-      <v-row align="center" class="pb-2">
+      <v-row align="center">
         <v-col>
           <div class="dt-title-block">
             <div class="dt-title">{{ props.title ? props.title : 'Order items' }}</div>
@@ -32,9 +32,23 @@
 
           <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
 
-          <v-btn icon flat size="small" class="float-right mr-7" v-tooltip="'Download to Excel'" @click="fileDownload(excelDlUrl)">
-            <v-icon icon="mdi-file-download-outline"></v-icon>
-          </v-btn>
+          <v-menu>
+            <template v-slot:activator="{ props }">
+              <v-btn class="float-right mr-5" icon="mdi-dots-vertical" v-bind="props"></v-btn>
+            </template>
+            <v-list>
+
+              <v-list-item prepend-icon="mdi-selection-ellipse-remove">
+                <v-list-item-title class="clickable" @click="resetTable()">Reset table</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item prepend-icon="mdi-download-outline">
+                <v-list-item-title class="clickable" @click="fileDownload(excelDlUrl)">Download to Excel</v-list-item-title>
+              </v-list-item>
+
+            </v-list>
+          </v-menu>
+
         </v-col>
       </v-row>
     </template>
@@ -59,12 +73,8 @@
       </v-btn>
     </template>
 
-    <template v-if="totalItemsIsEstimate" v-slot:[`bottom`]="{}">
-      <v-data-table-footer
-        :items-per-page-options="itemsPerPageOptions"
-        :page-text="getPageTextEstimated(totalItemsEstimated)"
-        :show-current-page=true
-      ></v-data-table-footer>
+    <template v-slot:[`bottom`]="{}">
+      <DtFooter :totalItemsIsEstimate="totalItemsIsEstimate" :totalItemsEstimated="totalItemsEstimated"></DtFooter>
     </template>
 
 </v-data-table-server>
@@ -73,11 +83,12 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
-import ax from '@/api'
+import { useFetchDt } from '@/composables/fetch'
 import { OrderItem } from '@/types/sales'
 import { GetMetadata } from '@/types/system'
-import { getPageTextEstimated, itemsPerPageOptions, processURIOptions } from '@/composables/datatable'
-import { fileDownload } from '@/composables/file'
+import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { fileDownload } from '@/functions/file'
+import DtFooter from '@/components/DtFooter.vue'
 import OrderItemForm from '@/components/forms/OrderItemForm.vue'
 
 const props = defineProps<{
@@ -124,29 +135,18 @@ function getFilterStr(): string {
 }
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
-
-  var myURL = baseUrl
-  myURL = processURIOptions(myURL, options)
+  var myURL = processURIOptions(baseUrl, options)
   myURL += getFilterStr()
-
-  ax.get(myURL)
-  .then(resp => {
-      items.value = resp.data.data
-      metadata.value = resp.data.metadata
-
-      totalItemsIsEstimate.value = metadata.value!.total_count_is_estimated
-      if (totalItemsIsEstimate.value) {
-        totalItemsEstimated.value = metadata.value!.total_count
-        totalItems.value = 101 // workaround so that next page button is enabled even if estimate is too low
-      } else {
-        totalItems.value = metadata.value!.total_count
-      }
-    })
-    .catch() // handled by interceptor
+  useFetchDt(myURL, items, totalItems, totalItemsIsEstimate, totalItemsEstimated)
 }
 
 function refreshItems() {
   search.value = String(Date.now())
+}
+
+function resetTable() {
+  localStorage.removeItem(lsKey)
+  window.location.reload()
 }
 
 watch([itemsPerPage, search, sortBy], () => {

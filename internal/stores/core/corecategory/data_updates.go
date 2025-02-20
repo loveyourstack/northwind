@@ -47,6 +47,6 @@ func (s DuStore) Select(ctx context.Context, params lyspg.SelectParams) (items [
 	return lyspg.Select[DuModel](ctx, s.Db, schemaName, gDuViewName, gDuViewName, defaultOrderBy, duMeta.DbTags, params)
 }
 
-func (s DuStore) SelectById(ctx context.Context, fields []string, id int64) (item DuModel, err error) {
-	return lyspg.SelectUnique[DuModel](ctx, s.Db, schemaName, gDuViewName, pkColName, fields, duMeta.DbTags, id)
+func (s DuStore) SelectById(ctx context.Context, id int64) (item DuModel, err error) {
+	return lyspg.SelectUnique[DuModel](ctx, s.Db, schemaName, gDuViewName, pkColName, id)
 }

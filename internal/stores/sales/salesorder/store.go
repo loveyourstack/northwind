@@ -53,6 +53,8 @@ type Model struct {
 	CustomerCompanyName string           `db:"customer_company_name" json:"customer_company_name,omitempty"`
 	DestCountryIso2     string           `db:"dest_country_iso2" json:"dest_country_iso2,omitempty"`
 	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryBy             string           `db:"entry_by" json:"entry_by,omitempty"`
+	LastModifiedBy      string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	Salesman            string           `db:"salesman" json:"salesman,omitempty"`
 	ShipperCompanyName  string           `db:"shipper_company_name" json:"shipper_company_name,omitempty"`
 	OrderItemCount      int              `db:"order_item_count" json:"order_item_count"`
@@ -139,8 +141,8 @@ func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []M
 	return lyspg.Select[Model](ctx, s.Db, schemaName, tableName, viewName, defaultOrderBy, meta.DbTags, params)
 }
 
-func (s Store) SelectById(ctx context.Context, fields []string, id int64) (item Model, err error) {
-	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, fields, meta.DbTags, id)
+func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error) {
+	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, id)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {

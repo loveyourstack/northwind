@@ -8,10 +8,6 @@ export const itemsPerPageOptions = [
   {value: 100, title: '100'}
 ]
 
-// milliseconds to delay input before triggering data refresh
-export const debounceMs = 400
-export const maxDebounceMs = 5000
-
 export function getHeaderListIcon(excludedHeaders: string[], headerKey: string) {
   return excludedHeaders.includes(headerKey) ? 'mdi-close' : 'mdi-check'
 }

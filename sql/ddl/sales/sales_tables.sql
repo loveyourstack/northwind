@@ -59,28 +59,9 @@ CREATE TABLE sales.order
 );
 COMMENT ON TABLE sales.order IS 'shortname: s_o';
 --- change columns with ---
-CREATE TABLE sales.order_archived
-(
-  id bigint NOT NULL PRIMARY KEY,
-  is_shipped boolean NOT NULL,
-  order_number int NOT NULL,
-  customer_fk bigint NOT NULL,
-  dest_country_fk bigint NOT NULL,
-  salesman_fk bigint NOT NULL,
-  shipper_fk bigint NOT NULL,
-  freight_cost numeric(12,2) NOT NULL,
-  order_date date NOT NULL,
-  required_date date NOT NULL,
-  shipped_date date NOT NULL,
-  entry_at tracking_at,
-  last_modified_at tracking_at,
-  dest_address text NOT NULL,
-  dest_city text NOT NULL,
-  dest_company_name text NOT NULL,
-  dest_postal_code text NOT NULL,
-  dest_state text NOT NULL,
-  entry_by tracking_by,
-  last_modified_by tracking_by,
+CREATE TABLE sales.order_archived 
+( 
+  LIKE sales.order,
   archived_at tracking_at,
   archived_by tracking_by,
   archived_by_cascade bool NOT NULL
@@ -105,17 +86,8 @@ CREATE TABLE sales.order_item
 COMMENT ON TABLE sales.order_item IS 'shortname: s_oi';
 --- change columns with ---
 CREATE TABLE sales.order_item_archived
-(
-  id bigint NOT NULL PRIMARY KEY,
-  quantity int NOT NULL,
-  order_fk bigint NOT NULL,
-  product_fk bigint NOT NULL,
-  unit_price numeric(12,2) NOT NULL,
-  discount numeric(5,4) NOT NULL,
-  entry_at tracking_at,
-  last_modified_at tracking_at,
-  entry_by tracking_by,
-  last_modified_by tracking_by,
+( 
+  LIKE sales.order_item,
   archived_at tracking_at,
   archived_by tracking_by,
   archived_by_cascade bool NOT NULL

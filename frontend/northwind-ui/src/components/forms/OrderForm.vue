@@ -132,8 +132,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useDateFormat, useNow } from '@vueuse/core'
 import ax from '@/api'
+import { useFetch } from '@/composables/fetch'
 import { Customer, Order, OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
-import { fadeMs } from '@/composables/form'
 import { useCommonStore } from '@/stores/common'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
@@ -211,20 +211,17 @@ function fillFromCustomer() {
 }
 
 function loadItem() {
-  ax.get(itemURL)
-    .then(response => {
-      item.value = response.data.data
+  useFetch(itemURL, item, () => { 
 
-      // assign date objects from YYYY-MM-DD strings
-      item.value!.order_date_d = new Date(item.value!.order_date!)
-      item.value!.required_date_d = new Date(item.value!.required_date!)
-      if (item.value!.shipped_date) {
-        item.value!.shipped_date_d = new Date(item.value!.shipped_date!)
-      }
+    // assign date objects from YYYY-MM-DD strings
+    item.value!.order_date_d = new Date(item.value!.order_date!)
+    item.value!.required_date_d = new Date(item.value!.required_date!)
+    if (item.value!.shipped_date) {
+      item.value!.shipped_date_d = new Date(item.value!.shipped_date!)
+    }
 
-      emit('load', item.value!.order_number)
-    })
-    .catch() // handled by interceptor
+    emit('load', item.value!.order_number)
+  })
 }
 
 async function saveItem() {
@@ -241,7 +238,7 @@ async function saveItem() {
     await ax.put(itemURL, saveItem)
       .then(() => {
         showSaved.value = true
-        setTimeout(() => { showSaved.value = false }, fadeMs)
+        setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)
         loadItem()
         emit('update')
       })
@@ -254,7 +251,7 @@ async function saveItem() {
     .then(response => {
       saveBtnLabel.value = 'Save'
       showSaved.value = true
-      setTimeout(() => { showSaved.value = false }, fadeMs)
+      setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)
       emit('create', response.data.data)
     })
     .catch() // handled by interceptor

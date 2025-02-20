@@ -79,8 +79,8 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
+import { useFetch } from '@/composables/fetch'
 import { Supplier, SupplierInput, NewSupplier, GetSupplierInputFromItem } from '@/types/core'
-import { fadeMs } from '@/composables/form'
 import { useCommonStore } from '@/stores/common'
 import { useCoreStore } from '@/stores/core'
 
@@ -126,12 +126,7 @@ function deleteItem() {
 }
 
 function loadItem() {
-  ax.get(itemURL)
-    .then(response => {
-      item.value = response.data.data
-      emit('load', item.value!.name)
-    })
-    .catch() // handled by interceptor
+  useFetch(itemURL, item, () => { emit('load', item.value!.name) })
 }
 
 async function saveItem() {
@@ -149,7 +144,7 @@ async function saveItem() {
       .then(() => {
         coreStore.loadSuppliersList()
         showSaved.value = true
-        setTimeout(() => { showSaved.value = false }, fadeMs)
+        setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)
         loadItem()
         emit('update')
       })
@@ -163,7 +158,7 @@ async function saveItem() {
       coreStore.loadSuppliersList()
       saveBtnLabel.value = 'Save'
       showSaved.value = true
-      setTimeout(() => { showSaved.value = false }, fadeMs)
+      setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)
       emit('create', response.data.data)
     })
     .catch() // handled by interceptor

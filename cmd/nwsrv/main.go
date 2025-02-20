@@ -25,7 +25,7 @@ func main() {
 	conf := nw.Config{}
 	err := conf.LoadFromFile(*configFilePath)
 	if err != nil {
-		log.Fatalf("initialization: nw_config.toml not found: %s" + err.Error())
+		log.Fatalf("initialization: nw_config.toml not found: %s", err.Error())
 	}
 
 	ctx := context.Background()
