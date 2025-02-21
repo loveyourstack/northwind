@@ -68,29 +68,47 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-0">
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field label="Name search" v-model="filterName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
+      <v-row no-gutters class="mb-1">
+        <v-col>
+          <v-chip-group column>
+
+            <FilterChipText name="Name" :filterValue="filterName" :filterText="filterName" @closed="filterName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Name" v-model="filterName"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Code" :filterValue="filterCode" :filterText="filterCode" @closed="filterCode = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Code" v-model="filterCode"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Region" :filterValue="filterRegion" :filterText="filterRegion" @closed="filterRegion = ''; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Region" v-model="filterRegion"
+                  :items="salesStore.regions"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Salesman" :filterValue="filterSalesmanID" :filterText="filterSalesmanIDText" @closed="filterSalesmanID = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Salesman" v-model="filterSalesmanID"
+                  :items="hrStore.employeesList" item-title="name" item-value="id"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipText>
+
+          </v-chip-group>
         </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field label="Code search" v-model="filterCode" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-autocomplete label="Region" v-model="filterRegion" clearable
-            :items="salesStore.regions"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3" v-if="props.salesman_id == 0">
-          <v-autocomplete label="Salesman" v-model="filterSalesmanID" clearable
-            :items="hrStore.employeesList" item-title="name" item-value="id"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
-        </v-col>
+
       </v-row>
     </template>
 
@@ -113,12 +131,12 @@ import { useDebounceFn } from '@vueuse/core'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { Territory } from '@/types/sales'
-import { GetMetadata } from '@/types/system'
-import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChipText from '@/components/FilterChipText.vue'
 import TerritoryForm from '@/components/forms/TerritoryForm.vue'
 
 const props = defineProps<{
@@ -145,7 +163,6 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<Territory[]>([])
-const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')
@@ -159,7 +176,12 @@ const showDialog = ref(false)
 const filterCode = ref<string>()
 const filterName = ref<string>()
 const filterRegion = ref<string>()
+
 const filterSalesmanID = ref<number>()
+const filterSalesmanIDText = computed(() => {
+  return filterSalesmanID.value ? hrStore.employeesList.find(ele => ele.id === filterSalesmanID.value)?.name : ''
+})
+
 const lsKey = 'territories_dt'
 
 function getFilterStr(): string {
@@ -172,17 +194,9 @@ function getFilterStr(): string {
     ret += '&salesman_fk=' + filterSalesmanID.value
   }
 
-  if (filterCode.value) {
-    ret += '&code=~' + filterCode.value + '~'
-  }
-
-  if (filterName.value) {
-    ret += '&name=~' + filterName.value + '~'
-  }
-
-  if (filterRegion.value) {
-    ret += '&region=' + filterRegion.value
-  }
+  ret += getTextFilterUrlParam('code', filterCode.value)
+  ret += getTextFilterUrlParam('name', filterName.value)
+  ret += getTextFilterUrlParam('region', filterRegion.value)
 
   return ret
 }

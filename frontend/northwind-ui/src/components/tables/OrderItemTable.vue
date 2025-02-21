@@ -85,7 +85,6 @@ import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { OrderItem } from '@/types/sales'
-import { GetMetadata } from '@/types/system'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import DtFooter from '@/components/DtFooter.vue'
@@ -111,7 +110,6 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<OrderItem[]>([])
-const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')

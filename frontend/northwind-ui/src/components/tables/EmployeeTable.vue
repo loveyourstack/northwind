@@ -59,16 +59,27 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-0">
-        <v-col cols="12" sm="6" lg="4">
-          <v-text-field label="First name search" v-model="filterFirstName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <v-text-field label="Last name search" v-model="filterLastName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
+      <v-row no-gutters class="mb-1">
+        <v-col>
+          <v-chip-group column>
+
+            <FilterChipText name="First name" :filterValue="filterFirstName" :filterText="filterFirstName" @closed="filterFirstName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="First name" v-model="filterFirstName"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Last name" :filterValue="filterLastName" :filterText="filterLastName" @closed="filterLastName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Last name" v-model="filterLastName"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+          </v-chip-group>
         </v-col>
       </v-row>
     </template>
@@ -95,11 +106,11 @@ import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { Employee } from '@/types/hr'
-import { GetMetadata } from '@/types/system'
-import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useDateFormat, useDebounceFn } from '@vueuse/core'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   title?: string
@@ -124,7 +135,6 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<Employee[]>([])
-const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')
@@ -142,12 +152,8 @@ function getFilterStr(): string {
   // exclude None
   ret += '&id=!-1'
 
-  if (filterFirstName.value) {
-    ret += '&first_name=~' + filterFirstName.value + '~'
-  }
-  if (filterLastName.value) {
-    ret += '&last_name=~' + filterLastName.value + '~'
-  }
+  ret += getTextFilterUrlParam('first_name', filterFirstName.value)
+  ret += getTextFilterUrlParam('last_name', filterLastName.value)
 
   return ret
 }

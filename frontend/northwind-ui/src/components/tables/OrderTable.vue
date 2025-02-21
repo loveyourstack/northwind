@@ -61,38 +61,52 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-0">
-        <v-col cols="12" sm="6" lg="4">
-          <v-text-field label="Order # search" v-model="filterOrderNumber" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4" v-if="props.customer_id == 0">
-          <v-text-field label="Customer search" v-model="filterCustomerName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="4">
-          <v-autocomplete label="Shipped" v-model="filterShipped" clearable
-            :items="coreStore.booleanOptions"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
+      <v-row no-gutters class="mb-1">
+        <v-col>
+          <v-chip-group column>
 
-      <v-row class="mt-0">
-        <v-col cols="12" sm="6" lg="4">
-          <v-menu v-model="showOrderDateDp" :close-on-content-click="false">
-            <template #activator="{ props }">
-              <v-text-field id="order-date-text" v-bind="props" label="Order date >" prepend-icon="mdi-calendar" readonly clearable
-                :model-value="filterOrderDate ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : undefined"
-                @click:clear="filterOrderDate = undefined; refreshItems()"
-              ></v-text-field>
-            </template>
-            <template #default>
-              <v-date-picker color="primary" v-model="filterOrderDate" @update:model-value="showOrderDateDp = false; refreshItems()"></v-date-picker>
-            </template>
-          </v-menu>
+            <FilterChipText name="Order #" :filterValue="filterOrderNumber" :filterText="filterOrderNumber" @closed="filterOrderNumber = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Order #" v-model="filterOrderNumber"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Customer name" :filterValue="filterCustomerName" :filterText="filterCustomerName" @closed="filterCustomerName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Customer name" v-model="filterCustomerName"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipBool name="Shipped" :filterValue="filterShipped" :filterText="filterShippedText" @closed="filterShipped = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Shipped" v-model="filterShipped"
+                  :items="coreStore.booleanOptions"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipBool>
+
+            <FilterChipText name="Order date >" :filterValue="filterOrderDate" :filterText="filterOrderDateText" @closed="filterOrderDate = undefined; refreshItems()">
+              <template #menuContent>
+                <v-menu v-model="showOrderDateDp" :close-on-content-click="false">
+                  <template #activator="{ props }">
+                    <v-text-field id="order-date-text" v-bind="props" label="Order date >" prepend-icon="mdi-calendar" readonly
+                      :model-value="filterOrderDate ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : undefined"
+                      @click:clear="filterOrderDate = undefined; refreshItems()"
+                    ></v-text-field>
+                  </template>
+                  <template #default>
+                    <v-date-picker color="primary" v-model="filterOrderDate" @update:model-value="showOrderDateDp = false; refreshItems()"></v-date-picker>
+                  </template>
+                </v-menu>
+              </template>
+            </FilterChipText>
+
+          </v-chip-group>
         </v-col>
       </v-row>
     </template>
@@ -144,10 +158,11 @@ import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { useCoreStore } from '@/stores/core'
 import { Order } from '@/types/sales'
-import { GetMetadata } from '@/types/system'
-import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChipBool from '@/components/FilterChipBool.vue'
+import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   customer_id: number // pass 0 rather than null/undefined, easier to handle
@@ -180,7 +195,6 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<Order[]>([])
-const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')
@@ -190,7 +204,13 @@ const totalItemsEstimated = ref(0)
 
 const filterOrderNumber = ref<string>()
 const filterCustomerName = ref<string>()
+
 const filterShipped = ref<boolean>()
+const filterShippedText = computed(() => {
+  return filterShipped.value != undefined ? coreStore.booleanOptions.find(ele => ele.value === filterShipped.value)?.title : ''
+})
+
+
 /*
   filter type Date:
   - use menu/text/date picker with a "show" bool variable to control menu visibility
@@ -199,7 +219,12 @@ const filterShipped = ref<boolean>()
   - default empty string when writing to LS in watch (ideally undefined, but this causes type error), useDateFormat if truthy
   - new Date() when reading from LS in onBeforeMount
 */
+
 const filterOrderDate = ref<Date>()
+const filterOrderDateText = computed(() => {
+  return filterOrderDate.value != undefined ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : ''
+})
+
 const lsKey = 'orders_dt'
 
 const showOrderDateDp = ref(false)
@@ -215,7 +240,7 @@ function getFilterStr(): string {
   if (props.customer_id > 0) {
     ret += '&customer_fk=' + props.customer_id
   } else if (filterCustomerName.value) {
-    ret += '&customer_company_name=~' + filterCustomerName.value + '~'
+    ret += getTextFilterUrlParam('customer_company_name', filterCustomerName.value)
   }
 
   // checking bool filter like this so that undefined and null do not count as false

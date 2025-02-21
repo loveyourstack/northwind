@@ -59,29 +59,46 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-0">
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field label="Name search" v-model="filterName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-autocomplete label="Category" v-model="filterCategoryID" clearable
-            :items="coreStore.categoriesList" item-title="name" item-value="id"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3" v-if="props.supplier_id == 0">
-          <v-autocomplete label="Supplier" v-model="filterSupplierID" clearable
-            :items="coreStore.suppliersList" item-title="name" item-value="id"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-autocomplete label="Discontinued" v-model="filterDiscontinued"
-            :items="coreStore.booleanOptions"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
+      <v-row no-gutters class="mb-1">
+        <v-col>
+          <v-chip-group column>
+
+            <FilterChipText name="Name" :filterValue="filterName" :filterText="filterName" @closed="filterName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Name" v-model="filterName" clearable
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Category" :filterValue="filterCategoryID" :filterText="filterCategoryIDText" @closed="filterCategoryID = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Category" v-model="filterCategoryID"
+                  :items="coreStore.categoriesList" item-title="name" item-value="id"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Supplier" :filterValue="filterSupplierID" :filterText="filterSupplierIDText" @closed="filterSupplierID = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Supplier" v-model="filterSupplierID"
+                  :items="coreStore.suppliersList" item-title="name" item-value="id"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipText>
+
+            <FilterChipBool name="Discontinued" :filterValue="filterDiscontinued" :filterText="filterDiscontinuedText" @closed="filterDiscontinued = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Discontinued" v-model="filterDiscontinued"
+                  :items="coreStore.booleanOptions"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipBool>
+
+          </v-chip-group>
         </v-col>
       </v-row>
     </template>
@@ -127,12 +144,13 @@ import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { Product } from '@/types/core'
-import { GetMetadata } from '@/types/system'
-import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useCoreStore } from '@/stores/core'
 import { useDebounceFn } from '@vueuse/core'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChipBool from '@/components/FilterChipBool.vue'
+import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   supplier_id: number // pass 0 rather than null/undefined, easier to handle
@@ -162,7 +180,6 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<Product[]>([])
-const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')
@@ -171,17 +188,29 @@ const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
 
 const filterName = ref<string>()
+
 const filterCategoryID = ref<number>()
+const filterCategoryIDText = computed(() => {
+  return filterCategoryID.value ? coreStore.categoriesList.find(ele => ele.id === filterCategoryID.value)?.name : ''
+})
+
 const filterSupplierID = ref<number>()
-const filterDiscontinued = ref(false)
+const filterSupplierIDText = computed(() => {
+  return filterSupplierID.value ? coreStore.suppliersList.find(ele => ele.id === filterSupplierID.value)?.name : ''
+})
+
+const filterDiscontinued = ref<boolean>()
+const filterDiscontinuedText = computed(() => {
+  return filterDiscontinued.value != undefined ? coreStore.booleanOptions.find(ele => ele.value === filterDiscontinued.value)?.title : ''
+})
+
 const lsKey = 'products_dt'
 
 function getFilterStr(): string {
   var ret = ''
 
-  if (filterName.value) {
-    ret += '&name=~' + filterName.value + '~'
-  }
+  ret += getTextFilterUrlParam('name', filterName.value)
+  
   if (filterCategoryID.value) {
     ret += '&category_fk=' + filterCategoryID.value
   }
@@ -193,7 +222,10 @@ function getFilterStr(): string {
     ret += '&supplier_fk=' + filterSupplierID.value
   }
 
-  ret += '&is_discontinued=' + filterDiscontinued.value 
+  // checking bool filter like this so that undefined and null do not count as false
+  if (filterDiscontinued.value == false || filterDiscontinued.value == true) {
+    ret += '&is_discontinued=' + filterDiscontinued.value
+  }
 
   return ret
 }

@@ -19,6 +19,23 @@ export function getPageTextEstimated(totalItemsEstimated: number) {
   return "~" + totalItemsEstimated.toLocaleString() + " items"
 }
 
+export function getTextFilterUrlParam(param: string, filterStr: string | undefined): string {
+
+  if (!filterStr) { 
+    return ''
+  }
+
+  // if filterStr starts with !
+  if (filterStr.startsWith('!')) {
+
+    // return a "not contains" filter
+    return '&' + param + '=!~' + filterStr.substring(1) + '~'
+  }
+
+  // return a "contains any" filter, which allows use of "|" for OR conditions
+  return '&' + param + '=~[' + filterStr + ']~'
+}
+
 // processURIOptions translates the datatable pagination and sorting options into URL params for the API
 // uri = the API uri before pagination and sorting are added
 // options = the options object from v-data-table-server

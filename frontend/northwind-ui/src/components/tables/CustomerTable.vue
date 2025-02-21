@@ -59,29 +59,46 @@
         </v-col>
       </v-row>
 
-      <v-row class="mt-0">
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field label="Code search" v-model="filterCode" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
+      <v-row no-gutters class="mb-1">
+        <v-col>
+          <v-chip-group column>
+
+            <FilterChipText name="Code" :filterValue="filterCode" :filterText="filterCode" @closed="filterCode = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Code" v-model="filterCode"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Company name" :filterValue="filterCompanyName" :filterText="filterCompanyName" @closed="filterCompanyName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Company name" v-model="filterCompanyName"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Contact name" :filterValue="filterContactName" :filterText="filterContactName" @closed="filterContactName = ''; refreshItems()">
+              <template #menuContent>
+                <v-text-field label="Contact name" v-model="filterContactName"
+                  @update:model-value="debouncedRefreshItems"
+                ></v-text-field>
+              </template>
+            </FilterChipText>
+
+            <FilterChipText name="Country" :filterValue="filterCountryID" :filterText="filterCountryIDText" @closed="filterCountryID = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Country" v-model="filterCountryID"
+                  :items="commonStore.activeCountriesList" item-title="name" item-value="id"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipText>
+
+          </v-chip-group>
         </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field label="Company name search" v-model="filterCompanyName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-text-field label="Contact name search" v-model="filterContactName" clearable
-            @update:model-value="debouncedRefreshItems"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" sm="6" lg="3">
-          <v-autocomplete label="Country" v-model="filterCountryID" clearable
-            :items="commonStore.activeCountriesList" item-title="name" item-value="id"
-            @update:model-value="refreshItems"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
+       </v-row>
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
@@ -102,12 +119,12 @@ import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { Customer } from '@/types/sales'
-import { GetMetadata } from '@/types/system'
-import { getHeaderListIcon, getHeaderListIconColor, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useCommonStore } from '@/stores/common'
 import { useDebounceFn } from '@vueuse/core'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   title?: string
@@ -134,7 +151,6 @@ const excelDlUrl = computed(() => {
 }) 
 
 const items = ref<Customer[]>([])
-const metadata = ref<GetMetadata>()
 const itemsPerPage = ref(10)
 const sortBy = ref<any>()
 const search = ref('')
@@ -145,21 +161,21 @@ const totalItemsEstimated = ref(0)
 const filterCode = ref<string>()
 const filterCompanyName = ref<string>()
 const filterContactName = ref<string>()
+
 const filterCountryID = ref<number>()
+const filterCountryIDText = computed(() => {
+  return filterCountryID.value ? commonStore.activeCountriesList.find(ele => ele.id === filterCountryID.value)?.name : ''
+})
+
 const lsKey = 'customers_dt'
 
 function getFilterStr(): string {
   var ret = ''
 
-  if (filterCode.value) {
-    ret += '&code=~' + filterCode.value + '~'
-  }
-  if (filterCompanyName.value) {
-    ret += '&company_name=~' + filterCompanyName.value + '~'
-  }
-  if (filterContactName.value) {
-    ret += '&contact_name=~' + filterContactName.value + '~'
-  }
+  ret += getTextFilterUrlParam('code', filterCode.value)
+  ret += getTextFilterUrlParam('company_name', filterCompanyName.value)
+  ret += getTextFilterUrlParam('contact_name', filterContactName.value)
+
   if (filterCountryID.value) {
     ret += '&country_fk=' + filterCountryID.value
   }
