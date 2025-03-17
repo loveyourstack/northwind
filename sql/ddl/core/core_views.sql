@@ -1,12 +1,12 @@
 
 CREATE OR REPLACE VIEW core.v_category AS
 	SELECT 
-    c_c.id,
     c_c.color_hex,
     c_c.color_is_light,
     c_c.description,
     c_c.entry_at,
     c_c.entry_by,
+    c_c.id,
     c_c.last_modified_at,
     c_c.last_modified_by,
     c_c.name,
@@ -30,13 +30,13 @@ CREATE OR REPLACE VIEW core.v_category_data_update AS
 
 CREATE OR REPLACE VIEW core.v_product AS
 	SELECT 
-    c_p.id,
     c_p.category_fk,
     c_c.name AS category,
     c_c.color_hex AS category_color_hex,
     c_c.color_is_light AS category_color_is_light,
     c_p.entry_at,
     c_p.entry_by,
+    c_p.id,
     c_p.is_discontinued,
     c_p.last_modified_at,
     c_p.last_modified_by,
@@ -58,7 +58,6 @@ CREATE OR REPLACE VIEW core.v_product AS
 
 CREATE OR REPLACE VIEW core.v_supplier AS
 	SELECT 
-    c_s.id,
     c_s.address,
     c_s.city,
     c_s.company_name,
@@ -69,6 +68,7 @@ CREATE OR REPLACE VIEW core.v_supplier AS
     co.iso2 AS country_iso2,
     c_s.entry_at,
     c_s.entry_by,
+    c_s.id,
     c_s.last_modified_at,
     c_s.last_modified_by,
     c_s.phone,

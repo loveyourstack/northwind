@@ -1,7 +1,6 @@
 
 CREATE OR REPLACE VIEW hr.v_employee AS
 	SELECT 
-    hr_e.id,
     hr_e.address,
     EXTRACT('YEAR' FROM AGE(current_date, hr_e.date_of_birth))::int AS age,
     hr_e.city,
@@ -15,6 +14,7 @@ CREATE OR REPLACE VIEW hr.v_employee AS
     hr_e.hire_date,
     hr_e.home_phone,
     hr_e.job_title,
+    hr_e.id,
     hr_e.last_modified_at,
     hr_e.last_modified_by,
     hr_e.last_name,

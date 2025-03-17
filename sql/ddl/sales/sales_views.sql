@@ -1,7 +1,6 @@
 
 CREATE OR REPLACE VIEW sales.v_customer AS
 	SELECT 
-    s_c.id,
     s_c.address,
     s_c.city,
     s_c.code,
@@ -13,6 +12,7 @@ CREATE OR REPLACE VIEW sales.v_customer AS
     co.iso2 AS country_iso2,
     s_c.entry_at,
     s_c.entry_by,
+    s_c.id,
     s_c.last_modified_at,
     s_c.last_modified_by,
     s_c.code || ' (' || s_c.company_name || ')' AS name,
@@ -27,7 +27,6 @@ CREATE OR REPLACE VIEW sales.v_customer AS
 
 CREATE OR REPLACE VIEW sales.v_order AS
 	SELECT 
-    s_o.id,
     s_o.customer_fk,
     s_c.code AS customer_code,
     s_c.company_name AS customer_company_name,
@@ -41,6 +40,7 @@ CREATE OR REPLACE VIEW sales.v_order AS
     s_o.entry_at,
     s_o.entry_by,
     s_o.freight_cost,
+    s_o.id,
     s_o.is_shipped,
     s_o.last_modified_at,
     s_o.last_modified_by,
@@ -64,10 +64,10 @@ CREATE OR REPLACE VIEW sales.v_order AS
 
 CREATE OR REPLACE VIEW sales.v_order_item AS
 	SELECT 
-    s_oi.id,
     s_oi.discount,
     s_oi.entry_at,
     s_oi.entry_by,
+    s_oi.id,
     s_oi.last_modified_at,
     s_oi.last_modified_by,
     s_oi.order_fk,
@@ -92,12 +92,12 @@ CREATE OR REPLACE VIEW sales.v_order_value_latest_weeks AS
 
 CREATE OR REPLACE VIEW sales.v_territory AS
 	SELECT 
-    s_t.id,
     s_t.code,
     salesman_fk,
     hr_e.name AS salesman,
     s_t.entry_at,
     s_t.entry_by,
+    s_t.id,
     s_t.last_modified_at,
     s_t.last_modified_by,
     s_t.name,
