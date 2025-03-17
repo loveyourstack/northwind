@@ -72,39 +72,33 @@
         <v-col>
           <v-chip-group column>
 
-            <FilterChipText name="Name" :filterValue="filterName" :filterText="filterName" @closed="filterName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Name" v-model="filterName"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Name" :filterValue="filterName" 
+              @closed="filterName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Code" :filterValue="filterCode" :filterText="filterCode" @closed="filterCode = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Code" v-model="filterCode"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Code" :filterValue="filterCode" 
+              @closed="filterCode = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterCode = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Region" :filterValue="filterRegion" :filterText="filterRegion" @closed="filterRegion = ''; refreshItems()">
+            <FilterChip name="Region" :filterValue="filterRegion" :filterText="filterRegion" @closed="filterRegion = ''; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Region" v-model="filterRegion"
+                <v-autocomplete label="Region" v-model="filterRegion" autofocus
                   :items="salesStore.regions"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
-            </FilterChipText>
+            </FilterChip>
 
-            <FilterChipText name="Salesman" :filterValue="filterSalesmanID" :filterText="filterSalesmanIDText" @closed="filterSalesmanID = undefined; refreshItems()">
+            <FilterChip name="Salesman" :filterValue="filterSalesmanID" :filterText="filterSalesmanIDText" @closed="filterSalesmanID = undefined; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Salesman" v-model="filterSalesmanID"
+                <v-autocomplete label="Salesman" v-model="filterSalesmanID" autofocus
                   :items="hrStore.employeesList" item-title="name" item-value="id"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
-            </FilterChipText>
+            </FilterChip>
 
           </v-chip-group>
         </v-col>
@@ -136,6 +130,7 @@ import { fileDownload } from '@/functions/file'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChip from '@/components/FilterChip.vue'
 import FilterChipText from '@/components/FilterChipText.vue'
 import TerritoryForm from '@/components/forms/TerritoryForm.vue'
 

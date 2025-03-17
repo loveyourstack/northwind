@@ -63,35 +63,32 @@
         <v-col>
           <v-chip-group column>
 
-            <FilterChipText name="Name" :filterValue="filterName" :filterText="filterName" @closed="filterName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Name" v-model="filterName" clearable
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Name" :filterValue="filterName" 
+              @closed="filterName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Category" :filterValue="filterCategoryID" :filterText="filterCategoryIDText" @closed="filterCategoryID = undefined; refreshItems()">
+            <FilterChip name="Category" :filterValue="filterCategoryID" :filterText="filterCategoryIDText" @closed="filterCategoryID = undefined; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Category" v-model="filterCategoryID"
+                <v-autocomplete label="Category" v-model="filterCategoryID" autofocus
                   :items="coreStore.categoriesList" item-title="name" item-value="id"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
-            </FilterChipText>
+            </FilterChip>
 
-            <FilterChipText name="Supplier" :filterValue="filterSupplierID" :filterText="filterSupplierIDText" @closed="filterSupplierID = undefined; refreshItems()">
+            <FilterChip name="Supplier" :filterValue="filterSupplierID" :filterText="filterSupplierIDText" @closed="filterSupplierID = undefined; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Supplier" v-model="filterSupplierID"
+                <v-autocomplete label="Supplier" v-model="filterSupplierID" autofocus
                   :items="coreStore.suppliersList" item-title="name" item-value="id"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
-            </FilterChipText>
+            </FilterChip>
 
             <FilterChipBool name="Discontinued" :filterValue="filterDiscontinued" :filterText="filterDiscontinuedText" @closed="filterDiscontinued = undefined; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Discontinued" v-model="filterDiscontinued"
+                <v-autocomplete label="Discontinued" v-model="filterDiscontinued" autofocus
                   :items="coreStore.booleanOptions"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
@@ -149,6 +146,7 @@ import { fileDownload } from '@/functions/file'
 import { useCoreStore } from '@/stores/core'
 import { useDebounceFn } from '@vueuse/core'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChip from '@/components/FilterChip.vue'
 import FilterChipBool from '@/components/FilterChipBool.vue'
 import FilterChipText from '@/components/FilterChipText.vue'
 

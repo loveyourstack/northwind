@@ -65,46 +65,32 @@
         <v-col>
           <v-chip-group column>
 
-            <FilterChipText name="Order #" :filterValue="filterOrderNumber" :filterText="filterOrderNumber" @closed="filterOrderNumber = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Order #" v-model="filterOrderNumber"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Order #" :filterValue="filterOrderNumber" 
+              @closed="filterOrderNumber = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterOrderNumber = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Customer name" :filterValue="filterCustomerName" :filterText="filterCustomerName" @closed="filterCustomerName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Customer name" v-model="filterCustomerName"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Customer name" :filterValue="filterCustomerName" 
+              @closed="filterCustomerName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterCustomerName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
             <FilterChipBool name="Shipped" :filterValue="filterShipped" :filterText="filterShippedText" @closed="filterShipped = undefined; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Shipped" v-model="filterShipped"
+                <v-autocomplete label="Shipped" v-model="filterShipped" autofocus
                   :items="coreStore.booleanOptions"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
             </FilterChipBool>
 
-            <FilterChipText name="Order date >" :filterValue="filterOrderDate" :filterText="filterOrderDateText" @closed="filterOrderDate = undefined; refreshItems()">
+            <FilterChip name="Order date >" :filterValue="filterOrderDate" :filterText="filterOrderDateText" @closed="filterOrderDate = undefined; refreshItems()">
               <template #menuContent>
-                <v-menu v-model="showOrderDateDp" :close-on-content-click="false">
-                  <template #activator="{ props }">
-                    <v-text-field id="order-date-text" v-bind="props" label="Order date >" prepend-icon="mdi-calendar" readonly
-                      :model-value="filterOrderDate ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : undefined"
-                      @click:clear="filterOrderDate = undefined; refreshItems()"
-                    ></v-text-field>
-                  </template>
-                  <template #default>
-                    <v-date-picker color="primary" v-model="filterOrderDate" @update:model-value="showOrderDateDp = false; refreshItems()"></v-date-picker>
-                  </template>
-                </v-menu>
+                <DateTextField :dateVal="filterOrderDate" label="Order date >"
+                  @updated="(val: Date | undefined) => { filterOrderDate = val; refreshItems() } "
+                ></DateTextField>
               </template>
-            </FilterChipText>
+            </FilterChip>
 
           </v-chip-group>
         </v-col>
@@ -160,7 +146,9 @@ import { useCoreStore } from '@/stores/core'
 import { Order } from '@/types/sales'
 import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
+import DateTextField from '@/components/DateTextField.vue'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChip from '@/components/FilterChip.vue'
 import FilterChipBool from '@/components/FilterChipBool.vue'
 import FilterChipText from '@/components/FilterChipText.vue'
 
@@ -213,7 +201,6 @@ const filterShippedText = computed(() => {
 
 /*
   filter type Date:
-  - use menu/text/date picker with a "show" bool variable to control menu visibility
   - useDateFormat in getFilterStr
   - save as YYYY-MM-DD string in LS
   - default empty string when writing to LS in watch (ideally undefined, but this causes type error), useDateFormat if truthy
@@ -226,8 +213,6 @@ const filterOrderDateText = computed(() => {
 })
 
 const lsKey = 'orders_dt'
-
-const showOrderDateDp = ref(false)
 
 function getFilterStr(): string {
   var ret = ''

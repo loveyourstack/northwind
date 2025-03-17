@@ -63,38 +63,29 @@
         <v-col>
           <v-chip-group column>
 
-            <FilterChipText name="Code" :filterValue="filterCode" :filterText="filterCode" @closed="filterCode = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Code" v-model="filterCode"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Code" :filterValue="filterCode" 
+              @closed="filterCode = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterCode = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Company name" :filterValue="filterCompanyName" :filterText="filterCompanyName" @closed="filterCompanyName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Company name" v-model="filterCompanyName"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Company name" :filterValue="filterCompanyName" 
+              @closed="filterCompanyName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterCompanyName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Contact name" :filterValue="filterContactName" :filterText="filterContactName" @closed="filterContactName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Contact name" v-model="filterContactName"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Contact name" :filterValue="filterContactName" 
+              @closed="filterContactName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterContactName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Country" :filterValue="filterCountryID" :filterText="filterCountryIDText" @closed="filterCountryID = undefined; refreshItems()">
+            <FilterChip name="Country" :filterValue="filterCountryID" :filterText="filterCountryIDText" @closed="filterCountryID = undefined; refreshItems()">
               <template #menuContent>
-                <v-autocomplete label="Country" v-model="filterCountryID"
+                <v-autocomplete label="Country" v-model="filterCountryID" autofocus
                   :items="commonStore.activeCountriesList" item-title="name" item-value="id"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
-            </FilterChipText>
+            </FilterChip>
 
           </v-chip-group>
         </v-col>
@@ -124,6 +115,7 @@ import { fileDownload } from '@/functions/file'
 import { useCommonStore } from '@/stores/common'
 import { useDebounceFn } from '@vueuse/core'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChip from '@/components/FilterChip.vue'
 import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{

@@ -18,34 +18,20 @@
               :rules="[(v: number) => !!v || 'Customer is required']"
             ></v-autocomplete>
 
-            <v-dialog v-model="showOrderDateDp">
-              <template #activator="{ props }">
-                <v-text-field v-bind="props" label="Order date" prepend-icon="mdi-calendar" readonly 
-                  :model-value="item.order_date_d ? useDateFormat(item.order_date_d, 'DD MMM YYYY').value : undefined"
-                  :rules="[(v: string) => !!v || 'Order date is required']"
-                ></v-text-field>
-              </template>
-              <template #default>
-                <v-date-picker color="primary" v-model="item.order_date_d" @update:model-value="showOrderDateDp = false"></v-date-picker>
-              </template>
-            </v-dialog>
+            <DateTextField :dateVal="item.order_date_d" label="Order date" clearable @cleared="item.order_date_d = undefined"
+              @updated="(val: Date | undefined) => { item!.order_date_d = val }"
+              :rules="[(v: string) => !!v || 'Order date is required']"
+            ></DateTextField>
 
             <v-autocomplete label="Salesman" v-model="item.salesman_fk"
               :items="hrStore.employeesList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Salesman is required']"
             ></v-autocomplete>
 
-            <v-dialog v-model="showRequiredDateDp">
-              <template #activator="{ props }">
-                <v-text-field v-bind="props" label="Required date" prepend-icon="mdi-calendar" readonly 
-                  :model-value="item.required_date_d ? useDateFormat(item.required_date_d, 'DD MMM YYYY').value : undefined"
-                  :rules="[(v: string) => !!v || 'Required date is required']"
-                ></v-text-field>
-              </template>
-              <template #default>
-                <v-date-picker color="primary" v-model="item.required_date_d" @update:model-value="showRequiredDateDp = false"></v-date-picker>
-              </template>
-            </v-dialog>
+            <DateTextField :dateVal="item.required_date_d" label="Required date" clearable @cleared="item.required_date_d = undefined"
+              @updated="(val: Date | undefined) => { item!.required_date_d = val }"
+              :rules="[(v: string) => !!v || 'Required date is required']"
+            ></DateTextField>
 
             <v-autocomplete label="Shipper" v-model="item.shipper_fk"
               :items="salesStore.shippersList" item-title="company_name" item-value="id"
@@ -59,17 +45,10 @@
 
             <v-checkbox v-if="props.id !== 0" label="Shipped" v-model="item.is_shipped" @update:model-value="item.shipped_date_d = useNow().value"></v-checkbox>
 
-            <v-dialog v-if="item.is_shipped" v-model="showShippedDateDp">
-              <template #activator="{ props }">
-                <v-text-field v-bind="props" label="Shipped date" prepend-icon="mdi-calendar" readonly 
-                  :model-value="item.shipped_date_d ? useDateFormat(item.shipped_date_d, 'DD MMM YYYY').value : undefined"
-                  :rules="[(v: string) => !!v || 'Shipped date is required']"
-                ></v-text-field>
-              </template>
-              <template #default>
-                <v-date-picker color="primary" v-model="item.shipped_date_d" @update:model-value="showShippedDateDp = false"></v-date-picker>
-              </template>
-            </v-dialog>
+            <DateTextField v-if="item.is_shipped" :dateVal="item.shipped_date_d" label="Shipped date" clearable @cleared="item.shipped_date_d = undefined"
+              @updated="(val: Date | undefined) => { item!.shipped_date_d = val }"
+              :rules="[(v: string) => !!v || 'Shipped date is required']"
+            ></DateTextField>
 
           </v-col>
           <v-col cols="12" md="6" class="form-col">
@@ -130,13 +109,14 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
-import { useDateFormat, useNow } from '@vueuse/core'
+import { useNow } from '@vueuse/core'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { Customer, Order, OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
 import { useCommonStore } from '@/stores/common'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
+import DateTextField from '@/components/DateTextField.vue'
 
 const props = defineProps<{
   id: number
@@ -162,10 +142,6 @@ const itemURL = baseURL + '/' + props.id
 const itemForm = ref()
 const saveBtnLabel = ref('Save')
 const showSaved = ref(false)
-
-const showOrderDateDp = ref(false)
-const showRequiredDateDp = ref(false)
-const showShippedDateDp = ref(false)
 
 const cardTitle = computed(() => {
   return props.id !== 0 ? 'Order #' + item.value!.order_number : 'New Order'

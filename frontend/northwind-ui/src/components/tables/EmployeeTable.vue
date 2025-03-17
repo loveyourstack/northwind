@@ -63,20 +63,14 @@
         <v-col>
           <v-chip-group column>
 
-            <FilterChipText name="First name" :filterValue="filterFirstName" :filterText="filterFirstName" @closed="filterFirstName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="First name" v-model="filterFirstName"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="First name" :filterValue="filterFirstName" 
+              @closed="filterFirstName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterFirstName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Last name" :filterValue="filterLastName" :filterText="filterLastName" @closed="filterLastName = ''; refreshItems()">
-              <template #menuContent>
-                <v-text-field label="Last name" v-model="filterLastName"
-                  @update:model-value="debouncedRefreshItems"
-                ></v-text-field>
-              </template>
+            <FilterChipText name="Last name" :filterValue="filterLastName" 
+              @closed="filterLastName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterLastName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
           </v-chip-group>
