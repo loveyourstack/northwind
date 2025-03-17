@@ -35,25 +35,11 @@
                 <v-list-item-title class="clickable" @click="resetTable()">Reset table</v-list-item-title>
               </v-list-item>
 
+              <AdjustColsListItem :headers="headers" :excluded-headers="excludedHeaders" @toggle="(key: string) => toggleHeader(key)"></AdjustColsListItem>
+
               <v-list-item prepend-icon="mdi-download-outline">
                 <v-list-item-title class="clickable" @click="fileDownload(excelDlUrl)">Download to Excel</v-list-item-title>
               </v-list-item>
-
-              <v-menu :close-on-content-click=false location="start">
-                <template v-slot:activator="{ props }">
-                  <v-list-item v-bind="props" prepend-icon="mdi-table-column">
-                    <v-list-item-title class="clickable">Adjust columns</v-list-item-title>
-                  </v-list-item>
-                </template>
-                <v-list>
-                  <v-list-item v-for="(header, i) in headers" :key="i" :value="header" @click="toggleHeader(header.key)">
-                    <template v-slot:append>
-                      <v-icon :icon="getHeaderListIcon(excludedHeaders, header.key)" :color="getHeaderListIconColor(excludedHeaders, header.key)"></v-icon>
-                    </template>
-                    <v-list-item-title class="clickable" v-text="header.title"></v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
 
             </v-list>
           </v-menu>
@@ -144,8 +130,9 @@ import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { useCoreStore } from '@/stores/core'
 import { Order } from '@/types/sales'
-import { getHeaderListIcon, getHeaderListIconColor, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
+import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
 import DateTextField from '@/components/DateTextField.vue'
 import DtFooter from '@/components/DtFooter.vue'
 import FilterChip from '@/components/FilterChip.vue'
