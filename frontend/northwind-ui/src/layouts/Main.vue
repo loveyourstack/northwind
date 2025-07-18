@@ -1,11 +1,11 @@
 <template>
   <v-app class="rounded rounded-md">
-    <v-app-bar density="compact" elevation="8" class="appbar-bg" image="./../assets/sky.png" theme="dark">
+    <v-app-bar density="compact" elevation="8">
 
       <v-app-bar-nav-icon variant="text" @click.stop="showNav = !showNav"></v-app-bar-nav-icon>
       <v-img max-height="30px" max-width="30px" src="./../assets/logo.png" class="ml-1"></v-img>
       <v-toolbar-title>
-        <span class="text-yellow-darken-2 font-weight-bold projectFont">{{ appStore.projectTitle }}</span>
+        <span class="font-weight-bold projectFont">{{ appStore.projectTitle }}</span>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
@@ -28,33 +28,8 @@
 
     </v-app-bar>
 
-    <v-navigation-drawer v-model="showNav" elevation="8" class="nav-bg-left" floating>
-      <v-list density="compact">
-        <v-list-item link title="Home" to="/home"></v-list-item>
-
-        <v-divider></v-divider>
-        <v-list-subheader title="Import" class="text-uppercase mt-2 clickable" @click="showImportItems = !showImportItems"></v-list-subheader>
-        <div v-if="showImportItems">
-          <v-list-item link title="Categories" to="/categories" prepend-icon="mdi-food-variant"></v-list-item>
-          <v-list-item link title="Products" to="/products" prepend-icon="mdi-food-apple"></v-list-item>
-          <v-list-item link title="Suppliers" to="/suppliers" prepend-icon="mdi-chef-hat"></v-list-item>
-        </div>
-
-        <v-divider></v-divider>
-        <v-list-subheader title="Sales" class="text-uppercase mt-2 clickable" @click="showSalesItems = !showSalesItems"></v-list-subheader>
-        <div v-if="showSalesItems">
-          <v-list-item link title="Customers" to="/customers" prepend-icon="mdi-account-box-outline"></v-list-item>
-          <v-list-item link title="Orders" to="/orders" prepend-icon="mdi-hand-extended"></v-list-item>
-          <v-list-item link title="Territories" to="/territories" prepend-icon="mdi-land-plots"></v-list-item>
-        </div>
-
-        <v-divider></v-divider>
-        <v-list-subheader title="HR" class="text-uppercase mt-2 clickable" @click="showHrItems = !showHrItems"></v-list-subheader>
-        <div v-if="showHrItems">
-          <v-list-item link title="Employees" to="/employees" prepend-icon="mdi-account-circle"></v-list-item>
-        </div>
-
-      </v-list>
+    <v-navigation-drawer v-model="showNav" elevation="8" floating>
+      <LeftNavList />
     </v-navigation-drawer>
 
     <v-main class="d-flex cockpit">
@@ -73,6 +48,7 @@ import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 import ApiError from '@/components/ApiError.vue'
+import LeftNavList from '@/components/LeftNavList.vue'
 
 const theme = useTheme()
 const appStore = useAppStore()
@@ -83,22 +59,16 @@ const salesStore = useSalesStore()
 
 const showNav = ref(true)
 
-const showHrItems = ref(false)
-const showImportItems = ref(false)
-const showSalesItems = ref(false)
-
 const lsKey = 'main'
 
 function toggleTheme () {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
 
-watch([theme.global.name, showHrItems, showImportItems, showSalesItems], () => {
+watch([showNav, theme.global.name], () => {
 
   let lsObj = {
-    'showHrItems': showHrItems.value,
-    'showImportItems': showImportItems.value,
-    'showSalesItems': showSalesItems.value,
+    'showNav': showNav.value,
     'theme': theme.global.name.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
@@ -111,9 +81,7 @@ onBeforeMount(() => {
   }
 
   let lsObj = JSON.parse(lsJSON)
-  if (lsObj['showHrItems']) { showHrItems.value = lsObj['showHrItems'] }
-  if (lsObj['showImportItems']) { showImportItems.value = lsObj['showImportItems'] }
-  if (lsObj['showSalesItems']) { showSalesItems.value = lsObj['showSalesItems'] }
+  if (lsObj['showNav'] !== undefined) { showNav.value = lsObj['showNav'] }
   if (lsObj['theme']) { theme.global.name.value = lsObj['theme'] }
 })
 
@@ -130,10 +98,6 @@ onMounted(() => {
 </script>
 
 <style>
-
-.appbar-bg {
-  opacity: 0.9;
-}
 
 .clickable:hover {
   cursor: pointer;
@@ -196,14 +160,6 @@ onMounted(() => {
 
 .fs-std {
   border-color: #FAFAFA80;
-}
-
-.nav-bg-left {
-  opacity: 0.9;
-  background: linear-gradient(90deg, rgb(var(--v-theme-dark_yellow)) 0%, rgb(var(--v-theme-light_yellow)) 50%) !important;
-}
-.v-theme--dark .nav-bg-left {
-  background: linear-gradient(90deg, rgb(var(--v-theme-dark_yellow)) 0%, rgba(33,33,33,1) 50%) !important;
 }
 
 .projectFont {

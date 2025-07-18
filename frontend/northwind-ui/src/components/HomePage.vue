@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-h2 font-weight-bold projectFont text-yellow-darken-2 mb-4">{{ appStore.projectTitle }}</h1>
+  <h1 class="text-h2 font-weight-bold projectFont mb-4">{{ appStore.projectTitle }}</h1>
   <v-card class="mx-auto text-center" max-width="1000">
     <v-card-text>
       <v-sheet color="rgba(0, 0, 0, .12)">
