@@ -13,6 +13,7 @@ import (
 	"github.com/loveyourstack/northwind/internal/stores/core/coreproduct"
 	"github.com/loveyourstack/northwind/internal/stores/core/coresupplier"
 	"github.com/loveyourstack/northwind/internal/stores/hr/hremployee"
+	"github.com/loveyourstack/northwind/internal/stores/hr/hrmeetingsched"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salescustomer"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorder"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderitem"
@@ -169,6 +170,16 @@ func (srvApp *httpServerApplication) hrRoutes(apiEnv lys.Env) lys.RouteAdderFunc
 		r.HandleFunc(endpoint+"/{id}", lys.Put(apiEnv, employeeStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, employeeStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, employeeStore)).Methods("DELETE")
+
+		endpoint = "/meeting-schedule"
+
+		meetingSchedStore := hrmeetingsched.Store{Db: srvApp.Db}
+		r.HandleFunc(endpoint, lys.Get(apiEnv, meetingSchedStore)).Methods("GET")
+		r.HandleFunc(endpoint+"/{id}", lys.GetById(apiEnv, meetingSchedStore)).Methods("GET")
+		r.HandleFunc(endpoint, lys.Post(apiEnv, meetingSchedStore)).Methods("POST")
+		r.HandleFunc(endpoint+"/{id}", lys.Put(apiEnv, meetingSchedStore)).Methods("PUT")
+		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, meetingSchedStore)).Methods("PATCH")
+		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, meetingSchedStore)).Methods("DELETE")
 
 		return r
 	}

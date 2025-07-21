@@ -17,3 +17,8 @@ UPDATE hr.employee SET reports_to_fk = (SELECT id FROM hr.employee WHERE last_na
 UPDATE hr.employee SET reports_to_fk = (SELECT id FROM hr.employee WHERE last_name = 'Fuller') WHERE reports_to_fk IS NULL;
 ALTER TABLE hr.employee ALTER COLUMN reports_to_fk SET NOT NULL;
 
+
+INSERT INTO hr.meeting_schedule (frequency, day, name, scheduled_time) VALUES 
+  ('Daily', 'None', 'Daily sales report', '09:00'),
+  ('Weekly', 'Monday', 'Weekly sales plan', '09:30')
+;
