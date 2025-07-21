@@ -42,7 +42,7 @@ func main() {
 	}
 
 	// connect to db and assign pool to srvApp
-	srvApp.Db, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbServerUser)
+	srvApp.Db, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbServerUser, srvApp.Config.General.AppName+" Srv")
 	if err != nil {
 		log.Fatalf("initialization: failed to create db connection pool: %s", err.Error())
 	}

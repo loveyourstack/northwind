@@ -25,7 +25,7 @@ var genViewCmd = &cobra.Command{
 		}
 
 		ctx := context.Background()
-		ownerDb, err := lyspgdb.GetPool(ctx, cliApp.Config.Db, dbOwnerUser)
+		ownerDb, err := lyspgdb.GetPool(ctx, cliApp.Config.Db, dbOwnerUser, cliApp.Config.General.AppName+" Cli")
 		if err != nil {
 			cliApp.ErrorLog.Error("lyspgdb.GetPool (db owner) failed: " + err.Error())
 			os.Exit(1)

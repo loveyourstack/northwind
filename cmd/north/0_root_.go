@@ -37,7 +37,7 @@ func initApp() {
 	conf := nw.Config{}
 	err := conf.LoadFromFile("/usr/local/etc/nw_config.toml")
 	if err != nil {
-		log.Fatalf("initialization: nw_config.toml not found: %s" + err.Error())
+		log.Fatalf("initialization: nw_config.toml not found: %s", err.Error())
 	}
 
 	ctx := context.Background()
@@ -52,7 +52,7 @@ func initApp() {
 	}
 
 	// connect to db and assign pool to cliApp
-	cliApp.Db, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbCliUser)
+	cliApp.Db, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbCliUser, conf.General.AppName+" Cli")
 	if err != nil {
 		log.Fatalf("initialization: failed to create db connection pool: %s", err.Error())
 	}
@@ -61,6 +61,6 @@ func initApp() {
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		log.Fatalf(err.Error())
+		log.Fatal(err.Error())
 	}
 }
