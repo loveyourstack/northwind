@@ -6,7 +6,7 @@
           <v-card>
             <v-card-text class="pa-0">
 
-              <CustomerTable />
+              <SalesTerritoryTable :salesman_id="0" />
 
             </v-card-text>
           </v-card>
@@ -17,5 +17,5 @@
 </template>
 
 <script lang="ts" setup>
-import CustomerTable from '@/components/tables/CustomerTable.vue'
+import SalesTerritoryTable from '@/components/tables/SalesTerritoryTable.vue'
 </script>

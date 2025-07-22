@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <TerritoryForm :id="editID"
+    <SalesTerritoryForm :id="editID"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @delete="showDialog = false; refreshItems()"
       @update="showDialog = false; refreshItems()"
-    ></TerritoryForm>
+    ></SalesTerritoryForm>
   </v-dialog>
 
   <v-data-table-server
@@ -119,7 +119,7 @@ import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
 import DtFooter from '@/components/DtFooter.vue'
 import FilterChip from '@/components/FilterChip.vue'
 import FilterChipText from '@/components/FilterChipText.vue'
-import TerritoryForm from '@/components/forms/TerritoryForm.vue'
+import SalesTerritoryForm from '@/components/forms/SalesTerritoryForm.vue'
 
 const props = defineProps<{
   salesman_id: number

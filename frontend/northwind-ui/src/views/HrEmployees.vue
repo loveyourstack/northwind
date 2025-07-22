@@ -6,7 +6,7 @@
           <v-card>
             <v-card-text class="pa-0">
 
-              <SupplierTable />
+              <HrEmployeeTable />
 
             </v-card-text>
           </v-card>
@@ -17,5 +17,5 @@
 </template>
 
 <script lang="ts" setup>
-import SupplierTable from '@/components/tables/SupplierTable.vue'
+import HrEmployeeTable from '@/components/tables/HrEmployeeTable.vue'
 </script>

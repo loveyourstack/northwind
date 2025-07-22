@@ -20,18 +20,18 @@
               <v-window v-model="selectedTab">
 
                 <v-window-item value="details">
-                  <EmployeeForm :id="props.id"
+                  <HrEmployeeForm :id="props.id"
                     @cancel="router.back"
                     @create="router.push({ name: 'Employees' })"
                     @delete="router.push({ name: 'Employees' })"
                     @load="(name) => { itemName = name }"
-                  ></EmployeeForm>
+                  ></HrEmployeeForm>
                 </v-window-item>
 
                 <v-window-item v-if="props.id !== 0 && visitedTabs.includes('territories')" value="territories">
                   <v-card>
                     <v-card-text class="pa-0">
-                      <TerritoryTable :salesman_id="props.id" :title="itemName + ' > Territories'" />
+                      <SalesTerritoryTable :salesman_id="props.id" :title="itemName + ' > Territories'" />
                       <v-row class="pt-4 pb-4 pl-4">
                         <v-col>
                           <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
@@ -56,8 +56,8 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import EmployeeForm from '@/components/forms/EmployeeForm.vue'
-import TerritoryTable from '@/components/tables/TerritoryTable.vue';
+import HrEmployeeForm from '@/components/forms/HrEmployeeForm.vue'
+import SalesTerritoryTable from '@/components/tables/SalesTerritoryTable.vue';
 
 const props = defineProps<{
   id: number

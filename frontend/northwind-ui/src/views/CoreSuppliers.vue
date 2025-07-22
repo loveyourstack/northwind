@@ -6,7 +6,7 @@
           <v-card>
             <v-card-text class="pa-0">
 
-              <CategoryTable />
+              <CoreSupplierTable />
 
             </v-card-text>
           </v-card>
@@ -17,5 +17,5 @@
 </template>
 
 <script lang="ts" setup>
-import CategoryTable from '@/components/tables/CategoryTable.vue'
+import CoreSupplierTable from '@/components/tables/CoreSupplierTable.vue'
 </script>

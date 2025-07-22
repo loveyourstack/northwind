@@ -22,18 +22,18 @@
 
                 <!-- details tab not lazy loaded, others are -->
                 <v-window-item value="details">
-                  <SupplierForm :id="props.id"
+                  <CoreSupplierForm :id="props.id"
                     @cancel="router.back"
                     @create="router.push({ name: 'Suppliers' })"
                     @delete="router.push({ name: 'Suppliers' })"
                     @load="(name) => { itemName = name }"
-                  ></SupplierForm>
+                  ></CoreSupplierForm>
                 </v-window-item>
 
                 <v-window-item v-if="props.id !== 0 && visitedTabs.includes('products')" value="products">
                   <v-card>
                     <v-card-text class="pa-0">
-                      <ProductTable :supplier_id="props.id" :title="itemName + ' > Products'" />
+                      <CoreProductTable :supplier_id="props.id" :title="itemName + ' > Products'" />
                       <v-row class="pt-4 pb-4 pl-4">
                         <v-col>
                           <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
@@ -58,8 +58,8 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import SupplierForm from '@/components/forms/SupplierForm.vue'
-import ProductTable from '@/components/tables/ProductTable.vue'
+import CoreSupplierForm from '@/components/forms/CoreSupplierForm.vue'
+import CoreProductTable from '@/components/tables/CoreProductTable.vue'
 
 const props = defineProps<{
   id: number

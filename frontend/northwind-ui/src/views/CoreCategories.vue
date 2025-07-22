@@ -6,7 +6,7 @@
           <v-card>
             <v-card-text class="pa-0">
 
-              <OrderTable :customer_id="0" />
+              <CoreCategoryTable />
 
             </v-card-text>
           </v-card>
@@ -17,5 +17,5 @@
 </template>
 
 <script lang="ts" setup>
-import OrderTable from '@/components/tables/OrderTable.vue'
+import CoreCategoryTable from '@/components/tables/CoreCategoryTable.vue'
 </script>

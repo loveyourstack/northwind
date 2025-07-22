@@ -6,11 +6,11 @@
           <v-card>
             <v-card-text class="pa-0">
 
-              <ProductForm :id="props.id"
+              <CoreProductForm :id="props.id"
                 @cancel="router.back"
                 @create="router.push({ name: 'Products' })"
                 @delete="router.push({ name: 'Products' })"
-              ></ProductForm>
+              ></CoreProductForm>
 
             </v-card-text>
           </v-card>
@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import ProductForm from '@/components/forms/ProductForm.vue'
+import CoreProductForm from '@/components/forms/CoreProductForm.vue'
 
 const props = defineProps<{
   id: number

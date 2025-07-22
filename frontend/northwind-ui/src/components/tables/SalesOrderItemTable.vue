@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <OrderItemForm :order_id="order_id" :order_number="props.order_number" :id="editID"
+    <SalesOrderItemForm :order_id="order_id" :order_number="props.order_number" :id="editID"
       @archive="showDialog = false; refreshItems()"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @update="showDialog = false; refreshItems()"
-    ></OrderItemForm>
+    ></SalesOrderItemForm>
   </v-dialog>
 
   <v-data-table-server
@@ -88,7 +88,7 @@ import { OrderItem } from '@/types/sales'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import DtFooter from '@/components/DtFooter.vue'
-import OrderItemForm from '@/components/forms/OrderItemForm.vue'
+import SalesOrderItemForm from '@/components/forms/SalesOrderItemForm.vue'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle

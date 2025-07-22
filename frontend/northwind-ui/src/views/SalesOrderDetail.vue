@@ -20,18 +20,18 @@
               <v-window v-model="selectedTab">
 
                 <v-window-item value="details">
-                  <OrderForm :id="props.id"
+                  <SalesOrderForm :id="props.id"
                     @archive="router.push({ name: 'Orders' })"
                     @cancel="router.back"
                     @create="router.push({ name: 'Orders' })"
                     @load=""
-                  ></OrderForm>
+                  ></SalesOrderForm>
                 </v-window-item>
                 
                 <v-window-item v-if="props.id !== 0 && visitedTabs.includes('orderItems')" value="orderItems">
                   <v-card>
                     <v-card-text class="pa-0">
-                      <OrderItemTable v-if="item" :order_id="props.id" :order_number="item.order_number" :title="'Order #' + item.order_number + ' > Items'" />
+                      <SalesOrderItemTable v-if="item" :order_id="props.id" :order_number="item.order_number" :title="'Order #' + item.order_number + ' > Items'" />
                       <v-row class="pt-4 pb-4 pl-4">
                         <v-col>
                           <v-btn icon class="mr-4 mb-1 ml-1" @click="router.back">
@@ -59,8 +59,8 @@ import { useRouter } from 'vue-router'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { Order } from '@/types/sales'
-import OrderForm from '@/components/forms/OrderForm.vue'
-import OrderItemTable from '@/components/tables/OrderItemTable.vue';
+import SalesOrderForm from '@/components/forms/SalesOrderForm.vue'
+import SalesOrderItemTable from '@/components/tables/SalesOrderItemTable.vue';
 
 const props = defineProps<{
   id: number

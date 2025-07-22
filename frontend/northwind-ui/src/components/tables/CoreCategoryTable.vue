@@ -1,11 +1,11 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <CategoryForm :id="editID"
+    <CoreCategoryForm :id="editID"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @delete="showDialog = false; refreshItems()"
       @update="showDialog = false; refreshItems()"
-    ></CategoryForm>
+    ></CoreCategoryForm>
   </v-dialog>
 
   <v-data-table-server
@@ -86,7 +86,7 @@ import { useFetchDt } from '@/composables/fetch'
 import { Category } from '@/types/core'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import CategoryForm from '@/components/forms/CategoryForm.vue'
+import CoreCategoryForm from '@/components/forms/CoreCategoryForm.vue'
 import DtFooter from '@/components/DtFooter.vue'
 
 const props = defineProps<{

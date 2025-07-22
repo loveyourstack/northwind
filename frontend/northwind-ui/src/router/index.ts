@@ -25,7 +25,7 @@ const routes = [
           {
             path: '',
             name: 'Categories',
-            component: () => import('@/views/Categories.vue'),
+            component: () => import('@/views/CoreCategories.vue'),
           },
         ],
       },
@@ -35,13 +35,13 @@ const routes = [
           {
             path: '',
             name: 'Customers',
-            component: () => import('@/views/Customers.vue'),
+            component: () => import('@/views/SalesCustomers.vue'),
           },
           {
             path: 'new',
             props: () => { return { id: 0 } },
             name: 'New customer',
-            component: () => import('@/views/CustomerDetail.vue'),
+            component: () => import('@/views/SalesCustomerDetail.vue'),
           },
           {
             path: ':id',
@@ -51,7 +51,7 @@ const routes = [
               }
             },
             name: 'Customer detail',
-            component: () => import('@/views/CustomerDetail.vue'),
+            component: () => import('@/views/SalesCustomerDetail.vue'),
           },
         ],
       },
@@ -61,13 +61,13 @@ const routes = [
           {
             path: '',
             name: 'Employees',
-            component: () => import('@/views/Employees.vue'),
+            component: () => import('@/views/HrEmployees.vue'),
           },
           {
             path: 'new',
             props: () => { return { id: 0 } },
             name: 'New employee',
-            component: () => import('@/views/EmployeeDetail.vue'),
+            component: () => import('@/views/HrEmployeeDetail.vue'),
           },
           {
             path: ':id',
@@ -77,7 +77,7 @@ const routes = [
               }
             },
             name: 'Employee detail',
-            component: () => import('@/views/EmployeeDetail.vue'),
+            component: () => import('@/views/HrEmployeeDetail.vue'),
           },
         ]
       },
@@ -87,13 +87,13 @@ const routes = [
           {
             path: '',
             name: 'Orders',
-            component: () => import('@/views/Orders.vue'),
+            component: () => import('@/views/SalesOrders.vue'),
           },
           {
             path: 'new',
             props: () => { return { id: 0 } },
             name: 'New order',
-            component: () => import('@/views/OrderDetail.vue'),
+            component: () => import('@/views/SalesOrderDetail.vue'),
           },
           {
             path: ':id',
@@ -103,7 +103,7 @@ const routes = [
               }
             },
             name: 'Order detail',
-            component: () => import('@/views/OrderDetail.vue'),
+            component: () => import('@/views/SalesOrderDetail.vue'),
           },
         ]
       },
@@ -113,13 +113,13 @@ const routes = [
           {
             path: '',
             name: 'Products',
-            component: () => import('@/views/Products.vue'),
+            component: () => import('@/views/CoreProducts.vue'),
           },
           {
             path: 'new',
             props: () => { return { id: 0 } },
             name: 'New product',
-            component: () => import('@/views/ProductDetail.vue'),
+            component: () => import('@/views/CoreProductDetail.vue'),
           },
           {
             path: ':id',
@@ -129,7 +129,7 @@ const routes = [
               }
             },
             name: 'Product detail',
-            component: () => import('@/views/ProductDetail.vue'),
+            component: () => import('@/views/CoreProductDetail.vue'),
           },
         ],
       },
@@ -139,13 +139,13 @@ const routes = [
           {
             path: '',
             name: 'Suppliers',
-            component: () => import('@/views/Suppliers.vue'),
+            component: () => import('@/views/CoreSuppliers.vue'),
           },
           {
             path: 'new',
             props: () => { return { id: 0 } },
             name: 'New supplier',
-            component: () => import('@/views/SupplierDetail.vue'),
+            component: () => import('@/views/CoreSupplierDetail.vue'),
           },
           {
             path: ':id',
@@ -155,7 +155,7 @@ const routes = [
               }
             },
             name: 'Supplier detail',
-            component: () => import('@/views/SupplierDetail.vue'),
+            component: () => import('@/views/CoreSupplierDetail.vue'),
           },
         ],
       },
@@ -165,7 +165,7 @@ const routes = [
           {
             path: '',
             name: 'Territories',
-            component: () => import('@/views/Territories.vue'),
+            component: () => import('@/views/SalesTerritories.vue'),
           },
         ]
       },
