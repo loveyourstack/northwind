@@ -92,7 +92,7 @@ func (s Store) ArchiveById(ctx context.Context, tx pgx.Tx, id int64) error {
 }
 
 func (s Store) BulkInsert(ctx context.Context, inputs []Input) (rowsAffected int64, err error) {
-	return lyspg.BulkInsert[Input](ctx, s.Db, schemaName, tableName, inputs)
+	return lyspg.BulkInsert(ctx, s.Db, schemaName, tableName, inputs)
 }
 
 func (s Store) Delete(ctx context.Context, id int64) error {
@@ -147,7 +147,7 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
 	input.LastModifiedAt = lystype.Datetime(time.Now())
-	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id)
+	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {

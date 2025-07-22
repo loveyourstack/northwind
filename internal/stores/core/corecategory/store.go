@@ -102,7 +102,7 @@ func (s Store) Update(ctx context.Context, input Input, id int64) (err error) {
 		}
 	}
 
-	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
+	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (err error) {

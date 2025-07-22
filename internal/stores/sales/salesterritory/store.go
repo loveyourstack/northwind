@@ -85,7 +85,7 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
 	input.LastModifiedAt = lystype.Datetime(time.Now())
 	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
-	return lyspg.Update[Input](ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
+	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
