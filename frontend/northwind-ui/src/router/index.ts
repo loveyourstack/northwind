@@ -82,6 +82,16 @@ const routes = [
         ]
       },
       {
+        path: '/meeting-schedule',
+        children: [
+          {
+            path: '',
+            name: 'MeetingSchedule',
+            component: () => import('@/views/HrMeetingSchedule.vue'),
+          },
+        ]
+      },
+      {
         path: '/orders',
         children: [
           {

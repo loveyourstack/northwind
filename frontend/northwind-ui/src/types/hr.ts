@@ -66,3 +66,32 @@ export function GetEmployeeInputFromItem(item: Employee): EmployeeInput {
     title: item.title,
   }
 }
+
+// ------------------------------------------------------------------------------------------------------
+
+export interface MeetingScheduleInput {
+  day: string
+  frequency: string
+  name: string
+  scheduled_time: string
+}
+export interface MeetingSchedule extends MeetingScheduleInput {
+  id: number
+}
+export function NewMeetingSchedule(): MeetingSchedule {
+  return  {
+    day: 'None',
+    frequency: '',
+    name: '',
+    scheduled_time: '',
+    id: 0,
+  }
+}
+export function GetMeetingScheduleInputFromItem(item: MeetingSchedule): MeetingScheduleInput {
+  return  {
+    day: item.day,
+    frequency: item.frequency,
+    name: item.name,
+    scheduled_time: item.scheduled_time,
+  }
+}

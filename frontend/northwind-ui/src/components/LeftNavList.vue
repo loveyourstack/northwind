@@ -18,6 +18,7 @@
     <v-list-subheader title="HR" class="text-uppercase mt-2 clickable" @click="showHrItems = !showHrItems"></v-list-subheader>
     <div v-if="showHrItems">
       <v-list-item link title="Employees" to="/employees" prepend-icon="mdi-account-circle"></v-list-item>
+      <v-list-item link title="Meeting schedule" to="/meeting-schedule" prepend-icon="mdi-account-group"></v-list-item>
     </div>
 
   </v-list>
@@ -29,7 +30,7 @@ import { ref, watch, onBeforeMount } from 'vue'
 const showHrItems = ref(true)
 const showSalesItems = ref(true)
 
-const lsKey = 'leftNavList'
+const lsKey = 'left_nav_list'
 
 watch([showHrItems, showSalesItems], () => {
 

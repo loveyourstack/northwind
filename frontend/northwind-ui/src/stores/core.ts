@@ -14,8 +14,10 @@ export const useCoreStore = defineStore('core', () => {
   const activeCountriesList = ref<Country[]>([])
   const countriesList = ref<Country[]>([])
   const categoriesList = ref<SelectionItem[]>([])
+  const frequenciesList = ref<string[]>(['Daily', 'Weekly'])
   const productsList = ref<SelectionItem[]>([])
   const suppliersList = ref<SelectionItem[]>([])
+  const weekdaysList = ref<string[]>(['None', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
 
   function loadCategoriesList() {
     var myURL = '/a/core/categories?xfields=id,name&xsort=name&xper_page=5000'
@@ -54,7 +56,7 @@ export const useCoreStore = defineStore('core', () => {
     .catch() // handled by interceptor
   }
 
-  return { activeCountriesList, booleanOptions, categoriesList, countriesList, productsList, suppliersList, 
+  return { activeCountriesList, booleanOptions, categoriesList, countriesList, frequenciesList, productsList, suppliersList, weekdaysList,
     loadCategoriesList, loadCountriesList, loadSuppliersList, loadProductsList  }
 })
 
