@@ -52,7 +52,7 @@ CREATE OR REPLACE VIEW core.v_product AS
     c_p.units_on_order
   FROM core.product c_p
   JOIN core.supplier c_s ON c_p.supplier_fk = c_s.id
-  JOIN common.country co ON c_s.country_fk = co.id
+  JOIN core.country co ON c_s.country_fk = co.id
   JOIN core.category c_c ON c_p.category_fk = c_c.id;
 
 
@@ -77,7 +77,7 @@ CREATE OR REPLACE VIEW core.v_supplier AS
     c_s.company_name || ' (' || co.iso2 || ')' AS name, --unique
     COALESCE(c_p.active_product_count,0) AS active_product_count
   FROM core.supplier c_s
-  JOIN common.country co ON c_s.country_fk = co.id
+  JOIN core.country co ON c_s.country_fk = co.id
   LEFT JOIN (SELECT supplier_fk, count(*) FILTER (WHERE is_discontinued = false) AS active_product_count FROM core.product GROUP BY 1) c_p ON c_p.supplier_fk = c_s.id;
 
 CREATE OR REPLACE VIEW core.v_supplier_data_update AS

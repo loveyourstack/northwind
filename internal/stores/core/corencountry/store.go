@@ -1,4 +1,4 @@
-package commoncountry
+package corecountry
 
 import (
 	"context"
@@ -16,7 +16,7 @@ import (
 
 const (
 	name           string = "Countries"
-	schemaName     string = "common"
+	schemaName     string = "core"
 	tableName      string = "country"
 	viewName       string = "country"
 	pkColName      string = "id"

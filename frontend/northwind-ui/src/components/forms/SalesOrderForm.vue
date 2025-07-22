@@ -75,7 +75,7 @@
               ></v-text-field>
 
               <v-autocomplete label="Country" v-model="item.dest_country_fk"
-                :items="commonStore.activeCountriesList" item-title="name" item-value="id"
+                :items="coreStore.activeCountriesList" item-title="name" item-value="id"
                 :rules="[(v: number) => !!v || 'Country is required']"
               ></v-autocomplete>
 
@@ -113,7 +113,7 @@ import { useNow } from '@vueuse/core'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { Customer, Order, OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
-import { useCommonStore } from '@/stores/common'
+import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 import DateTextField from '@/components/DateTextField.vue'
@@ -130,7 +130,7 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>()
 
-const commonStore = useCommonStore()
+const coreStore = useCoreStore()
 const hrStore = useHRStore()
 const salesStore = useSalesStore()
 

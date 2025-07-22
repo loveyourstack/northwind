@@ -43,7 +43,6 @@
 import { ref, watch, onBeforeMount, onMounted } from 'vue'
 import { useTheme } from 'vuetify'
 import { useAppStore } from '@/stores/app'
-import { useCommonStore } from '@/stores/common'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
@@ -52,7 +51,6 @@ import LeftNavList from '@/components/LeftNavList.vue'
 
 const theme = useTheme()
 const appStore = useAppStore()
-const commonStore = useCommonStore()
 const coreStore = useCoreStore()
 const hrStore = useHRStore()
 const salesStore = useSalesStore()
@@ -87,8 +85,8 @@ onBeforeMount(() => {
 
 onMounted(() => {
   // refresh stores on page reload
-  commonStore.loadCountriesList()
   coreStore.loadCategoriesList()
+  coreStore.loadCountriesList()
   coreStore.loadProductsList()
   coreStore.loadSuppliersList()
   hrStore.loadEmployeesList()

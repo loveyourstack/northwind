@@ -26,5 +26,5 @@ CREATE OR REPLACE VIEW hr.v_employee AS
     hr_e.state,
     hr_e.title
   FROM hr.employee hr_e
-  JOIN common.country co ON hr_e.country_fk = co.id
+  JOIN core.country co ON hr_e.country_fk = co.id
   JOIN hr.employee report ON hr_e.reports_to_fk = report.id;

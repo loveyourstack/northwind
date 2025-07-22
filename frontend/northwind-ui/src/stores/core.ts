@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { Country } from '@/types/core'
 import { SelectionItem } from '@/types/system'
 import ax from '@/api'
 
@@ -10,6 +11,8 @@ export const useCoreStore = defineStore('core', () => {
     {value: false, title: 'No'}
   ]
 
+  const activeCountriesList = ref<Country[]>([])
+  const countriesList = ref<Country[]>([])
   const categoriesList = ref<SelectionItem[]>([])
   const productsList = ref<SelectionItem[]>([])
   const suppliersList = ref<SelectionItem[]>([])
@@ -19,6 +22,16 @@ export const useCoreStore = defineStore('core', () => {
     ax.get(myURL)
     .then(response => {
       categoriesList.value = response.data.data
+    })
+    .catch() // handled by interceptor
+  }
+
+  function loadCountriesList() {
+    var myURL = '/a/core/countries?xfields=id,is_active,iso2,name&xsort=name&xper_page=5000'
+    ax.get(myURL)
+    .then(response => {
+      countriesList.value = response.data.data
+      activeCountriesList.value = countriesList.value.filter((el: Country) => el.is_active)
     })
     .catch() // handled by interceptor
   }
@@ -41,6 +54,7 @@ export const useCoreStore = defineStore('core', () => {
     .catch() // handled by interceptor
   }
 
-  return { booleanOptions, categoriesList, suppliersList, loadCategoriesList, loadSuppliersList, loadProductsList, productsList }
+  return { activeCountriesList, booleanOptions, categoriesList, countriesList, productsList, suppliersList, 
+    loadCategoriesList, loadCountriesList, loadSuppliersList, loadProductsList  }
 })
 

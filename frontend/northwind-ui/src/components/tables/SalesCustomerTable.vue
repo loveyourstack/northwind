@@ -67,7 +67,7 @@
             <FilterChip name="Country" :filterValue="filterCountryID" :filterText="filterCountryIDText" @closed="filterCountryID = undefined; refreshItems()">
               <template #menuContent>
                 <v-autocomplete label="Country" v-model="filterCountryID" autofocus
-                  :items="commonStore.activeCountriesList" item-title="name" item-value="id"
+                  :items="coreStore.activeCountriesList" item-title="name" item-value="id"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
@@ -98,7 +98,7 @@ import { useFetchDt } from '@/composables/fetch'
 import { Customer } from '@/types/sales'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import { useCommonStore } from '@/stores/common'
+import { useCoreStore } from '@/stores/core'
 import { useDebounceFn } from '@vueuse/core'
 import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
 import DtFooter from '@/components/DtFooter.vue'
@@ -109,7 +109,7 @@ const props = defineProps<{
   title?: string
 }>()
 
-const commonStore = useCommonStore()
+const coreStore = useCoreStore()
 
 var headers = [
   { title: 'Code', key: 'code' },
@@ -143,7 +143,7 @@ const filterContactName = ref<string>()
 
 const filterCountryID = ref<number>()
 const filterCountryIDText = computed(() => {
-  return filterCountryID.value ? commonStore.activeCountriesList.find(ele => ele.id === filterCountryID.value)?.name : ''
+  return filterCountryID.value ? coreStore.activeCountriesList.find(ele => ele.id === filterCountryID.value)?.name : ''
 })
 
 const lsKey = 'customers_dt'

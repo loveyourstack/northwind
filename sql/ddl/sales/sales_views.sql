@@ -21,7 +21,7 @@ CREATE OR REPLACE VIEW sales.v_customer AS
     s_c.state,
     COALESCE(s_o.order_count,0) AS order_count
   FROM sales.customer s_c
-  JOIN common.country co ON s_c.country_fk = co.id
+  JOIN core.country co ON s_c.country_fk = co.id
   LEFT JOIN (SELECT customer_fk, count(*) AS order_count FROM sales.order GROUP BY 1) s_o ON s_o.customer_fk = s_c.id;
 
 
@@ -56,7 +56,7 @@ CREATE OR REPLACE VIEW sales.v_order AS
     COALESCE(s_oi.value,0) AS order_value
   FROM sales.order s_o
   JOIN sales.customer s_c ON s_o.customer_fk = s_c.id
-  JOIN common.country co ON s_o.dest_country_fk = co.id
+  JOIN core.country co ON s_o.dest_country_fk = co.id
   JOIN hr.employee hr_e ON s_o.salesman_fk = hr_e.id
   JOIN sales.shipper s_s ON s_o.shipper_fk = s_s.id
   LEFT JOIN (SELECT order_fk, count(*), SUM(quantity * unit_price * (1 - discount)) AS value FROM sales.order_item GROUP BY 1) s_oi ON s_oi.order_fk = s_o.id;

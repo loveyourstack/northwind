@@ -12,7 +12,7 @@ import (
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
-	"github.com/loveyourstack/northwind/internal/stores/common/commoncountry"
+	corecountry "github.com/loveyourstack/northwind/internal/stores/core/corencountry"
 )
 
 const (
@@ -72,10 +72,10 @@ func (s Store) Delete(ctx context.Context, id int64) error {
 	return lyspg.DeleteUnique(ctx, s.Db, schemaName, tableName, pkColName, id)
 }
 
-func (s Store) DistinctSupplierCommonCountries(ctx context.Context) (countries []commoncountry.Model, err error) {
+func (s Store) DistinctSupplierCountries(ctx context.Context) (countries []corecountry.Model, err error) {
 
 	stmt := fmt.Sprintf(`
-		SELECT co.id, co.name FROM common.country co 
+		SELECT co.id, co.name FROM core.country co 
 		JOIN (
 			SELECT DISTINCT country_fk 
 			FROM core.supplier c_s
@@ -84,7 +84,7 @@ func (s Store) DistinctSupplierCommonCountries(ctx context.Context) (countries [
 		ORDER BY co.name;`,
 		schemaName, tableName)
 
-	return lyspg.SelectT[commoncountry.Model](ctx, s.Db, stmt)
+	return lyspg.SelectT[corecountry.Model](ctx, s.Db, stmt)
 }
 
 func (s Store) GetMeta() lysmeta.Result {

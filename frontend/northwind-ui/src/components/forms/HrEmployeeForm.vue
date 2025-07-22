@@ -66,7 +66,7 @@
               ></v-text-field>
 
               <v-autocomplete label="Country" v-model="item.country_fk"
-                :items="commonStore.countriesList" item-title="name" item-value="id"
+                :items="coreStore.countriesList" item-title="name" item-value="id"
                 :rules="[(v: number) => !!v || 'Country is required']"
               ></v-autocomplete>
 
@@ -113,7 +113,7 @@ import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { Employee, EmployeeInput, NewEmployee, GetEmployeeInputFromItem } from '@/types/hr'
-import { useCommonStore } from '@/stores/common'
+import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 
 const props = defineProps<{
@@ -128,7 +128,7 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>()
 
-const commonStore = useCommonStore()
+const coreStore = useCoreStore()
 const hrStore = useHRStore()
 
 const saving = ref(false)

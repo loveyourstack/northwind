@@ -8,8 +8,8 @@ import (
 	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lysstring"
 	"github.com/loveyourstack/northwind/internal/enums/sysrole"
-	"github.com/loveyourstack/northwind/internal/stores/common/commoncountry"
 	"github.com/loveyourstack/northwind/internal/stores/core/corecategory"
+	corecountry "github.com/loveyourstack/northwind/internal/stores/core/corencountry"
 	"github.com/loveyourstack/northwind/internal/stores/core/coreproduct"
 	"github.com/loveyourstack/northwind/internal/stores/core/coresupplier"
 	"github.com/loveyourstack/northwind/internal/stores/hr/hremployee"
@@ -70,26 +70,10 @@ func (srvApp *httpServerApplication) getRouter() http.Handler {
 func (srvApp *httpServerApplication) getSubRoutes(apiEnv lys.Env) []lys.SubRoute {
 
 	return []lys.SubRoute{
-		{Url: "/common", RouteAdder: srvApp.commonRoutes(apiEnv)},
 		{Url: "/core", RouteAdder: srvApp.coreRoutes(apiEnv)},
 		{Url: "/ecb", RouteAdder: srvApp.ecbRoutes()},
 		{Url: "/hr", RouteAdder: srvApp.hrRoutes(apiEnv)},
 		{Url: "/sales", RouteAdder: srvApp.salesRoutes(apiEnv)},
-	}
-}
-
-func (srvApp *httpServerApplication) commonRoutes(apiEnv lys.Env) lys.RouteAdderFunc {
-
-	return func(r *mux.Router) *mux.Router {
-
-		endpoint := "/countries"
-
-		countryStore := commoncountry.Store{Db: srvApp.Db}
-		r.HandleFunc(endpoint, lys.Get(apiEnv, countryStore)).Methods("GET")
-		r.HandleFunc(endpoint+"/{id}", lys.GetById(apiEnv, countryStore)).Methods("GET")
-		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, countryStore)).Methods("PATCH")
-
-		return r
 	}
 }
 
@@ -113,6 +97,13 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 		// test
 		r.HandleFunc(endpoint+"/test", srvApp.coreAddCategoryTest).Methods("POST")
 
+		endpoint = "/countries"
+
+		countryStore := corecountry.Store{Db: srvApp.Db}
+		r.HandleFunc(endpoint, lys.Get(apiEnv, countryStore)).Methods("GET")
+		r.HandleFunc(endpoint+"/{id}", lys.GetById(apiEnv, countryStore)).Methods("GET")
+		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, countryStore)).Methods("PATCH")
+
 		endpoint = "/products"
 
 		productStore := coreproduct.Store{Db: srvApp.Db}
@@ -123,7 +114,7 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, productStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, productStore)).Methods("DELETE")
 
-		r.HandleFunc(endpoint+"/distinct/countries", lys.GetSimple(apiEnv, productStore.DistinctSupplierCommonCountries)).Methods("GET")
+		r.HandleFunc(endpoint+"/distinct/countries", lys.GetSimple(apiEnv, productStore.DistinctSupplierCountries)).Methods("GET")
 
 		endpoint = "/suppliers"
 

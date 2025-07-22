@@ -29,6 +29,15 @@ export function GetCategoryInputFromItem(item: Category): CategoryInput {
 
 // ------------------------------------------------------------------------------------------------------
 
+export interface Country {
+  id: number
+  is_active: boolean
+  iso2: string
+  name: string
+}
+
+// ------------------------------------------------------------------------------------------------------
+
 export interface ProductInput {
   category_fk: number | undefined
   is_discontinued?: boolean
