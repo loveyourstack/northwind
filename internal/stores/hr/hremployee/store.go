@@ -26,12 +26,12 @@ type Input struct {
 	Address        string           `db:"address" json:"address,omitempty" validate:"required"`
 	City           string           `db:"city" json:"city,omitempty" validate:"required"`
 	CountryFk      int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
-	DateOfBirth    lystype.Date     `db:"date_of_birth" json:"date_of_birth,omitempty" validate:"required"`
+	DateOfBirth    lystype.Date     `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
 	FirstName      string           `db:"first_name" json:"first_name,omitempty" validate:"required"`
-	HireDate       lystype.Date     `db:"hire_date" json:"hire_date,omitempty" validate:"required"`
+	HireDate       lystype.Date     `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
 	HomePhone      string           `db:"home_phone" json:"home_phone,omitempty"`
 	JobTitle       string           `db:"job_title" json:"job_title,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	LastName       string           `db:"last_name" json:"last_name,omitempty" validate:"required"`
 	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
 	Notes          string           `db:"notes" json:"notes,omitempty"`
@@ -46,7 +46,7 @@ type Model struct {
 	Age            int              `db:"age" json:"age,omitempty"`
 	Country        string           `db:"country" json:"country,omitempty"`
 	CountryIso2    string           `db:"country_iso2" json:"country_iso2,omitempty"`
-	EntryAt        lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt        lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`
 	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	ReportsTo      string           `db:"reports_to" json:"reports_to,omitempty"`

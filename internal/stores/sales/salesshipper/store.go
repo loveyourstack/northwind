@@ -24,13 +24,13 @@ const (
 
 type Input struct {
 	CompanyName    string           `db:"company_name" json:"company_name,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	Phone          string           `db:"phone" json:"phone,omitempty"`
 }
 
 type Model struct {
 	Id      int64            `db:"id" json:"id"`
-	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	Input
 }
 

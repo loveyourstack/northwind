@@ -25,7 +25,7 @@ const (
 
 type Input struct {
 	Discount       float32          `db:"discount" json:"discount,omitempty"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	OrderFk        int64            `db:"order_fk" json:"order_fk,omitempty" validate:"required"`
 	ProductFk      int64            `db:"product_fk" json:"product_fk,omitempty" validate:"required"`
 	Quantity       int32            `db:"quantity" json:"quantity,omitempty" validate:"required"`
@@ -34,7 +34,7 @@ type Input struct {
 
 type Model struct {
 	Id             int64            `db:"id" json:"id"`
-	EntryAt        lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt        lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`
 	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	OrderNumber    int32            `db:"order_number" json:"order_number,omitempty"`

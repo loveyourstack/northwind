@@ -25,14 +25,14 @@ const (
 type Input struct {
 	Day            string           `db:"day" json:"day,omitempty" validate:"required"`
 	Frequency      string           `db:"frequency" json:"frequency,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
-	ScheduledTime  lystype.Time     `db:"scheduled_time" json:"scheduled_time,omitempty" validate:"required"`
+	ScheduledTime  lystype.Time     `db:"scheduled_time" json:"scheduled_time,omitzero" validate:"required"`
 }
 
 type Model struct {
 	Id      int64            `db:"id" json:"id"`
-	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	Input
 }
 

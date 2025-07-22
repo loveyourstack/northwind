@@ -28,7 +28,7 @@ type Input struct {
 	Code           string           `db:"code" json:"code,omitempty" validate:"required"`
 	SalesmanFk     int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
 	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"`  // assigned in Update funcs
 	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"` // assigned in Update funcs
 	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
 	Region         salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
@@ -36,7 +36,7 @@ type Input struct {
 
 type Model struct {
 	Id       int64            `db:"id" json:"id"`
-	EntryAt  lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt  lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	Salesman string           `db:"salesman" json:"salesman"`
 	Input
 }

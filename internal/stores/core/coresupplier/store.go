@@ -29,7 +29,7 @@ type Input struct {
 	ContactName    string           `db:"contact_name" json:"contact_name,omitempty" validate:"required"`
 	ContactTitle   string           `db:"contact_title" json:"contact_title,omitempty"`
 	CountryFk      int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	Phone          string           `db:"phone" json:"phone,omitempty"`
 	PostalCode     string           `db:"postal_code" json:"postal_code,omitempty"`
 	State          string           `db:"state" json:"state,omitempty"`
@@ -40,7 +40,7 @@ type Model struct {
 	ActiveProductCount int              `db:"active_product_count" json:"active_product_count"`
 	Country            string           `db:"country" json:"country,omitempty"`
 	CountryIso2        string           `db:"country_iso2" json:"country_iso2,omitempty"`
-	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	EntryBy            string           `db:"entry_by" json:"entry_by,omitempty"`
 	LastModifiedBy     string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	Name               string           `db:"name" json:"name,omitempty"`

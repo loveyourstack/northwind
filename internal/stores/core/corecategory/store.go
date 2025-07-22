@@ -30,14 +30,14 @@ type Input struct {
 	ColorIsLight   bool             `db:"color_is_light" json:"color_is_light"` // assigned in Insert and Update funcs
 	Description    string           `db:"description" json:"description,omitempty" validate:"required"`
 	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"`  // assigned in Update funcs
 	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"` // assigned in Update funcs
 	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
 }
 
 type Model struct {
 	Id                 int64            `db:"id" json:"id"`
-	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	ActiveProductCount int              `db:"active_product_count" json:"active_product_count"`
 	Input
 }

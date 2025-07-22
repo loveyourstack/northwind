@@ -27,7 +27,7 @@ const (
 type Input struct {
 	CategoryFk      int64            `db:"category_fk" json:"category_fk" validate:"required"`
 	IsDiscontinued  bool             `db:"is_discontinued" json:"is_discontinued"`
-	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
+	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	Name            string           `db:"name" json:"name,omitempty" validate:"required"`
 	QuantityPerUnit string           `db:"quantity_per_unit" json:"quantity_per_unit" validate:"required"`
 	ReorderLevel    int              `db:"reorder_level" json:"reorder_level"`
@@ -43,7 +43,7 @@ type Model struct {
 	Category             string           `db:"category" json:"category,omitempty"`
 	CategoryColorHex     string           `db:"category_color_hex" json:"category_color_hex,omitempty"`
 	CategoryColorIsLight bool             `db:"category_color_is_light" json:"category_color_is_light"`
-	EntryAt              lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt              lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	EntryBy              string           `db:"entry_by" json:"entry_by,omitempty"`
 	LastModifiedBy       string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	SupplierCompanyName  string           `db:"supplier_company_name" json:"supplier_company_name,omitempty"`

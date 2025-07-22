@@ -38,12 +38,12 @@ type Input struct {
 	DestState       string           `db:"dest_state" json:"dest_state,omitempty"`
 	FreightCost     float32          `db:"freight_cost" json:"freight_cost,omitempty" validate:"number,gte=0"`
 	IsShipped       bool             `db:"is_shipped" json:"is_shipped,omitempty"`
-	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitempty"` // assigned in Update funcs
-	OrderDate       lystype.Date     `db:"order_date" json:"order_date,omitempty" validate:"required"`
+	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
+	OrderDate       lystype.Date     `db:"order_date" json:"order_date,omitzero" validate:"required"`
 	OrderNumber     int32            `db:"order_number" json:"order_number,omitempty"` // assigned in Insert
-	RequiredDate    lystype.Date     `db:"required_date" json:"required_date,omitempty" validate:"required"`
+	RequiredDate    lystype.Date     `db:"required_date" json:"required_date,omitzero" validate:"required"`
 	SalesmanFk      int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
-	ShippedDate     lystype.Date     `db:"shipped_date" json:"shipped_date,omitempty"`
+	ShippedDate     lystype.Date     `db:"shipped_date" json:"shipped_date,omitzero"`
 	ShipperFk       int64            `db:"shipper_fk" json:"shipper_fk,omitempty" validate:"required"`
 }
 
@@ -52,7 +52,7 @@ type Model struct {
 	CustomerCode        string           `db:"customer_code" json:"customer_code,omitempty"`
 	CustomerCompanyName string           `db:"customer_company_name" json:"customer_company_name,omitempty"`
 	DestCountryIso2     string           `db:"dest_country_iso2" json:"dest_country_iso2,omitempty"`
-	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitempty"`
+	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	EntryBy             string           `db:"entry_by" json:"entry_by,omitempty"`
 	LastModifiedBy      string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	Salesman            string           `db:"salesman" json:"salesman,omitempty"`
