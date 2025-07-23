@@ -7,7 +7,7 @@
       ></v-text-field>
     </template>
     <template #default>
-      <v-date-picker color="primary" v-model="localDateVal" :max="max" @update:model-value="showDateDp = false; emit('updated', localDateVal)"></v-date-picker>
+      <v-date-picker color="primary" v-model="localDateVal" :max="max" @update:model-value="showDateDp = false; emit('updated', useDateFormat(localDateVal, 'YYYY-MM-DD').value)"></v-date-picker>
     </template>
   </v-menu>
 </template>
@@ -17,7 +17,7 @@ import { ref, watch } from 'vue'
 import { useDateFormat } from '@vueuse/core'
 
 const props = defineProps<{
-  dateVal: Date | undefined
+  dateVal: string | undefined // YYYY-MM-DD
   label?: string
   tFClass?: string // tF = text field
   clearable?: boolean
@@ -28,7 +28,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'cleared'): void
-  (e: 'updated', val: Date | undefined): void
+  (e: 'updated', val: string | undefined): void // YYYY-MM-DD
 }>()
 
 const showDateDp = ref(false)
@@ -37,7 +37,7 @@ const showDateDp = ref(false)
 const localDateVal = ref<Date>()
 
 watch(() => props.dateVal, () => {
-  localDateVal.value = props.dateVal
+  localDateVal.value = new Date(props.dateVal as string)
 }, { immediate: true }) // so that props.dateVal is read immediately and the initial date in the date picker is highlighted
 
 </script>

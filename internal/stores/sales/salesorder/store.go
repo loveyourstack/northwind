@@ -37,7 +37,7 @@ type Input struct {
 	DestPostalCode  string           `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"required"`
 	DestState       string           `db:"dest_state" json:"dest_state,omitempty"`
 	FreightCost     float32          `db:"freight_cost" json:"freight_cost,omitempty" validate:"number,gte=0"`
-	IsShipped       bool             `db:"is_shipped" json:"is_shipped,omitempty"`
+	IsShipped       bool             `db:"is_shipped" json:"is_shipped"`
 	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	OrderDate       lystype.Date     `db:"order_date" json:"order_date,omitzero" validate:"required"`
 	OrderNumber     int32            `db:"order_number" json:"order_number,omitempty"` // assigned in Insert

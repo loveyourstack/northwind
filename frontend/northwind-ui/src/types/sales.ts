@@ -64,7 +64,7 @@ export interface OrderInput {
   dest_state?: string
   freight_cost: number
   is_shipped: boolean
-  order_date: string | undefined // string, not Date: use additional Date object with _d suffix for date picker element
+  order_date: string | undefined // YYYY-MM-DD string, not Date
   order_number: number
   required_date: string | undefined
   salesman_fk: number | undefined
@@ -80,11 +80,6 @@ export interface Order extends OrderInput {
   shipper_company_name: string
   order_item_count: number
   order_value: number
-
-  // date objects: to be assigned after load
-  order_date_d: Date | undefined
-  required_date_d: Date | undefined
-  shipped_date_d: Date | undefined
 }
 export function NewOrder(): Order {
   return  {
@@ -97,7 +92,7 @@ export function NewOrder(): Order {
     dest_state: '',
     freight_cost: 0,
     is_shipped: false,
-    order_date: undefined,
+    order_date: useDateFormat(useNow().value, 'YYYY-MM-DD').value, // new order date defaults to today
     order_number: 0,
     required_date: undefined,
     salesman_fk: undefined,
@@ -111,10 +106,6 @@ export function NewOrder(): Order {
     shipper_company_name: '',
     order_item_count: 0,
     order_value: 0,
-
-    order_date_d: useNow().value, // new order date defaults to today
-    required_date_d: undefined,
-    shipped_date_d: undefined
   }
 }
 export function GetOrderInputFromItem(item: Order): OrderInput {
@@ -128,11 +119,11 @@ export function GetOrderInputFromItem(item: Order): OrderInput {
     dest_state: item.dest_state,
     freight_cost: item.freight_cost,
     is_shipped: item.is_shipped,
-    order_date: useDateFormat(item.order_date_d, 'YYYY-MM-DD').value, // format corresponding Date object for db input
+    order_date: item.order_date,
     order_number: item.order_number,
-    required_date: useDateFormat(item.required_date_d, 'YYYY-MM-DD').value,
+    required_date: item.required_date,
     salesman_fk: item.salesman_fk,
-    shipped_date: useDateFormat(item.shipped_date_d, 'YYYY-MM-DD').value,
+    shipped_date: item.shipped_date,
     shipper_fk: item.shipper_fk,
   }
 }

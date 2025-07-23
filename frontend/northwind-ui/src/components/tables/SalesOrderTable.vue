@@ -73,7 +73,7 @@
             <FilterChip name="Order date >" :filterValue="filterOrderDate" :filterText="filterOrderDateText" @closed="filterOrderDate = undefined; refreshItems()">
               <template #menuContent>
                 <DateTextField :dateVal="filterOrderDate" label="Order date >"
-                  @updated="(val: Date | undefined) => { filterOrderDate = val; refreshItems() } "
+                  @updated="(val: string | undefined) => { filterOrderDate = val; refreshItems() } "
                 ></DateTextField>
               </template>
             </FilterChip>
@@ -177,36 +177,24 @@ const totalItems = ref(0)
 const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
 
-const filterOrderNumber = ref<string>()
 const filterCustomerName = ref<string>()
+
+const filterOrderDate = ref<string>() // YYYY-MM-DD
+const filterOrderDateText = computed(() => {
+  return filterOrderDate.value != undefined ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : ''
+})
+
+const filterOrderNumber = ref<string>()
 
 const filterShipped = ref<boolean>()
 const filterShippedText = computed(() => {
   return filterShipped.value != undefined ? coreStore.booleanOptions.find(ele => ele.value === filterShipped.value)?.title : ''
 })
 
-
-/*
-  filter type Date:
-  - useDateFormat in getFilterStr
-  - save as YYYY-MM-DD string in LS
-  - default empty string when writing to LS in watch (ideally undefined, but this causes type error), useDateFormat if truthy
-  - new Date() when reading from LS in onBeforeMount
-*/
-
-const filterOrderDate = ref<Date>()
-const filterOrderDateText = computed(() => {
-  return filterOrderDate.value != undefined ? useDateFormat(filterOrderDate, 'DD MMM YYYY').value : ''
-})
-
 const lsKey = 'orders_dt'
 
 function getFilterStr(): string {
   var ret = ''
-
-  if (filterOrderNumber.value) {
-    ret += '&order_number=~' + filterOrderNumber.value + '~'
-  }
 
   // prop filter overrides regular filter
   if (props.customer_id > 0) {
@@ -215,13 +203,17 @@ function getFilterStr(): string {
     ret += getTextFilterUrlParam('customer_company_name', filterCustomerName.value)
   }
 
+  if (filterOrderDate.value) {
+    ret += '&order_date=>eq' + filterOrderDate.value
+  }
+
+  if (filterOrderNumber.value) {
+    ret += '&order_number=~' + filterOrderNumber.value + '~'
+  }
+
   // checking bool filter like this so that undefined and null do not count as false
   if (filterShipped.value == false || filterShipped.value == true) {
     ret += '&is_shipped=' + filterShipped.value
-  }
-
-  if (filterOrderDate.value) {
-    ret += '&order_date=>' + useDateFormat(filterOrderDate, 'YYYY-MM-DD').value
   }
 
   return ret
@@ -265,11 +257,8 @@ watch([itemsPerPage, search, sortBy, excludedHeaders], () => {
     'filterOrderNumber': filterOrderNumber.value,
     'filterCustomerName': filterCustomerName.value,
     'filterShipped': filterShipped.value,
-    'filterOrderDate': '',
+    'filterOrderDate': filterOrderDate.value,
     'excludedHeaders': excludedHeaders.value,
-  }
-  if (filterOrderDate.value) {
-    lsObj.filterOrderDate = useDateFormat(filterOrderDate, 'YYYY-MM-DD').value
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
 }, { deep: true })
@@ -286,7 +275,7 @@ onBeforeMount(() => {
   if (lsObj['filterOrderNumber']) { filterOrderNumber.value = lsObj['filterOrderNumber'] }
   if (lsObj['filterCustomerName']) { filterCustomerName.value = lsObj['filterCustomerName'] }
   if (lsObj['filterShipped']) { filterShipped.value = lsObj['filterShipped'] }
-  if (lsObj['filterOrderDate']) { filterOrderDate.value = new Date(lsObj['filterOrderDate']) }
+  if (lsObj['filterOrderDate']) { filterOrderDate.value = lsObj['filterOrderDate'] }
   if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
 })
 

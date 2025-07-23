@@ -18,8 +18,8 @@
               :rules="[(v: number) => !!v || 'Customer is required']"
             ></v-autocomplete>
 
-            <DateTextField :dateVal="item.order_date_d" label="Order date" clearable @cleared="item.order_date_d = undefined"
-              @updated="(val: Date | undefined) => { item!.order_date_d = val }"
+            <DateTextField :dateVal="item.order_date" label="Order date" clearable @cleared="item.order_date = undefined"
+              @updated="(val: string | undefined) => { item!.order_date = val }"
               :rules="[(v: string) => !!v || 'Order date is required']"
             ></DateTextField>
 
@@ -28,8 +28,8 @@
               :rules="[(v: number) => !!v || 'Salesman is required']"
             ></v-autocomplete>
 
-            <DateTextField :dateVal="item.required_date_d" label="Required date" clearable @cleared="item.required_date_d = undefined"
-              @updated="(val: Date | undefined) => { item!.required_date_d = val }"
+            <DateTextField :dateVal="item.required_date" label="Required date" clearable @cleared="item.required_date = undefined"
+              @updated="(val: string | undefined) => { item!.required_date = val }"
               :rules="[(v: string) => !!v || 'Required date is required']"
             ></DateTextField>
 
@@ -43,10 +43,10 @@
             <v-text-field v-if="item.order_item_count" label="Freight cost" v-model.number="item.freight_cost" type="number" prefix="$" disabled
             ></v-text-field>
 
-            <v-checkbox v-if="props.id !== 0" label="Shipped" v-model="item.is_shipped" @update:model-value="item.shipped_date_d = useNow().value"></v-checkbox>
+            <v-checkbox v-if="props.id !== 0" label="Shipped" v-model="item.is_shipped" @update:model-value="item.shipped_date = useDateFormat(useNow().value, 'YYYY-MM-DD').value"></v-checkbox>
 
-            <DateTextField v-if="item.is_shipped" :dateVal="item.shipped_date_d" label="Shipped date" clearable @cleared="item.shipped_date_d = undefined"
-              @updated="(val: Date | undefined) => { item!.shipped_date_d = val }"
+            <DateTextField v-if="item.is_shipped" :dateVal="item.shipped_date" label="Shipped date" clearable @cleared="item.shipped_date = undefined"
+              @updated="(val: string | undefined) => { item!.shipped_date = val }"
               :rules="[(v: string) => !!v || 'Shipped date is required']"
             ></DateTextField>
 
@@ -109,7 +109,7 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
-import { useNow } from '@vueuse/core'
+import { useNow, useDateFormat } from '@vueuse/core'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { Customer, Order, OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
@@ -187,17 +187,7 @@ function fillFromCustomer() {
 }
 
 function loadItem() {
-  useFetch(itemURL, item, () => { 
-
-    // assign date objects from YYYY-MM-DD strings
-    item.value!.order_date_d = new Date(item.value!.order_date!)
-    item.value!.required_date_d = new Date(item.value!.required_date!)
-    if (item.value!.shipped_date) {
-      item.value!.shipped_date_d = new Date(item.value!.shipped_date!)
-    }
-
-    emit('load', item.value!.order_number)
-  })
+  useFetch(itemURL, item, () => emit('load', item.value!.order_number) )
 }
 
 async function saveItem() {
