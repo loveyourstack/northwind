@@ -75,7 +75,7 @@
             <FilterChipBool name="Discontinued" :filterValue="filterDiscontinued" :filterText="filterDiscontinuedText" @closed="filterDiscontinued = undefined; refreshItems()">
               <template #menuContent>
                 <v-autocomplete label="Discontinued" v-model="filterDiscontinued" autofocus
-                  :items="coreStore.booleanOptions"
+                  :items="appStore.booleanOptions"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
@@ -124,13 +124,14 @@
 
 <script lang="ts" setup>
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
+import { useDebounceFn } from '@vueuse/core'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { Product } from '@/types/core'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
+import { useAppStore } from '@/stores/app'
 import { useCoreStore } from '@/stores/core'
-import { useDebounceFn } from '@vueuse/core'
 import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
 import DtFooter from '@/components/DtFooter.vue'
 import FilterChip from '@/components/FilterChip.vue'
@@ -142,6 +143,7 @@ const props = defineProps<{
   title?: string
 }>()
 
+const appStore = useAppStore()
 const coreStore = useCoreStore()
 
 var headers = [
@@ -186,7 +188,7 @@ const filterSupplierIDText = computed(() => {
 
 const filterDiscontinued = ref<boolean>()
 const filterDiscontinuedText = computed(() => {
-  return filterDiscontinued.value != undefined ? coreStore.booleanOptions.find(ele => ele.value === filterDiscontinued.value)?.title : ''
+  return filterDiscontinued.value != undefined ? appStore.booleanOptions.find(ele => ele.value === filterDiscontinued.value)?.title : ''
 })
 
 const lsKey = 'products_dt'

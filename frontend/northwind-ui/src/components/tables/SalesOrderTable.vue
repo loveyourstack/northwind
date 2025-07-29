@@ -64,7 +64,7 @@
             <FilterChipBool name="Shipped" :filterValue="filterShipped" :filterText="filterShippedText" @closed="filterShipped = undefined; refreshItems()">
               <template #menuContent>
                 <v-autocomplete label="Shipped" v-model="filterShipped" autofocus
-                  :items="coreStore.booleanOptions"
+                  :items="appStore.booleanOptions"
                   @update:model-value="refreshItems"
                 ></v-autocomplete>
               </template>
@@ -128,7 +128,7 @@ import { useDateFormat, useDebounceFn } from '@vueuse/core'
 import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { useCoreStore } from '@/stores/core'
+import { useAppStore } from '@/stores/app'
 import { Order } from '@/types/sales'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
@@ -144,7 +144,7 @@ const props = defineProps<{
   title?: string
 }>()
 
-const coreStore = useCoreStore()
+const appStore = useAppStore()
 
 const theme = useTheme()
 
@@ -188,7 +188,7 @@ const filterOrderNumber = ref<string>()
 
 const filterShipped = ref<boolean>()
 const filterShippedText = computed(() => {
-  return filterShipped.value != undefined ? coreStore.booleanOptions.find(ele => ele.value === filterShipped.value)?.title : ''
+  return filterShipped.value != undefined ? appStore.booleanOptions.find(ele => ele.value === filterShipped.value)?.title : ''
 })
 
 const lsKey = 'orders_dt'

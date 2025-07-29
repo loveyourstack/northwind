@@ -29,7 +29,7 @@
             ></v-text-field>
 
             <v-autocomplete label="Discontinued" v-model="item.is_discontinued"
-              :items="coreStore.booleanOptions"
+              :items="appStore.booleanOptions"
             ></v-autocomplete>
 
           </v-col>
@@ -79,6 +79,7 @@ import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { Product, ProductInput, NewProduct, GetProductInputFromItem } from '@/types/core'
+import { useAppStore } from '@/stores/app'
 import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{
@@ -93,6 +94,7 @@ const emit = defineEmits<{
   (e: 'update'): void
 }>()
 
+const appStore = useAppStore()
 const coreStore = useCoreStore()
 
 const saving = ref(false)
