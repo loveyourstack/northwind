@@ -73,7 +73,7 @@ export interface MeetingScheduleInput {
   day: string
   frequency: string
   name: string
-  scheduled_time: string
+  scheduled_time: string | undefined
 }
 export interface MeetingSchedule extends MeetingScheduleInput {
   id: number
@@ -83,7 +83,7 @@ export function NewMeetingSchedule(): MeetingSchedule {
     day: 'None',
     frequency: '',
     name: '',
-    scheduled_time: '',
+    scheduled_time: undefined,
     id: 0,
   }
 }

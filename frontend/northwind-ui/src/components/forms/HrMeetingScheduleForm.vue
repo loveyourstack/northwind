@@ -24,9 +24,10 @@
               :rules="[(v: string) => !!v || 'Day is required']"
             ></v-autocomplete>
 
-            <v-time-picker format="24hr" v-model="item.scheduled_time" title="Scheduled time"
-              :allowed-minutes="m => m % 5 === 0"
-            ></v-time-picker>
+            <TimeTextField :timeVal="item.scheduled_time" label="Scheduled time"
+              @updated="(val: string | undefined) => { item!.scheduled_time = val }"
+              :rules="[(v: string) => !!v || 'Scheduled time is required']"
+            ></TimeTextField>
 
           </v-col>
         </v-row>
@@ -56,11 +57,11 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue'
-import { VTimePicker } from 'vuetify/labs/VTimePicker'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { MeetingSchedule, MeetingScheduleInput, NewMeetingSchedule, GetMeetingScheduleInputFromItem } from '@/types/hr'
 import { useCoreStore } from '@/stores/core'
+import TimeTextField from '@/components/TimeTextField.vue'
 
 const props = defineProps<{
   id: number

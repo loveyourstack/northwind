@@ -51,6 +51,22 @@
 
         </v-col>
       </v-row>
+
+      <v-row no-gutters class="mb-1">
+        <v-col>
+          <v-chip-group column>
+
+            <FilterChip name="Sched. time >" :filterValue="filterSchedTime" :filterText="filterSchedTime" @closed="filterSchedTime = undefined; refreshItems()">
+              <template #menuContent>
+                <TimeTextField :timeVal="filterSchedTime" label="Sched. time >"
+                  @updated="(val: string | undefined) => { filterSchedTime = val; refreshItems() } "
+                ></TimeTextField>
+              </template>
+            </FilterChip>
+
+          </v-chip-group>
+        </v-col>
+      </v-row>
     </template>
 
     <template v-slot:[`item.day`]="{ item }">
@@ -77,8 +93,10 @@ import { useFetchDt } from '@/composables/fetch'
 import { MeetingSchedule } from '@/types/hr'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import HrMeetingScheduleForm from '@/components/forms/HrMeetingScheduleForm.vue'
 import DtFooter from '@/components/DtFooter.vue'
+import FilterChip from '@/components/FilterChip.vue'
+import HrMeetingScheduleForm from '@/components/forms/HrMeetingScheduleForm.vue'
+import TimeTextField from '@/components/TimeTextField.vue'
 
 const props = defineProps<{
   title?: string
@@ -109,10 +127,16 @@ const totalItemsEstimated = ref(0)
 const editID = ref(0)
 const showDialog = ref(false)
 
+const filterSchedTime = ref<string>() // hh24:mm
+
 const lsKey = 'meeting_schedule_dt'
 
 function getFilterStr(): string {
   var ret = ''
+
+  if (filterSchedTime.value) {
+    ret += '&scheduled_time=>eq' + filterSchedTime.value
+  }
 
   return ret
 }
@@ -138,6 +162,7 @@ watch([itemsPerPage, search, sortBy], () => {
 let lsObj = {
   'itemsPerPage': itemsPerPage.value,
   'sortBy': sortBy.value,
+  'filterSchedTime': filterSchedTime.value,
 }
 localStorage.setItem(lsKey, JSON.stringify(lsObj))
 })
@@ -151,6 +176,7 @@ onBeforeMount(() => {
   let lsObj = JSON.parse(lsJSON)
   if (lsObj['itemsPerPage']) { itemsPerPage.value = lsObj['itemsPerPage'] }
   if (lsObj['sortBy']) { sortBy.value = lsObj['sortBy'] }
+  if (lsObj['filterSchedTime']) { filterSchedTime.value = lsObj['filterSchedTime'] }
 })
 
 </script>
