@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"reflect"
-	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -30,7 +29,6 @@ type Input struct {
 	SalesmanFk int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
 	Name       string           `db:"name" json:"name,omitempty" validate:"required"`
 	Region     salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
-	UpdatedAt  lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"`  // assigned in Update funcs
 	UpdatedBy  string           `db:"updated_by" json:"updated_by,omitempty"` // assigned in Update funcs
 }
 
@@ -38,6 +36,7 @@ type Model struct {
 	Id        int64            `db:"id" json:"id"`
 	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
 	Salesman  string           `db:"salesman" json:"salesman"`
+	UpdatedAt lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
 	Input
 }
 
@@ -83,13 +82,11 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.UpdatedAt = lystype.Datetime(time.Now())
 	input.UpdatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	assignmentsMap["updated_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }

@@ -24,15 +24,15 @@ const (
 )
 
 type Input struct {
-	IsActive  bool             `db:"is_active" json:"is_active"`
-	Iso2      string           `db:"iso2" json:"iso2,omitempty" validate:"required,len=2"`
-	Name      string           `db:"name" json:"name,omitempty" validate:"required"`
-	UpdatedAt lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
+	IsActive bool   `db:"is_active" json:"is_active"`
+	Iso2     string `db:"iso2" json:"iso2,omitempty" validate:"required,len=2"`
+	Name     string `db:"name" json:"name,omitempty" validate:"required"`
 }
 
 type Model struct {
 	Id        int64            `db:"id" json:"id"`
 	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	UpdatedAt lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
 	Input
 }
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 	"reflect"
-	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -23,16 +22,15 @@ const (
 )
 
 type Input struct {
-	Address      string           `db:"address" json:"address,omitempty"`
-	City         string           `db:"city" json:"city,omitempty"`
-	CompanyName  string           `db:"company_name" json:"company_name,omitempty" validate:"required"`
-	ContactName  string           `db:"contact_name" json:"contact_name,omitempty" validate:"required"`
-	ContactTitle string           `db:"contact_title" json:"contact_title,omitempty"`
-	CountryFk    int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
-	Phone        string           `db:"phone" json:"phone,omitempty"`
-	PostalCode   string           `db:"postal_code" json:"postal_code,omitempty"`
-	State        string           `db:"state" json:"state,omitempty"`
-	UpdatedAt    lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
+	Address      string `db:"address" json:"address,omitempty"`
+	City         string `db:"city" json:"city,omitempty"`
+	CompanyName  string `db:"company_name" json:"company_name,omitempty" validate:"required"`
+	ContactName  string `db:"contact_name" json:"contact_name,omitempty" validate:"required"`
+	ContactTitle string `db:"contact_title" json:"contact_title,omitempty"`
+	CountryFk    int64  `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
+	Phone        string `db:"phone" json:"phone,omitempty"`
+	PostalCode   string `db:"postal_code" json:"postal_code,omitempty"`
+	State        string `db:"state" json:"state,omitempty"`
 }
 
 type Model struct {
@@ -43,6 +41,7 @@ type Model struct {
 	CreatedAt          lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
 	CreatedBy          string           `db:"created_by" json:"created_by,omitempty"`
 	Name               string           `db:"name" json:"name,omitempty"`
+	UpdatedAt          lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
 	UpdatedBy          string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
@@ -88,12 +87,10 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.UpdatedAt = lystype.Datetime(time.Now())
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 
