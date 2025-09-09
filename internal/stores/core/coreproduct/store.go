@@ -12,7 +12,7 @@ import (
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
-	corecountry "github.com/loveyourstack/northwind/internal/stores/core/corencountry"
+	"github.com/loveyourstack/northwind/internal/stores/core/corecountry"
 )
 
 const (
@@ -27,7 +27,6 @@ const (
 type Input struct {
 	CategoryFk      int64            `db:"category_fk" json:"category_fk" validate:"required"`
 	IsDiscontinued  bool             `db:"is_discontinued" json:"is_discontinued"`
-	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	Name            string           `db:"name" json:"name,omitempty" validate:"required"`
 	QuantityPerUnit string           `db:"quantity_per_unit" json:"quantity_per_unit" validate:"required"`
 	ReorderLevel    int              `db:"reorder_level" json:"reorder_level"`
@@ -36,6 +35,7 @@ type Input struct {
 	UnitPrice       float32          `db:"unit_price" json:"unit_price" validate:"required"`
 	UnitsInStock    int              `db:"units_in_stock" json:"units_in_stock"`
 	UnitsOnOrder    int              `db:"units_on_order" json:"units_on_order"`
+	UpdatedAt       lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
 }
 
 type Model struct {
@@ -43,11 +43,11 @@ type Model struct {
 	Category             string           `db:"category" json:"category,omitempty"`
 	CategoryColorHex     string           `db:"category_color_hex" json:"category_color_hex,omitempty"`
 	CategoryColorIsLight bool             `db:"category_color_is_light" json:"category_color_is_light"`
-	EntryAt              lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
-	EntryBy              string           `db:"entry_by" json:"entry_by,omitempty"`
-	LastModifiedBy       string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
+	CreatedAt            lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy            string           `db:"created_by" json:"created_by,omitempty"`
 	SupplierCompanyName  string           `db:"supplier_company_name" json:"supplier_company_name,omitempty"`
 	SupplierCountryIso2  string           `db:"supplier_country_iso2" json:"supplier_country_iso2,omitempty"`
+	UpdatedBy            string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -78,8 +78,8 @@ func (s Store) DistinctSupplierCountries(ctx context.Context) (countries []corec
 		SELECT co.id, co.name FROM core.country co 
 		JOIN (
 			SELECT DISTINCT country_fk 
-			FROM core.supplier c_s
-			JOIN %s.%s c_p ON c_p.supplier_fk = c_s.id
+			FROM core.supplier s
+			JOIN %s.%s p ON p.supplier_fk = s.id
 		) t1 ON co.id = t1.country_fk 
 		ORDER BY co.name;`,
 		schemaName, tableName)
@@ -107,12 +107,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
+	input.UpdatedAt = lystype.Datetime(time.Now())
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

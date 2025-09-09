@@ -38,27 +38,27 @@ type Input struct {
 	DestState       string           `db:"dest_state" json:"dest_state,omitempty"`
 	FreightCost     float32          `db:"freight_cost" json:"freight_cost,omitempty" validate:"number,gte=0"`
 	IsShipped       bool             `db:"is_shipped" json:"is_shipped"`
-	LastModifiedAt  lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
 	OrderDate       lystype.Date     `db:"order_date" json:"order_date,omitzero" validate:"required"`
 	OrderNumber     int32            `db:"order_number" json:"order_number,omitempty"` // assigned in Insert
 	RequiredDate    lystype.Date     `db:"required_date" json:"required_date,omitzero" validate:"required"`
 	SalesmanFk      int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
 	ShippedDate     lystype.Date     `db:"shipped_date" json:"shipped_date,omitzero"`
 	ShipperFk       int64            `db:"shipper_fk" json:"shipper_fk,omitempty" validate:"required"`
+	UpdatedAt       lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
 }
 
 type Model struct {
 	Id                  int64            `db:"id" json:"id"`
+	CreatedAt           lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy           string           `db:"created_by" json:"created_by,omitempty"`
 	CustomerCode        string           `db:"customer_code" json:"customer_code,omitempty"`
 	CustomerCompanyName string           `db:"customer_company_name" json:"customer_company_name,omitempty"`
 	DestCountryIso2     string           `db:"dest_country_iso2" json:"dest_country_iso2,omitempty"`
-	EntryAt             lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
-	EntryBy             string           `db:"entry_by" json:"entry_by,omitempty"`
-	LastModifiedBy      string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
 	Salesman            string           `db:"salesman" json:"salesman,omitempty"`
 	ShipperCompanyName  string           `db:"shipper_company_name" json:"shipper_company_name,omitempty"`
 	OrderItemCount      int              `db:"order_item_count" json:"order_item_count"`
 	OrderValue          float32          `db:"order_value" json:"order_value"`
+	UpdatedBy           string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -146,12 +146,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
+	input.UpdatedAt = lystype.Datetime(time.Now())
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

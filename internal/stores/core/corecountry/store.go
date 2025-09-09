@@ -24,15 +24,15 @@ const (
 )
 
 type Input struct {
-	IsActive       bool             `db:"is_active" json:"is_active"`
-	Iso2           string           `db:"iso2" json:"iso2,omitempty" validate:"required,len=2"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
-	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
+	IsActive  bool             `db:"is_active" json:"is_active"`
+	Iso2      string           `db:"iso2" json:"iso2,omitempty" validate:"required,len=2"`
+	Name      string           `db:"name" json:"name,omitempty" validate:"required"`
+	UpdatedAt lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
 }
 
 type Model struct {
-	Id      int64            `db:"id" json:"id"`
-	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
+	Id        int64            `db:"id" json:"id"`
+	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
 	Input
 }
 
@@ -80,7 +80,7 @@ func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any,
 		return fmt.Errorf(`assignmentsMap key must be "is_active"`)
 	}
 
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }

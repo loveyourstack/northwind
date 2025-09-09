@@ -1,84 +1,84 @@
 
 CREATE OR REPLACE VIEW sales.v_customer AS
 	SELECT 
-    s_c.address,
-    s_c.city,
-    s_c.code,
-    s_c.company_name,
-    s_c.contact_name,
-    s_c.contact_title,
-    s_c.country_fk,
+    c.address,
+    c.city,
+    c.code,
+    c.company_name,
+    c.contact_name,
+    c.contact_title,
+    c.country_fk,
     co.name AS country,
     co.iso2 AS country_iso2,
-    s_c.entry_at,
-    s_c.entry_by,
-    s_c.id,
-    s_c.last_modified_at,
-    s_c.last_modified_by,
-    s_c.code || ' (' || s_c.company_name || ')' AS name,
-    s_c.phone,
-    s_c.postal_code,
-    s_c.state,
-    COALESCE(s_o.order_count,0) AS order_count
-  FROM sales.customer s_c
-  JOIN core.country co ON s_c.country_fk = co.id
-  LEFT JOIN (SELECT customer_fk, count(*) AS order_count FROM sales.order GROUP BY 1) s_o ON s_o.customer_fk = s_c.id;
+    c.created_at,
+    c.created_by,
+    c.id,
+    c.code || ' (' || c.company_name || ')' AS name,
+    c.phone,
+    c.postal_code,
+    c.state,
+    c.updated_at,
+    c.updated_by,
+    COALESCE(o.order_count,0) AS order_count
+  FROM sales.customer c
+  JOIN core.country co ON c.country_fk = co.id
+  LEFT JOIN (SELECT customer_fk, count(*) AS order_count FROM sales.order GROUP BY 1) o ON o.customer_fk = c.id;
 
 
 CREATE OR REPLACE VIEW sales.v_order AS
 	SELECT 
-    s_o.customer_fk,
-    s_c.code AS customer_code,
-    s_c.company_name AS customer_company_name,
-    s_o.dest_address,
-    s_o.dest_city,
-    s_o.dest_company_name,
-    s_o.dest_country_fk,
+    o.customer_fk,
+    c.code AS customer_code,
+    c.company_name AS customer_company_name,
+    o.dest_address,
+    o.dest_city,
+    o.dest_company_name,
+    o.dest_country_fk,
     co.iso2 AS dest_country_iso2,
-    s_o.dest_postal_code,
-    s_o.dest_state,
-    s_o.entry_at,
-    s_o.entry_by,
-    s_o.freight_cost,
-    s_o.id,
-    s_o.is_shipped,
-    s_o.last_modified_at,
-    s_o.last_modified_by,
-    s_o.order_date,
-    s_o.order_number,
-    s_o.required_date,
-    s_o.salesman_fk,
-    hr_e.name AS salesman,
-    s_o.shipped_date,
-    s_o.shipper_fk,
-    s_s.company_name AS shipper_company_name,
-    COALESCE(s_oi.count,0) AS order_item_count,
-    COALESCE(s_oi.value,0) AS order_value
-  FROM sales.order s_o
-  JOIN sales.customer s_c ON s_o.customer_fk = s_c.id
-  JOIN core.country co ON s_o.dest_country_fk = co.id
-  JOIN hr.employee hr_e ON s_o.salesman_fk = hr_e.id
-  JOIN sales.shipper s_s ON s_o.shipper_fk = s_s.id
-  LEFT JOIN (SELECT order_fk, count(*), SUM(quantity * unit_price * (1 - discount)) AS value FROM sales.order_item GROUP BY 1) s_oi ON s_oi.order_fk = s_o.id;
+    o.dest_postal_code,
+    o.dest_state,
+    o.created_at,
+    o.created_by,
+    o.freight_cost,
+    o.id,
+    o.is_shipped,
+    o.order_date,
+    o.order_number,
+    o.required_date,
+    o.salesman_fk,
+    emp.name AS salesman,
+    o.shipped_date,
+    o.shipper_fk,
+    ship.company_name AS shipper_company_name,
+    o.updated_at,
+    o.updated_by,
+    COALESCE(oi.count,0) AS order_item_count,
+    COALESCE(oi.value,0) AS order_value
+  FROM sales.order o
+  JOIN sales.customer c ON o.customer_fk = c.id
+  JOIN core.country co ON o.dest_country_fk = co.id
+  JOIN hr.employee emp ON o.salesman_fk = emp.id
+  JOIN sales.shipper ship ON o.shipper_fk = ship.id
+  LEFT JOIN (SELECT order_fk, count(*), SUM(quantity * unit_price * (1 - discount)) AS value FROM sales.order_item GROUP BY 1) oi ON oi.order_fk = o.id;
 
 
 CREATE OR REPLACE VIEW sales.v_order_item AS
 	SELECT 
-    s_oi.discount,
-    s_oi.entry_at,
-    s_oi.entry_by,
-    s_oi.id,
-    s_oi.last_modified_at,
-    s_oi.last_modified_by,
-    s_oi.order_fk,
-    s_o.order_number,
-    s_oi.product_fk,
-    c_p.name AS product_name,
-    s_oi.quantity,
-    s_oi.unit_price
-  FROM sales.order_item s_oi
-  JOIN sales.order s_o ON s_oi.order_fk = s_o.id
-  JOIN core.product c_p ON s_oi.product_fk = c_p.id;
+    oi.discount,
+    oi.created_at,
+    oi.created_by,
+    oi.id,
+    oi.order_fk,
+    o.order_number,
+    oi.product_fk,
+    p.name AS product_name,
+    oi.quantity,
+    oi.unit_price,
+    oi.updated_at,
+    oi.updated_by
+  FROM sales.order_item oi
+  JOIN sales.order o ON oi.order_fk = o.id
+  JOIN core.product p ON oi.product_fk = p.id;
 
 
 CREATE OR REPLACE VIEW sales.v_order_value_latest_weeks AS
@@ -92,16 +92,16 @@ CREATE OR REPLACE VIEW sales.v_order_value_latest_weeks AS
 
 CREATE OR REPLACE VIEW sales.v_territory AS
 	SELECT 
-    s_t.code,
+    terr.code,
     salesman_fk,
-    hr_e.name AS salesman,
-    s_t.entry_at,
-    s_t.entry_by,
-    s_t.id,
-    s_t.last_modified_at,
-    s_t.last_modified_by,
-    s_t.name,
-    s_t.region::text -- cast so that sorting works as expected
-  FROM sales.territory s_t
-  LEFT JOIN hr.employee hr_e ON s_t.salesman_fk = hr_e.id;
+    emp.name AS salesman,
+    terr.created_at,
+    terr.created_by,
+    terr.id,
+    terr.name,
+    terr.region::text, -- cast so that sorting works as expected
+    terr.updated_at,
+    terr.updated_by
+  FROM sales.territory terr
+  LEFT JOIN hr.employee emp ON terr.salesman_fk = emp.id;
 

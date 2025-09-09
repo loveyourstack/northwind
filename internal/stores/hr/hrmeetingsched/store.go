@@ -23,16 +23,16 @@ const (
 )
 
 type Input struct {
-	Day            string           `db:"day" json:"day,omitempty" validate:"required"`
-	Frequency      string           `db:"frequency" json:"frequency,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
-	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
-	ScheduledTime  lystype.Time     `db:"scheduled_time" json:"scheduled_time,omitzero" validate:"required"`
+	Day           string           `db:"day" json:"day,omitempty" validate:"required"`
+	Frequency     string           `db:"frequency" json:"frequency,omitempty" validate:"required"`
+	Name          string           `db:"name" json:"name,omitempty" validate:"required"`
+	ScheduledTime lystype.Time     `db:"scheduled_time" json:"scheduled_time,omitzero" validate:"required"`
+	UpdatedAt     lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
 }
 
 type Model struct {
-	Id      int64            `db:"id" json:"id"`
-	EntryAt lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
+	Id        int64            `db:"id" json:"id"`
+	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
 	Input
 }
 
@@ -77,12 +77,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
+	input.UpdatedAt = lystype.Datetime(time.Now())
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

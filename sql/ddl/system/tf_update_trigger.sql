@@ -25,7 +25,7 @@ v_old_row := system.remove_jsonb_fields(v_old_row);
 
 -- get new row details and remove unwanted fields
 v_new_row := to_jsonb(NEW);
-v_user := COALESCE(v_new_row->>'last_modified_by', 'Unknown');
+v_user := COALESCE(v_new_row->>'updated_by', 'Unknown');
 
 -- remove columns that shouldn't be saved
 v_new_row := system.remove_jsonb_fields(v_new_row);

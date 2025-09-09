@@ -23,17 +23,17 @@ const (
 )
 
 type Input struct {
-	Address        string           `db:"address" json:"address,omitempty"`
-	City           string           `db:"city" json:"city,omitempty"`
-	Code           string           `db:"code" json:"code,omitempty" validate:"required,len=5,uppercase"`
-	CompanyName    string           `db:"company_name" json:"company_name,omitempty" validate:"required"`
-	ContactName    string           `db:"contact_name" json:"contact_name,omitempty" validate:"required"`
-	ContactTitle   string           `db:"contact_title" json:"contact_title,omitempty"`
-	CountryFk      int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
-	Phone          string           `db:"phone" json:"phone,omitempty"`
-	PostalCode     string           `db:"postal_code" json:"postal_code,omitempty"`
-	State          string           `db:"state" json:"state,omitempty"`
+	Address      string           `db:"address" json:"address,omitempty"`
+	City         string           `db:"city" json:"city,omitempty"`
+	Code         string           `db:"code" json:"code,omitempty" validate:"required,len=5,uppercase"`
+	CompanyName  string           `db:"company_name" json:"company_name,omitempty" validate:"required"`
+	ContactName  string           `db:"contact_name" json:"contact_name,omitempty" validate:"required"`
+	ContactTitle string           `db:"contact_title" json:"contact_title,omitempty"`
+	CountryFk    int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
+	Phone        string           `db:"phone" json:"phone,omitempty"`
+	PostalCode   string           `db:"postal_code" json:"postal_code,omitempty"`
+	State        string           `db:"state" json:"state,omitempty"`
+	UpdatedAt    lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
 }
 
 type Model struct {
@@ -41,10 +41,10 @@ type Model struct {
 	ActiveProductCount int              `db:"order_count" json:"order_count"`
 	Country            string           `db:"country" json:"country,omitempty"`
 	CountryIso2        string           `db:"country_iso2" json:"country_iso2,omitempty"`
-	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
-	EntryBy            string           `db:"entry_by" json:"entry_by,omitempty"`
-	LastModifiedBy     string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
+	CreatedAt          lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy          string           `db:"created_by" json:"created_by,omitempty"`
 	Name               string           `db:"name" json:"name,omitempty"`
+	UpdatedBy          string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -89,12 +89,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
+	input.UpdatedAt = lystype.Datetime(time.Now())
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

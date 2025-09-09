@@ -9,7 +9,7 @@ import (
 	"github.com/loveyourstack/lys/lysstring"
 	"github.com/loveyourstack/northwind/internal/enums/sysrole"
 	"github.com/loveyourstack/northwind/internal/stores/core/corecategory"
-	corecountry "github.com/loveyourstack/northwind/internal/stores/core/corencountry"
+	"github.com/loveyourstack/northwind/internal/stores/core/corecountry"
 	"github.com/loveyourstack/northwind/internal/stores/core/coreproduct"
 	"github.com/loveyourstack/northwind/internal/stores/core/coresupplier"
 	"github.com/loveyourstack/northwind/internal/stores/hr/hremployee"

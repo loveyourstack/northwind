@@ -7,7 +7,7 @@ debug   = true
 host   = "localhost"
 port   = "5432"
 database = "northwind"
-schemaCreationOrder = ["public", "common", "system", "core", "hr", "sales"] # must be updated when schemas are added / removed. Also need to add to schemas.sql
+schemaCreationOrder = ["public", "system", "core", "hr", "sales"] # must be updated when schemas are added / removed. Also need to add to schemas.sql
 
 [dbSuperUser]
 userName = "postgres"

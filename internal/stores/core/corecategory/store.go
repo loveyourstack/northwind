@@ -26,19 +26,19 @@ const (
 )
 
 type Input struct {
-	ColorHex       string           `db:"color_hex" json:"color_hex,omitempty"`
-	ColorIsLight   bool             `db:"color_is_light" json:"color_is_light"` // assigned in Insert and Update funcs
-	Description    string           `db:"description" json:"description,omitempty" validate:"required"`
-	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"`  // assigned in Update funcs
-	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"` // assigned in Update funcs
-	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
+	ColorHex     string           `db:"color_hex" json:"color_hex,omitempty"`
+	ColorIsLight bool             `db:"color_is_light" json:"color_is_light"`   // assigned in Insert and Update funcs
+	CreatedBy    string           `db:"created_by" json:"created_by,omitempty"` // omitted from Update, assigned in Insert func
+	Description  string           `db:"description" json:"description,omitempty" validate:"required"`
+	Name         string           `db:"name" json:"name,omitempty" validate:"required"`
+	UpdatedAt    lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"`  // assigned in Update funcs
+	UpdatedBy    string           `db:"updated_by" json:"updated_by,omitempty"` // assigned in Update funcs
 }
 
 type Model struct {
 	Id                 int64            `db:"id" json:"id"`
-	EntryAt            lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
 	ActiveProductCount int              `db:"active_product_count" json:"active_product_count"`
+	CreatedAt          lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
 	Input
 }
 
@@ -71,7 +71,7 @@ func (s Store) GetName() string {
 }
 
 func (s Store) Insert(ctx context.Context, input Input) (newId int64, err error) {
-	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	input.CreatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	if input.ColorHex != "" {
 		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
@@ -92,8 +92,8 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) (err error) {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
-	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	input.UpdatedAt = lystype.Datetime(time.Now())
+	input.UpdatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	if input.ColorHex != "" {
 		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
@@ -106,8 +106,8 @@ func (s Store) Update(ctx context.Context, input Input, id int64) (err error) {
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (err error) {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
-	assignmentsMap["last_modified_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	colorHex, ok := assignmentsMap["color_hex"]
 	if ok {

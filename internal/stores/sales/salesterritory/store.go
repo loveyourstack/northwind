@@ -25,19 +25,19 @@ const (
 )
 
 type Input struct {
-	Code           string           `db:"code" json:"code,omitempty" validate:"required"`
-	SalesmanFk     int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
-	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`                 // omitted from Update, assigned in Insert func
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"`  // assigned in Update funcs
-	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"` // assigned in Update funcs
-	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
-	Region         salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
+	Code       string           `db:"code" json:"code,omitempty" validate:"required"`
+	CreatedBy  string           `db:"created_by" json:"created_by,omitempty"` // omitted from Update, assigned in Insert func
+	SalesmanFk int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
+	Name       string           `db:"name" json:"name,omitempty" validate:"required"`
+	Region     salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
+	UpdatedAt  lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"`  // assigned in Update funcs
+	UpdatedBy  string           `db:"updated_by" json:"updated_by,omitempty"` // assigned in Update funcs
 }
 
 type Model struct {
-	Id       int64            `db:"id" json:"id"`
-	EntryAt  lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
-	Salesman string           `db:"salesman" json:"salesman"`
+	Id        int64            `db:"id" json:"id"`
+	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	Salesman  string           `db:"salesman" json:"salesman"`
 	Input
 }
 
@@ -70,7 +70,7 @@ func (s Store) GetName() string {
 }
 
 func (s Store) Insert(ctx context.Context, input Input) (newId int64, err error) {
-	input.EntryBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	input.CreatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Insert[Input, int64](ctx, s.Db, schemaName, tableName, pkColName, input)
 }
 
@@ -83,14 +83,14 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
-	input.LastModifiedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	input.UpdatedAt = lystype.Datetime(time.Now())
+	input.UpdatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
-	assignmentsMap["last_modified_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

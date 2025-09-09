@@ -23,33 +23,33 @@ const (
 )
 
 type Input struct {
-	Address        string           `db:"address" json:"address,omitempty" validate:"required"`
-	City           string           `db:"city" json:"city,omitempty" validate:"required"`
-	CountryFk      int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
-	DateOfBirth    lystype.Date     `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
-	FirstName      string           `db:"first_name" json:"first_name,omitempty" validate:"required"`
-	HireDate       lystype.Date     `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
-	HomePhone      string           `db:"home_phone" json:"home_phone,omitempty"`
-	JobTitle       string           `db:"job_title" json:"job_title,omitempty" validate:"required"`
-	LastModifiedAt lystype.Datetime `db:"last_modified_at" json:"last_modified_at,omitzero"` // assigned in Update funcs
-	LastName       string           `db:"last_name" json:"last_name,omitempty" validate:"required"`
-	Name           string           `db:"name" json:"name,omitempty" validate:"required"`
-	Notes          string           `db:"notes" json:"notes,omitempty"`
-	PostalCode     string           `db:"postal_code" json:"postal_code,omitempty" validate:"required"`
-	ReportsToFk    int64            `db:"reports_to_fk" json:"reports_to_fk,omitempty" validate:"required"`
-	State          string           `db:"state" json:"state,omitempty"`
-	Title          string           `db:"title" json:"title,omitempty" validate:"required"`
+	Address     string           `db:"address" json:"address,omitempty" validate:"required"`
+	City        string           `db:"city" json:"city,omitempty" validate:"required"`
+	CountryFk   int64            `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
+	DateOfBirth lystype.Date     `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
+	FirstName   string           `db:"first_name" json:"first_name,omitempty" validate:"required"`
+	HireDate    lystype.Date     `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
+	HomePhone   string           `db:"home_phone" json:"home_phone,omitempty"`
+	JobTitle    string           `db:"job_title" json:"job_title,omitempty" validate:"required"`
+	LastName    string           `db:"last_name" json:"last_name,omitempty" validate:"required"`
+	Name        string           `db:"name" json:"name,omitempty" validate:"required"`
+	Notes       string           `db:"notes" json:"notes,omitempty"`
+	PostalCode  string           `db:"postal_code" json:"postal_code,omitempty" validate:"required"`
+	ReportsToFk int64            `db:"reports_to_fk" json:"reports_to_fk,omitempty" validate:"required"`
+	State       string           `db:"state" json:"state,omitempty"`
+	Title       string           `db:"title" json:"title,omitempty" validate:"required"`
+	UpdatedAt   lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned in Update funcs
 }
 
 type Model struct {
-	Id             int64            `db:"id" json:"id"`
-	Age            int              `db:"age" json:"age,omitempty"`
-	Country        string           `db:"country" json:"country,omitempty"`
-	CountryIso2    string           `db:"country_iso2" json:"country_iso2,omitempty"`
-	EntryAt        lystype.Datetime `db:"entry_at" json:"entry_at,omitzero"`
-	EntryBy        string           `db:"entry_by" json:"entry_by,omitempty"`
-	LastModifiedBy string           `db:"last_modified_by" json:"last_modified_by,omitempty"`
-	ReportsTo      string           `db:"reports_to" json:"reports_to,omitempty"`
+	Id          int64            `db:"id" json:"id"`
+	Age         int              `db:"age" json:"age,omitempty"`
+	Country     string           `db:"country" json:"country,omitempty"`
+	CountryIso2 string           `db:"country_iso2" json:"country_iso2,omitempty"`
+	CreatedAt   lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy   string           `db:"created_by" json:"created_by,omitempty"`
+	ReportsTo   string           `db:"reports_to" json:"reports_to,omitempty"`
+	UpdatedBy   string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -94,12 +94,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.LastModifiedAt = lystype.Datetime(time.Now())
+	input.UpdatedAt = lystype.Datetime(time.Now())
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["last_modified_at"] = lystype.Datetime(time.Now())
+	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

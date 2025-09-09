@@ -1,30 +1,30 @@
 
 CREATE OR REPLACE VIEW hr.v_employee AS
 	SELECT 
-    hr_e.address,
-    EXTRACT('YEAR' FROM AGE(current_date, hr_e.date_of_birth))::int AS age,
-    hr_e.city,
-    hr_e.country_fk,
+    emp.address,
+    EXTRACT('YEAR' FROM AGE(current_date, emp.date_of_birth))::int AS age,
+    emp.city,
+    emp.country_fk,
     co.name AS country,
     co.iso2 AS country_iso2,
-    hr_e.date_of_birth,
-    hr_e.entry_at,
-    hr_e.entry_by,
-    hr_e.first_name,
-    hr_e.hire_date,
-    hr_e.home_phone,
-    hr_e.job_title,
-    hr_e.id,
-    hr_e.last_modified_at,
-    hr_e.last_modified_by,
-    hr_e.last_name,
-    hr_e.name,
-    hr_e.notes,
-    hr_e.postal_code,
-    hr_e.reports_to_fk,
-    CASE WHEN hr_e.reports_to_fk = hr_e.id THEN '' ELSE report.name END AS reports_to,
-    hr_e.state,
-    hr_e.title
-  FROM hr.employee hr_e
-  JOIN core.country co ON hr_e.country_fk = co.id
-  JOIN hr.employee report ON hr_e.reports_to_fk = report.id;
+    emp.created_at,
+    emp.created_by,
+    emp.date_of_birth,
+    emp.first_name,
+    emp.hire_date,
+    emp.home_phone,
+    emp.job_title,
+    emp.id,
+    emp.last_name,
+    emp.name,
+    emp.notes,
+    emp.postal_code,
+    emp.reports_to_fk,
+    CASE WHEN emp.reports_to_fk = emp.id THEN '' ELSE report.name END AS reports_to,
+    emp.state,
+    emp.title,
+    emp.updated_at,
+    emp.updated_by
+  FROM hr.employee emp
+  JOIN core.country co ON emp.country_fk = co.id
+  JOIN hr.employee report ON emp.reports_to_fk = report.id;
