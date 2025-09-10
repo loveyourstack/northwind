@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
@@ -22,21 +23,22 @@ const (
 )
 
 type Input struct {
-	Address     string       `db:"address" json:"address,omitempty" validate:"required"`
-	City        string       `db:"city" json:"city,omitempty" validate:"required"`
-	CountryFk   int64        `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
-	DateOfBirth lystype.Date `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
-	FirstName   string       `db:"first_name" json:"first_name,omitempty" validate:"required"`
-	HireDate    lystype.Date `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
-	HomePhone   string       `db:"home_phone" json:"home_phone,omitempty"`
-	JobTitle    string       `db:"job_title" json:"job_title,omitempty" validate:"required"`
-	LastName    string       `db:"last_name" json:"last_name,omitempty" validate:"required"`
-	Name        string       `db:"name" json:"name,omitempty" validate:"required"`
-	Notes       string       `db:"notes" json:"notes,omitempty"`
-	PostalCode  string       `db:"postal_code" json:"postal_code,omitempty" validate:"required"`
-	ReportsToFk int64        `db:"reports_to_fk" json:"reports_to_fk,omitempty" validate:"required"`
-	State       string       `db:"state" json:"state,omitempty"`
-	Title       string       `db:"title" json:"title,omitempty" validate:"required"`
+	Address          string       `db:"address" json:"address,omitempty" validate:"required"`
+	City             string       `db:"city" json:"city,omitempty" validate:"required"`
+	CountryFk        int64        `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
+	DateOfBirth      lystype.Date `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
+	FirstName        string       `db:"first_name" json:"first_name,omitempty" validate:"required"`
+	HireDate         lystype.Date `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
+	HomePhone        string       `db:"home_phone" json:"home_phone,omitempty"`
+	JobTitle         string       `db:"job_title" json:"job_title,omitempty" validate:"required"`
+	LastName         string       `db:"last_name" json:"last_name,omitempty" validate:"required"`
+	LastUserUpdateBy string       `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
+	Name             string       `db:"name" json:"name,omitempty" validate:"required"`
+	Notes            string       `db:"notes" json:"notes,omitempty"`
+	PostalCode       string       `db:"postal_code" json:"postal_code,omitempty" validate:"required"`
+	ReportsToFk      int64        `db:"reports_to_fk" json:"reports_to_fk,omitempty" validate:"required"`
+	State            string       `db:"state" json:"state,omitempty"`
+	Title            string       `db:"title" json:"title,omitempty" validate:"required"`
 }
 
 type Model struct {
@@ -48,7 +50,6 @@ type Model struct {
 	CreatedBy   string           `db:"created_by" json:"created_by,omitempty"`
 	ReportsTo   string           `db:"reports_to" json:"reports_to,omitempty"`
 	UpdatedAt   lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
-	UpdatedBy   string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -93,10 +94,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
+	input.LastUserUpdateBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
+	assignmentsMap["last_user_update_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

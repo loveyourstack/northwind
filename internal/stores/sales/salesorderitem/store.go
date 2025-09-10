@@ -8,6 +8,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
@@ -23,11 +24,12 @@ const (
 )
 
 type Input struct {
-	Discount  float32 `db:"discount" json:"discount,omitempty"`
-	OrderFk   int64   `db:"order_fk" json:"order_fk,omitempty" validate:"required"`
-	ProductFk int64   `db:"product_fk" json:"product_fk,omitempty" validate:"required"`
-	Quantity  int32   `db:"quantity" json:"quantity,omitempty" validate:"required"`
-	UnitPrice float32 `db:"unit_price" json:"unit_price,omitempty" validate:"required"`
+	Discount         float32 `db:"discount" json:"discount,omitempty"`
+	LastUserUpdateBy string  `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
+	OrderFk          int64   `db:"order_fk" json:"order_fk,omitempty" validate:"required"`
+	ProductFk        int64   `db:"product_fk" json:"product_fk,omitempty" validate:"required"`
+	Quantity         int32   `db:"quantity" json:"quantity,omitempty" validate:"required"`
+	UnitPrice        float32 `db:"unit_price" json:"unit_price,omitempty" validate:"required"`
 }
 
 type Model struct {
@@ -37,7 +39,6 @@ type Model struct {
 	OrderNumber int32            `db:"order_number" json:"order_number,omitempty"`
 	ProductName string           `db:"product_name" json:"product_name,omitempty"`
 	UpdatedAt   lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
-	UpdatedBy   string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -98,10 +99,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
+	input.LastUserUpdateBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
+	assignmentsMap["last_user_update_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

@@ -14,11 +14,11 @@ CREATE OR REPLACE VIEW sales.v_customer AS
     c.created_by,
     c.id,
     c.code || ' (' || c.company_name || ')' AS name,
+    c.last_user_update_by,
     c.phone,
     c.postal_code,
     c.state,
     c.updated_at,
-    c.updated_by,
     COALESCE(o.order_count,0) AS order_count
   FROM sales.customer c
   JOIN core.country co ON c.country_fk = co.id
@@ -42,6 +42,7 @@ CREATE OR REPLACE VIEW sales.v_order AS
     o.freight_cost,
     o.id,
     o.is_shipped,
+    o.last_user_update_by,
     o.order_date,
     o.order_number,
     o.required_date,
@@ -51,7 +52,6 @@ CREATE OR REPLACE VIEW sales.v_order AS
     o.shipper_fk,
     ship.company_name AS shipper_company_name,
     o.updated_at,
-    o.updated_by,
     COALESCE(oi.count,0) AS order_item_count,
     COALESCE(oi.value,0) AS order_value
   FROM sales.order o
@@ -68,14 +68,14 @@ CREATE OR REPLACE VIEW sales.v_order_item AS
     oi.created_at,
     oi.created_by,
     oi.id,
+    oi.last_user_update_by,
     oi.order_fk,
     o.order_number,
     oi.product_fk,
     p.name AS product_name,
     oi.quantity,
     oi.unit_price,
-    oi.updated_at,
-    oi.updated_by
+    oi.updated_at
   FROM sales.order_item oi
   JOIN sales.order o ON oi.order_fk = o.id
   JOIN core.product p ON oi.product_fk = p.id;
@@ -98,10 +98,10 @@ CREATE OR REPLACE VIEW sales.v_territory AS
     terr.created_at,
     terr.created_by,
     terr.id,
+    terr.last_user_update_by,
     terr.name,
     terr.region::text, -- cast so that sorting works as expected
-    terr.updated_at,
-    terr.updated_by
+    terr.updated_at
   FROM sales.territory terr
   LEFT JOIN hr.employee emp ON terr.salesman_fk = emp.id;
 

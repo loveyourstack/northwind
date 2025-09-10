@@ -25,12 +25,12 @@ const (
 )
 
 type Input struct {
-	ColorHex     string `db:"color_hex" json:"color_hex,omitempty"`
-	ColorIsLight bool   `db:"color_is_light" json:"color_is_light"`   // assigned in Insert and Update funcs
-	CreatedBy    string `db:"created_by" json:"created_by,omitempty"` // omitted from Update, assigned in Insert func
-	Description  string `db:"description" json:"description,omitempty" validate:"required"`
-	Name         string `db:"name" json:"name,omitempty" validate:"required"`
-	UpdatedBy    string `db:"updated_by" json:"updated_by,omitempty"` // assigned in Update funcs
+	ColorHex         string `db:"color_hex" json:"color_hex,omitempty"`
+	ColorIsLight     bool   `db:"color_is_light" json:"color_is_light"`   // assigned in Insert and Update funcs
+	CreatedBy        string `db:"created_by" json:"created_by,omitempty"` // omitted from Update, assigned in Insert func
+	Description      string `db:"description" json:"description,omitempty" validate:"required"`
+	LastUserUpdateBy string `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
+	Name             string `db:"name" json:"name,omitempty" validate:"required"`
 }
 
 type Model struct {
@@ -91,7 +91,7 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) (err error) {
-	input.UpdatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	input.LastUserUpdateBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	if input.ColorHex != "" {
 		input.ColorIsLight, err = lyspcolor.HexIsLight(input.ColorHex)
@@ -100,11 +100,11 @@ func (s Store) Update(ctx context.Context, input Input, id int64) (err error) {
 		}
 	}
 
-	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
+	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"created_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) (err error) {
-	assignmentsMap["updated_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
+	assignmentsMap["last_user_update_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 
 	colorHex, ok := assignmentsMap["color_hex"]
 	if ok {

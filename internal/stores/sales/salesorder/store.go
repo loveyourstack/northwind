@@ -10,6 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lyserr"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
@@ -29,21 +30,22 @@ const (
 )
 
 type Input struct {
-	CustomerFk      int64        `db:"customer_fk" json:"customer_fk,omitempty" validate:"required"`
-	DestAddress     string       `db:"dest_address" json:"dest_address,omitempty" validate:"required"`
-	DestCity        string       `db:"dest_city" json:"dest_city,omitempty" validate:"required"`
-	DestCompanyName string       `db:"dest_company_name" json:"dest_company_name,omitempty" validate:"required"`
-	DestCountryFk   int64        `db:"dest_country_fk" json:"dest_country_fk,omitempty" validate:"required"`
-	DestPostalCode  string       `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"required"`
-	DestState       string       `db:"dest_state" json:"dest_state,omitempty"`
-	FreightCost     float32      `db:"freight_cost" json:"freight_cost,omitempty" validate:"number,gte=0"`
-	IsShipped       bool         `db:"is_shipped" json:"is_shipped"`
-	OrderDate       lystype.Date `db:"order_date" json:"order_date,omitzero" validate:"required"`
-	OrderNumber     int32        `db:"order_number" json:"order_number,omitempty"` // assigned in Insert
-	RequiredDate    lystype.Date `db:"required_date" json:"required_date,omitzero" validate:"required"`
-	SalesmanFk      int64        `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
-	ShippedDate     lystype.Date `db:"shipped_date" json:"shipped_date,omitzero"`
-	ShipperFk       int64        `db:"shipper_fk" json:"shipper_fk,omitempty" validate:"required"`
+	CustomerFk       int64        `db:"customer_fk" json:"customer_fk,omitempty" validate:"required"`
+	DestAddress      string       `db:"dest_address" json:"dest_address,omitempty" validate:"required"`
+	DestCity         string       `db:"dest_city" json:"dest_city,omitempty" validate:"required"`
+	DestCompanyName  string       `db:"dest_company_name" json:"dest_company_name,omitempty" validate:"required"`
+	DestCountryFk    int64        `db:"dest_country_fk" json:"dest_country_fk,omitempty" validate:"required"`
+	DestPostalCode   string       `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"required"`
+	DestState        string       `db:"dest_state" json:"dest_state,omitempty"`
+	FreightCost      float32      `db:"freight_cost" json:"freight_cost,omitempty" validate:"number,gte=0"`
+	IsShipped        bool         `db:"is_shipped" json:"is_shipped"`
+	LastUserUpdateBy string       `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
+	OrderDate        lystype.Date `db:"order_date" json:"order_date,omitzero" validate:"required"`
+	OrderNumber      int32        `db:"order_number" json:"order_number,omitempty"` // assigned in Insert
+	RequiredDate     lystype.Date `db:"required_date" json:"required_date,omitzero" validate:"required"`
+	SalesmanFk       int64        `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
+	ShippedDate      lystype.Date `db:"shipped_date" json:"shipped_date,omitzero"`
+	ShipperFk        int64        `db:"shipper_fk" json:"shipper_fk,omitempty" validate:"required"`
 }
 
 type Model struct {
@@ -58,7 +60,6 @@ type Model struct {
 	OrderItemCount      int              `db:"order_item_count" json:"order_item_count"`
 	OrderValue          float32          `db:"order_value" json:"order_value"`
 	UpdatedAt           lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
-	UpdatedBy           string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -146,10 +147,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
+	input.LastUserUpdateBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
+	assignmentsMap["last_user_update_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

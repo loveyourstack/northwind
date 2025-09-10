@@ -24,12 +24,12 @@ const (
 )
 
 type Input struct {
-	Code       string           `db:"code" json:"code,omitempty" validate:"required"`
-	CreatedBy  string           `db:"created_by" json:"created_by,omitempty"` // omitted from Update, assigned in Insert func
-	SalesmanFk int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
-	Name       string           `db:"name" json:"name,omitempty" validate:"required"`
-	Region     salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
-	UpdatedBy  string           `db:"updated_by" json:"updated_by,omitempty"` // assigned in Update funcs
+	Code             string           `db:"code" json:"code,omitempty" validate:"required"`
+	CreatedBy        string           `db:"created_by" json:"created_by,omitempty"`                   // omitted from Update, assigned in Insert func
+	LastUserUpdateBy string           `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
+	SalesmanFk       int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
+	Name             string           `db:"name" json:"name,omitempty" validate:"required"`
+	Region           salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
 }
 
 type Model struct {
@@ -82,12 +82,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
-	input.UpdatedBy = lys.GetUserNameFromCtx(ctx, "Unknown")
-	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"entry_by"}})
+	input.LastUserUpdateBy = lys.GetUserNameFromCtx(ctx, "Unknown")
+	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id, lyspg.UpdateOption{OmitFields: []string{"created_by"}})
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
-	assignmentsMap["updated_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
+	assignmentsMap["last_user_update_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

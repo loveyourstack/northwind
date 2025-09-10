@@ -16,6 +16,7 @@ CREATE OR REPLACE VIEW hr.v_employee AS
     emp.job_title,
     emp.id,
     emp.last_name,
+    emp.last_user_update_by,
     emp.name,
     emp.notes,
     emp.postal_code,
@@ -23,8 +24,7 @@ CREATE OR REPLACE VIEW hr.v_employee AS
     CASE WHEN emp.reports_to_fk = emp.id THEN '' ELSE report.name END AS reports_to,
     emp.state,
     emp.title,
-    emp.updated_at,
-    emp.updated_by
+    emp.updated_at
   FROM hr.employee emp
   JOIN core.country co ON emp.country_fk = co.id
   JOIN hr.employee report ON emp.reports_to_fk = report.id;

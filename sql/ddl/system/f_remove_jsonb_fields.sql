@@ -9,8 +9,8 @@ BEGIN
 p_row = p_row - 'id';
 p_row = p_row - 'created_at';
 p_row = p_row - 'created_by';
+p_row = p_row - 'last_user_update_by';
 p_row = p_row - 'updated_at';
-p_row = p_row - 'updated_by';
 
 RETURN p_row;
 

@@ -7,9 +7,9 @@ CREATE OR REPLACE VIEW core.v_category AS
     cat.created_by,
     cat.description,
     cat.id,
+    cat.last_user_update_by,
     cat.name,
     cat.updated_at,
-    cat.updated_by,
     COALESCE(p.active_product_count,0) AS active_product_count
   FROM core.category cat
   LEFT JOIN (SELECT category_fk, count(*) FILTER (WHERE is_discontinued = false) AS active_product_count FROM core.product GROUP BY 1) p ON p.category_fk = cat.id;
@@ -38,6 +38,7 @@ CREATE OR REPLACE VIEW core.v_product AS
     p.created_by,
     p.id,
     p.is_discontinued,
+    p.last_user_update_by,
     p.name,
     p.quantity_per_unit,
     p.reorder_level,
@@ -48,8 +49,7 @@ CREATE OR REPLACE VIEW core.v_product AS
     p.unit_price,
     p.units_in_stock,
     p.units_on_order,
-    p.updated_at,
-    p.updated_by
+    p.updated_at
   FROM core.product p
   JOIN core.supplier s ON p.supplier_fk = s.id
   JOIN core.country co ON s.country_fk = co.id
@@ -69,12 +69,12 @@ CREATE OR REPLACE VIEW core.v_supplier AS
     s.created_at,
     s.created_by,
     s.id,
+    s.last_user_update_by,
     s.phone,
     s.postal_code,
     s.state,
     s.company_name || ' (' || co.iso2 || ')' AS name, --unique
     s.updated_at,
-    s.updated_by,
     COALESCE(p.active_product_count,0) AS active_product_count
   FROM core.supplier s
   JOIN core.country co ON s.country_fk = co.id

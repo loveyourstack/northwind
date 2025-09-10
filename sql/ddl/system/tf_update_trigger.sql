@@ -20,14 +20,14 @@ END IF;
 v_old_row := to_jsonb(OLD);
 v_id := v_old_row->'id';
 
--- remove columns that shouldn't be saved
+-- remove old row columns that shouldn't be saved
 v_old_row := system.remove_jsonb_fields(v_old_row);
 
 -- get new row details and remove unwanted fields
 v_new_row := to_jsonb(NEW);
-v_user := COALESCE(v_new_row->>'updated_by', 'Unknown');
+v_user := COALESCE(v_new_row->>'last_user_update_by', 'Unknown');
 
--- remove columns that shouldn't be saved
+-- remove new row columns that shouldn't be saved
 v_new_row := system.remove_jsonb_fields(v_new_row);
 
 -- evaluate difference between new and old rows

@@ -13,14 +13,14 @@ CREATE TABLE hr.employee
   home_phone text NOT NULL,
   job_title text NOT NULL,
   last_name text NOT NULL,
+  last_user_update_by tracking_by,
   name text NOT NULL UNIQUE, -- not generated, in order to allow user to specify uniqueness however he chooses, e.g. using department or some other criterion
   notes text NOT NULL,
   postal_code text NOT NULL,
   reports_to_fk bigint REFERENCES hr.employee(id), -- self-reference - is made mandatory after data is inserted
   state text NOT NULL,
   title text NOT NULL,
-  updated_at tracking_at,
-  updated_by tracking_by
+  updated_at tracking_at
 );
 COMMENT ON TABLE hr.employee IS 'shortname: emp';
 

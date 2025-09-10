@@ -7,9 +7,9 @@ CREATE TABLE core.category
   created_at tracking_at,
   created_by tracking_by,
   description text NOT NULL UNIQUE,
+  last_user_update_by tracking_by,
   name text NOT NULL UNIQUE,
-  updated_at tracking_at,
-  updated_by tracking_by
+  updated_at tracking_at
 );
 COMMENT ON TABLE core.category IS 'shortname: cat';
 
@@ -23,7 +23,6 @@ CREATE TABLE core.country
   iso2 text NOT NULL UNIQUE,
   name text NOT NULL UNIQUE,
   updated_at tracking_at,
-  updated_by tracking_by,
   CONSTRAINT co_iso2_len CHECK (char_length(iso2) = 2)
 );
 COMMENT ON TABLE core.country IS 'shortname: co';
@@ -40,11 +39,11 @@ CREATE TABLE core.supplier
   country_fk bigint NOT NULL REFERENCES core.country (id),
   created_at tracking_at,
   created_by tracking_by,
+  last_user_update_by tracking_by,
   phone text NOT NULL,
   postal_code text NOT NULL,
   state text NOT NULL,
   updated_at tracking_at,
-  updated_by tracking_by,
   UNIQUE (country_fk, company_name)
 );
 COMMENT ON TABLE core.supplier IS 'shortname: s';
@@ -57,6 +56,7 @@ CREATE TABLE core.product
   created_at tracking_at,
   created_by tracking_by,
   is_discontinued boolean NOT NULL,
+  last_user_update_by tracking_by,
   name text NOT NULL UNIQUE,
   quantity_per_unit text NOT NULL,
   reorder_level integer NOT NULL CHECK (reorder_level >= 0),
@@ -65,7 +65,6 @@ CREATE TABLE core.product
   unit_price numeric(12,2) NOT NULL CHECK (unit_price > 0.0),
   units_in_stock integer NOT NULL CHECK (units_in_stock >= 0),
   units_on_order integer NOT NULL CHECK (units_on_order >= 0),
-  updated_at tracking_at,
-  updated_by tracking_by
+  updated_at tracking_at
 );
 COMMENT ON TABLE core.product IS 'shortname: p';

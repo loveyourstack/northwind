@@ -31,7 +31,7 @@ var adminCheckDdlCmd = &cobra.Command{
 		}
 		defer ownerDb.Close()
 
-		err = lyspgmon.CheckDDL(ctx, ownerDb, cliApp.InfoLog)
+		err = lyspgmon.CheckDDL(ctx, ownerDb, cliApp.InfoLog, cliApp.ErrorLog)
 		if err != nil {
 			cliApp.ErrorLog.Error("lyspgmon.CheckDDL failed: " + err.Error())
 			os.Exit(1)

@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
@@ -24,16 +25,17 @@ const (
 )
 
 type Input struct {
-	CategoryFk      int64    `db:"category_fk" json:"category_fk" validate:"required"`
-	IsDiscontinued  bool     `db:"is_discontinued" json:"is_discontinued"`
-	Name            string   `db:"name" json:"name,omitempty" validate:"required"`
-	QuantityPerUnit string   `db:"quantity_per_unit" json:"quantity_per_unit" validate:"required"`
-	ReorderLevel    int      `db:"reorder_level" json:"reorder_level"`
-	SupplierFk      int64    `db:"supplier_fk" json:"supplier_fk" validate:"required"`
-	Tags            []string `db:"tags" json:"tags,omitempty"`
-	UnitPrice       float32  `db:"unit_price" json:"unit_price" validate:"required"`
-	UnitsInStock    int      `db:"units_in_stock" json:"units_in_stock"`
-	UnitsOnOrder    int      `db:"units_on_order" json:"units_on_order"`
+	CategoryFk       int64    `db:"category_fk" json:"category_fk" validate:"required"`
+	IsDiscontinued   bool     `db:"is_discontinued" json:"is_discontinued"`
+	LastUserUpdateBy string   `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
+	Name             string   `db:"name" json:"name,omitempty" validate:"required"`
+	QuantityPerUnit  string   `db:"quantity_per_unit" json:"quantity_per_unit" validate:"required"`
+	ReorderLevel     int      `db:"reorder_level" json:"reorder_level"`
+	SupplierFk       int64    `db:"supplier_fk" json:"supplier_fk" validate:"required"`
+	Tags             []string `db:"tags" json:"tags,omitempty"`
+	UnitPrice        float32  `db:"unit_price" json:"unit_price" validate:"required"`
+	UnitsInStock     int      `db:"units_in_stock" json:"units_in_stock"`
+	UnitsOnOrder     int      `db:"units_on_order" json:"units_on_order"`
 }
 
 type Model struct {
@@ -46,7 +48,6 @@ type Model struct {
 	SupplierCompanyName  string           `db:"supplier_company_name" json:"supplier_company_name,omitempty"`
 	SupplierCountryIso2  string           `db:"supplier_country_iso2" json:"supplier_country_iso2,omitempty"`
 	UpdatedAt            lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
-	UpdatedBy            string           `db:"updated_by" json:"updated_by,omitempty"`
 	Input
 }
 
@@ -106,10 +107,12 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 }
 
 func (s Store) Update(ctx context.Context, input Input, id int64) error {
+	input.LastUserUpdateBy = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
 }
 
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
+	assignmentsMap["last_user_update_by"] = lys.GetUserNameFromCtx(ctx, "Unknown")
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
 }
 

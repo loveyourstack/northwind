@@ -11,11 +11,11 @@ CREATE TABLE sales.customer
   country_fk bigint NOT NULL REFERENCES core.country (id),
   created_at tracking_at,
   created_by tracking_by,
+  last_user_update_by tracking_by,
   phone text NOT NULL,
   postal_code text NOT NULL,
   state text NOT NULL,
   updated_at tracking_at,
-  updated_by tracking_by,
   CONSTRAINT s_c_code_len CHECK (char_length(code) = 5)
 );
 COMMENT ON TABLE sales.customer IS 'shortname: c';
@@ -27,9 +27,9 @@ CREATE TABLE sales.shipper
   company_name text NOT NULL UNIQUE,
   created_at tracking_at,
   created_by tracking_by,
+  last_user_update_by tracking_by,
   phone text NOT NULL,
-  updated_at tracking_at,
-  updated_by tracking_by
+  updated_at tracking_at
 );
 COMMENT ON TABLE sales.shipper IS 'shortname: ship';
 
@@ -48,14 +48,14 @@ CREATE TABLE sales.order
   dest_state text NOT NULL,
   freight_cost numeric(12,2) NOT NULL CHECK (freight_cost >= 0.0),
   is_shipped boolean NOT NULL DEFAULT false,
+  last_user_update_by tracking_by,
   order_date date NOT NULL CHECK (order_date >= '2010-01-01'),
   order_number int NOT NULL UNIQUE CHECK (order_number > 0),
   required_date date NOT NULL CHECK (required_date >= '2010-01-01'),
   salesman_fk bigint NOT NULL REFERENCES hr.employee(id),
   shipper_fk bigint NOT NULL REFERENCES sales.shipper(id),
   shipped_date date NOT NULL DEFAULT '0001-01-01'::date,
-  updated_at tracking_at,
-  updated_by tracking_by
+  updated_at tracking_at
 );
 COMMENT ON TABLE sales.order IS 'shortname: o';
 --- change columns with ---
@@ -75,12 +75,12 @@ CREATE TABLE sales.order_item
   created_at tracking_at,
   created_by tracking_by,
   discount numeric(5,4) NOT NULL CHECK (discount BETWEEN 0.0 AND 1.0),
+  last_user_update_by tracking_by,
   order_fk bigint NOT NULL REFERENCES sales.order(id),
   product_fk bigint NOT NULL REFERENCES core.product(id),
   quantity int NOT NULL CHECK (quantity >= 0),
   unit_price numeric(12,2) NOT NULL CHECK (unit_price >= 0.0),
   updated_at tracking_at,
-  updated_by tracking_by,
   UNIQUE(order_fk, product_fk)
 );
 COMMENT ON TABLE sales.order_item IS 'shortname: oi';
@@ -104,11 +104,11 @@ CREATE TABLE sales.territory
   code text NOT NULL UNIQUE,
   created_at tracking_at,
   created_by tracking_by,
+  last_user_update_by tracking_by,
   name text NOT NULL UNIQUE,
   region sales.region NOT NULL,
   salesman_fk bigint NOT NULL REFERENCES hr.employee(id),
   updated_at tracking_at,
-  updated_by tracking_by,
   CONSTRAINT s_t_code_len CHECK (char_length(code) = 5)
 );
 COMMENT ON TABLE sales.territory IS 'shortname: terr';
