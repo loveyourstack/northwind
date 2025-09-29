@@ -63,7 +63,6 @@ CREATE TABLE sales.order_archived
 ( 
   LIKE sales.order,
   archived_at tracking_at,
-  archived_by tracking_by,
   archived_by_cascade bool NOT NULL
 );
 COMMENT ON TABLE sales.order_archived IS 'shortname: o_arc';
@@ -89,7 +88,6 @@ CREATE TABLE sales.order_item_archived
 ( 
   LIKE sales.order_item,
   archived_at tracking_at,
-  archived_by tracking_by,
   archived_by_cascade bool NOT NULL
 );
 COMMENT ON TABLE sales.order_item_archived IS 'shortname: oi_arc';
