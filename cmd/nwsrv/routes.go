@@ -6,6 +6,11 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/loveyourstack/lys"
+	"github.com/loveyourstack/lys/lyspgmon/stores/lyspgbloat"
+	"github.com/loveyourstack/lys/lyspgmon/stores/lyspgquery"
+	"github.com/loveyourstack/lys/lyspgmon/stores/lyspgsetting"
+	"github.com/loveyourstack/lys/lyspgmon/stores/lyspgtablesize"
+	"github.com/loveyourstack/lys/lyspgmon/stores/lyspgunusedidx"
 	"github.com/loveyourstack/lys/lysstring"
 	"github.com/loveyourstack/northwind/internal/enums/sysrole"
 	"github.com/loveyourstack/northwind/internal/stores/core/corecategory"
@@ -74,6 +79,7 @@ func (srvApp *httpServerApplication) getSubRoutes(apiEnv lys.Env) []lys.SubRoute
 		{Url: "/ecb", RouteAdder: srvApp.ecbRoutes()},
 		{Url: "/hr", RouteAdder: srvApp.hrRoutes(apiEnv)},
 		{Url: "/sales", RouteAdder: srvApp.salesRoutes(apiEnv)},
+		{Url: "/tech", RouteAdder: srvApp.techRoutes(apiEnv)},
 	}
 }
 
@@ -240,6 +246,51 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		r.HandleFunc(endpoint+"/{id}", lys.Put(apiEnv, territoryStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, territoryStore)).Methods("PATCH")
 		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, territoryStore)).Methods("DELETE")
+
+		return r
+	}
+}
+
+func (srvApp *httpServerApplication) techRoutes(apiEnv lys.Env) lys.RouteAdderFunc {
+
+	return func(r *mux.Router) *mux.Router {
+
+		endpoint := "/long-running-query"
+
+		r.HandleFunc(endpoint, lys.PgSleep(srvApp.Db, srvApp.ErrorLog, 120)).Methods("GET")
+
+		endpoint = "/pg-bloat"
+
+		bloatStore := lyspgbloat.Store{Db: srvApp.OwnerDb} // uses db owner
+		r.HandleFunc(endpoint, lys.Get(apiEnv, bloatStore)).Methods("GET")
+
+		endpoint = "/pg-database-size"
+
+		r.HandleFunc(endpoint, srvApp.techGetDatabaseSize).Methods("GET")
+
+		endpoint = "/pg-queries"
+
+		activityStore := lyspgquery.Store{Db: srvApp.OwnerDb} // uses db owner
+		r.HandleFunc(endpoint, lys.Get(apiEnv, activityStore)).Methods("GET")
+
+		endpoint = "/pg-settings"
+
+		settingStore := lyspgsetting.Store{Db: srvApp.OwnerDb} // uses db owner
+		r.HandleFunc(endpoint, lys.Get(apiEnv, settingStore)).Methods("GET")
+
+		endpoint = "/pg-table-size"
+
+		tableSizeStore := lyspgtablesize.Store{Db: srvApp.OwnerDb} // uses db owner
+		r.HandleFunc(endpoint, lys.Get(apiEnv, tableSizeStore)).Methods("GET")
+
+		endpoint = "/pg-unused-indexes"
+
+		unusedIdxStore := lyspgunusedidx.Store{Db: srvApp.OwnerDb} // uses db owner
+		r.HandleFunc(endpoint, lys.Get(apiEnv, unusedIdxStore)).Methods("GET")
+
+		endpoint = "/pg-version"
+
+		r.HandleFunc(endpoint, srvApp.techGetPgVersion).Methods("GET")
 
 		return r
 	}

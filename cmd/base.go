@@ -14,7 +14,8 @@ type Application struct {
 	Config   *nw.Config
 	InfoLog  *slog.Logger
 	ErrorLog *slog.Logger
-	Db       *pgxpool.Pool
+	Db       *pgxpool.Pool // app-level connection for queries
+	OwnerDb  *pgxpool.Pool // db owner connection for monitoring
 	Validate *validator.Validate
 }
 

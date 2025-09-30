@@ -2,7 +2,7 @@
   <v-app class="rounded rounded-md">
     <v-app-bar density="compact" elevation="8">
 
-      <v-app-bar-nav-icon variant="text" @click.stop="showNav = !showNav"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon variant="text" @click.stop="showLeftNav = !showLeftNav"></v-app-bar-nav-icon>
       <v-img max-height="30px" max-width="30px" src="./../assets/logo.png" class="ml-1"></v-img>
       <v-toolbar-title>
         <span class="font-weight-bold projectFont">{{ appStore.projectTitle }}</span>
@@ -26,10 +26,15 @@
         </v-list>
       </v-menu>
 
+      <v-app-bar-nav-icon variant="text" v-tooltip="'Toggle right menu'" @click.stop="showRightNav = !showRightNav"></v-app-bar-nav-icon>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="showNav" elevation="8" floating>
+    <v-navigation-drawer v-model="showLeftNav" elevation="8" floating>
       <LeftNavList />
+    </v-navigation-drawer>
+
+    <v-navigation-drawer location="right" v-model="showRightNav" elevation="8" floating>
+      <RightNavList />
     </v-navigation-drawer>
 
     <v-main class="d-flex cockpit">
@@ -48,6 +53,7 @@ import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 import ApiError from '@/components/ApiError.vue'
 import LeftNavList from '@/components/LeftNavList.vue'
+import RightNavList from '@/components/RightNavList.vue'
 
 const theme = useTheme()
 const appStore = useAppStore()
@@ -55,7 +61,8 @@ const coreStore = useCoreStore()
 const hrStore = useHRStore()
 const salesStore = useSalesStore()
 
-const showNav = ref(true)
+const showLeftNav = ref(true)
+const showRightNav = ref(true)
 
 const lsKey = 'main'
 
@@ -63,10 +70,10 @@ function toggleTheme () {
   theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
 }
 
-watch([showNav, theme.global.name], () => {
+watch([showRightNav, theme.global.name], () => {
 
   let lsObj = {
-    'showNav': showNav.value,
+    'showRightNav': showRightNav.value,
     'theme': theme.global.name.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
@@ -79,7 +86,7 @@ onBeforeMount(() => {
   }
 
   let lsObj = JSON.parse(lsJSON)
-  if (lsObj['showNav'] !== undefined) { showNav.value = lsObj['showNav'] }
+  if (lsObj['showRightNav'] !== undefined) { showRightNav.value = lsObj['showRightNav'] }
   if (lsObj['theme']) { theme.global.name.value = lsObj['theme'] }
 })
 

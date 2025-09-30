@@ -44,9 +44,16 @@ func main() {
 	// connect to db and assign pool to srvApp
 	srvApp.Db, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbServerUser, srvApp.Config.General.AppName+" Srv")
 	if err != nil {
-		log.Fatalf("initialization: failed to create db connection pool: %s", err.Error())
+		log.Fatalf("initialization: failed to create regular db connection pool: %s", err.Error())
 	}
 	defer srvApp.Db.Close()
+
+	// connect to db using db owner and assign to srvApp
+	srvApp.OwnerDb, err = lyspgdb.GetPool(ctx, conf.Db, conf.DbOwnerUser, conf.General.AppName+" Srv")
+	if err != nil {
+		log.Fatalf("initialization: failed to create owner db connection pool: %s", err.Error())
+	}
+	defer srvApp.OwnerDb.Close()
 
 	// create HTTP server using srvApp's routes and handlers
 	srv := &http.Server{

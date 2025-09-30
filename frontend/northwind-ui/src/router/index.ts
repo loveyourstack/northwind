@@ -56,6 +56,16 @@ const routes = [
         ],
       },
       {
+        path: '/database',
+        children: [
+          {
+            path: '',
+            name: 'Database',
+            component: () => import('@/views/TechDatabase.vue'),
+          },
+        ]
+      },
+      {
         path: '/employees',
         children: [
           {
