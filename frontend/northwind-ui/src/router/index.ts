@@ -30,6 +30,16 @@ const routes = [
         ],
       },
       {
+        path: '/countries',
+        children: [
+          {
+            path: '',
+            name: 'Countries',
+            component: () => import('@/views/CoreCountries.vue'),
+          },
+        ]
+      },
+      {
         path: '/customers',
         children: [
           {
@@ -152,6 +162,16 @@ const routes = [
             component: () => import('@/views/CoreProductDetail.vue'),
           },
         ],
+      },
+      {
+        path: '/shippers',
+        children: [
+          {
+            path: '',
+            name: 'Shippers',
+            component: () => import('@/views/SalesShippers.vue'),
+          },
+        ]
       },
       {
         path: '/suppliers',

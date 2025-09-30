@@ -2,16 +2,14 @@ package corecountry
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"reflect"
-	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/loveyourstack/lys/lysmeta"
 	"github.com/loveyourstack/lys/lyspg"
 	"github.com/loveyourstack/lys/lystype"
-	"golang.org/x/exp/maps"
 )
 
 const (
@@ -32,6 +30,7 @@ type Input struct {
 type Model struct {
 	Id        int64            `db:"id" json:"id"`
 	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy string           `db:"created_by" json:"created_by,omitempty"`
 	UpdatedAt lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
 	Input
 }
@@ -53,11 +52,19 @@ type Store struct {
 	Db *pgxpool.Pool
 }
 
+func (s Store) Delete(ctx context.Context, id int64) error {
+	return lyspg.DeleteUnique(ctx, s.Db, schemaName, tableName, pkColName, id)
+}
+
 func (s Store) GetMeta() lysmeta.Result {
 	return meta
 }
 func (s Store) GetName() string {
 	return name
+}
+
+func (s Store) Insert(ctx context.Context, input Input) (newId int64, err error) {
+	return lyspg.Insert[Input, int64](ctx, s.Db, schemaName, tableName, pkColName, input)
 }
 
 func (s Store) Select(ctx context.Context, params lyspg.SelectParams) (items []Model, unpagedCount lyspg.TotalCount, err error) {
@@ -68,7 +75,19 @@ func (s Store) SelectById(ctx context.Context, id int64) (item Model, err error)
 	return lyspg.SelectUnique[Model](ctx, s.Db, schemaName, viewName, pkColName, id)
 }
 
+func (s Store) Update(ctx context.Context, input Input, id int64) error {
+	return lyspg.Update(ctx, s.Db, schemaName, tableName, pkColName, input, id)
+}
+
 func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
+	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
+}
+
+func (s Store) Validate(validate *validator.Validate, input Input) error {
+	return lysmeta.Validate(validate, input)
+}
+
+/*func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any, id int64) error {
 
 	// only allowed to update is_active
 
@@ -80,7 +99,5 @@ func (s Store) UpdatePartial(ctx context.Context, assignmentsMap map[string]any,
 		return fmt.Errorf(`assignmentsMap key must be "is_active"`)
 	}
 
-	assignmentsMap["updated_at"] = lystype.Datetime(time.Now())
-
 	return lyspg.UpdatePartial(ctx, s.Db, schemaName, tableName, pkColName, inputMeta.DbTags, assignmentsMap, id)
-}
+}*/

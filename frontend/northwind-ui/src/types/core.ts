@@ -29,11 +29,28 @@ export function GetCategoryInputFromItem(item: Category): CategoryInput {
 
 // ------------------------------------------------------------------------------------------------------
 
-export interface Country {
-  id: number
+export interface CountryInput {
   is_active: boolean
   iso2: string
   name: string
+}
+export interface Country extends CountryInput {
+  id: number
+}
+export function NewCountry(): Country {
+  return  {
+    is_active: false,
+    iso2: '',
+    name: '',
+    id: 0,
+  }
+}
+export function GetCountryInputFromItem(item: Country): CountryInput {
+  return  {
+    is_active: item.is_active,
+    iso2: item.iso2,
+    name: item.name,
+  }
 }
 
 // ------------------------------------------------------------------------------------------------------

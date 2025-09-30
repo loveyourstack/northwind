@@ -11,6 +11,7 @@
     <div v-if="showSalesItems">
       <v-list-item link title="Customers" to="/customers" prepend-icon="mdi-account-box-outline"></v-list-item>
       <v-list-item link title="Orders" to="/orders" prepend-icon="mdi-hand-extended"></v-list-item>
+      <v-list-item link title="Shippers" to="/shippers" prepend-icon="mdi-truck"></v-list-item>
       <v-list-item link title="Territories" to="/territories" prepend-icon="mdi-land-plots"></v-list-item>
     </div>
 

@@ -2,7 +2,7 @@
   <v-app class="rounded rounded-md">
     <v-app-bar density="compact" elevation="8">
 
-      <v-app-bar-nav-icon variant="text" @click.stop="showLeftNav = !showLeftNav"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon variant="text" v-tooltip="'Toggle left menu'" @click.stop="showLeftNav = !showLeftNav"></v-app-bar-nav-icon>
       <v-img max-height="30px" max-width="30px" src="./../assets/logo.png" class="ml-1"></v-img>
       <v-toolbar-title>
         <span class="font-weight-bold projectFont">{{ appStore.projectTitle }}</span>

@@ -1,6 +1,8 @@
 <template>
   <v-list>
 
+    <v-list-item link title="Countries" to="/countries" prepend-icon="mdi-earth" class="mt-2"></v-list-item>
+
     <v-divider></v-divider>
     <v-list-subheader title="Tech" class="text-uppercase mt-2 clickable" @click="showTechItems = !showTechItems"></v-list-subheader>
     <div v-if="showTechItems">

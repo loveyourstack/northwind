@@ -172,10 +172,27 @@ export interface OrderValueLatestWeeks {
   total_value: number
 }
 
-export interface Shipper {
-  id: number
+// ------------------------------------------------------------------------------------------------------
+
+export interface ShipperInput {
   company_name: string
   phone: string
+}
+export interface Shipper extends ShipperInput {
+  id: number
+}
+export function NewShipper(): Shipper {
+  return  {
+    company_name: '',
+    phone: '',
+    id: 0,
+  }
+}
+export function GetShipperInputFromItem(item: Shipper): ShipperInput {
+  return  {
+    company_name: item.company_name,
+    phone: item.phone,
+  }
 }
 
 // ------------------------------------------------------------------------------------------------------

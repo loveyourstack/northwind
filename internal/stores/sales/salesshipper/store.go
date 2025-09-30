@@ -31,6 +31,7 @@ type Input struct {
 type Model struct {
 	Id        int64            `db:"id" json:"id"`
 	CreatedAt lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy string           `db:"created_by" json:"created_by,omitempty"`
 	UpdatedAt lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
 	Input
 }

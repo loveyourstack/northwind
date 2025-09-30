@@ -108,7 +108,10 @@ func (srvApp *httpServerApplication) coreRoutes(apiEnv lys.Env) lys.RouteAdderFu
 		countryStore := corecountry.Store{Db: srvApp.Db}
 		r.HandleFunc(endpoint, lys.Get(apiEnv, countryStore)).Methods("GET")
 		r.HandleFunc(endpoint+"/{id}", lys.GetById(apiEnv, countryStore)).Methods("GET")
+		r.HandleFunc(endpoint, lys.Post(apiEnv, countryStore)).Methods("POST")
+		r.HandleFunc(endpoint+"/{id}", lys.Put(apiEnv, countryStore)).Methods("PUT")
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, countryStore)).Methods("PATCH")
+		r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, countryStore)).Methods("DELETE")
 
 		endpoint = "/products"
 
