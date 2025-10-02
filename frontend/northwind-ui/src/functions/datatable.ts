@@ -1,4 +1,5 @@
 import { VDataTable } from 'vuetify/components'
+import { NumericFilter } from '@/types/core'
 
 export const itemsPerPageOptions = [
   {value: 5, title: '5'},
@@ -13,6 +14,81 @@ export function getHeaderListIcon(excludedHeaders: string[], headerKey: string) 
 }
 export function getHeaderListIconColor(excludedHeaders: string[], headerKey: string) {
   return excludedHeaders.includes(headerKey) ? 'error' : 'success'
+}
+
+export function getNumericFilterDisplayText(nf: NumericFilter, isPercent?: boolean): string {
+
+  if (!nf.operator) { 
+    return ''
+  }
+
+  var val: number = nf.value ? nf.value : 0 // ensure that 0 rather than '' is shown when user deletes value in textbox
+  var val_upper: number = nf.value_upper ? nf.value_upper : 0
+
+  var val_s: string = val.toString()
+  if (isPercent) {
+    val_s += '%'
+  }
+  var val_upper_s: string = val_upper.toString()
+  if (isPercent) {
+    val_upper_s += '%'
+  }
+
+  if (nf.operator === '<=>') {
+    if (val_upper < val) {
+      return 'invalid'
+    }
+
+    return nf.operator + ' ' + val_s + ' and ' + val_upper_s
+  }
+
+  return nf.operator + ' ' + val_s
+}
+
+export function getNumericFilterUrlParams(param: string, nf: NumericFilter, isPercent?: boolean): string {
+
+  if (!nf.operator) { 
+    return ''
+  }
+
+  var val: number = nf.value ? nf.value : 0 // ensure that 0 rather than '' is passed to API when user deletes value in textbox
+  var val_upper: number = nf.value_upper ? nf.value_upper : 0
+
+  if (isPercent) {
+    val /= 100
+    val_upper /= 100
+  }
+
+  if (nf.operator === '<=>') {
+
+    if (val_upper < val) {
+      return ''
+    }
+
+    return '&' + param + '=>eq' + val + '&' + param + '=<eq' + val_upper
+  }
+  
+  return '&' + param + '=' + getOperatorParam(nf.operator) + val
+}
+
+
+export function getOperatorParam(operator: string): string {
+  switch (operator) {
+    case '<':
+      return operator
+    case '<=':
+      return '<eq'
+    case '=':
+      return '' // empty so that param becomes x=val
+    case '>=':
+      return '>eq'
+    case '>':
+      return operator
+    case '!=':
+      return '!'
+    default:
+      return 'unknown'
+  }
 }
 
 export function getPageTextEstimated(totalItemsEstimated: number) {

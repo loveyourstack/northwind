@@ -61,14 +61,10 @@
               @updated="(val: string | undefined) => { filterCustomerName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipBool name="Shipped" :filterValue="filterShipped" :filterText="filterShippedText" @closed="filterShipped = undefined; refreshItems()">
-              <template #menuContent>
-                <v-autocomplete label="Shipped" v-model="filterShipped" autofocus
-                  :items="appStore.booleanOptions"
-                  @update:model-value="refreshItems"
-                ></v-autocomplete>
-              </template>
-            </FilterChipBool>
+            <FilterChipNumeric name="# Items" :filterValue="filterItemCount" 
+                @closed="filterItemCount.operator = ''; filterItemCount.value = 0; filterItemCount.value_upper = 0; refreshItems()"
+                @updated="refreshItems()" @updated-debounce="debouncedRefreshItems()">
+            </FilterChipNumeric>
 
             <FilterChip name="Order date >" :filterValue="filterOrderDate" :filterText="filterOrderDateText" @closed="filterOrderDate = undefined; refreshItems()">
               <template #menuContent>
@@ -77,6 +73,15 @@
                 ></DateTextField>
               </template>
             </FilterChip>
+
+            <FilterChipBool name="Shipped" :filterValue="filterShipped" :filterText="filterShippedText" @closed="filterShipped = undefined; refreshItems()">
+              <template #menuContent>
+                <v-autocomplete label="Shipped" v-model="filterShipped" autofocus
+                  :items="appStore.booleanOptions"
+                  @update:model-value="refreshItems"
+                ></v-autocomplete>
+              </template>
+            </FilterChipBool>
 
           </v-chip-group>
         </v-col>
@@ -129,14 +134,16 @@ import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { useAppStore } from '@/stores/app'
+import { NumericFilter } from '@/types/core'
 import { Order } from '@/types/sales'
-import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
+import { getNumericFilterUrlParams, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
 import DateTextField from '@/components/DateTextField.vue'
 import DtFooter from '@/components/DtFooter.vue'
 import FilterChip from '@/components/FilterChip.vue'
 import FilterChipBool from '@/components/FilterChipBool.vue'
+import FilterChipNumeric from '@/components/FilterChipNumeric.vue'
 import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
@@ -178,6 +185,7 @@ const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
 
 const filterCustomerName = ref<string>()
+const filterItemCount = ref<NumericFilter>({operator: '', value: 0, value_upper: 0})
 
 const filterOrderDate = ref<string>() // YYYY-MM-DD
 const filterOrderDateText = computed(() => {
@@ -202,6 +210,8 @@ function getFilterStr(): string {
   } else if (filterCustomerName.value) {
     ret += getTextFilterUrlParam('customer_company_name', filterCustomerName.value)
   }
+
+  ret += getNumericFilterUrlParams('order_item_count', filterItemCount.value)
 
   if (filterOrderDate.value) {
     ret += '&order_date=>eq' + filterOrderDate.value
@@ -254,10 +264,11 @@ watch([itemsPerPage, search, sortBy, excludedHeaders], () => {
   let lsObj = {
     'itemsPerPage': itemsPerPage.value,
     'sortBy': sortBy.value,
-    'filterOrderNumber': filterOrderNumber.value,
     'filterCustomerName': filterCustomerName.value,
-    'filterShipped': filterShipped.value,
+    'filterItemCount': filterItemCount.value,
     'filterOrderDate': filterOrderDate.value,
+    'filterOrderNumber': filterOrderNumber.value,
+    'filterShipped': filterShipped.value,
     'excludedHeaders': excludedHeaders.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
@@ -272,10 +283,11 @@ onBeforeMount(() => {
   let lsObj = JSON.parse(lsJSON)
   if (lsObj['itemsPerPage']) { itemsPerPage.value = lsObj['itemsPerPage'] }
   if (lsObj['sortBy']) { sortBy.value = lsObj['sortBy'] }
-  if (lsObj['filterOrderNumber']) { filterOrderNumber.value = lsObj['filterOrderNumber'] }
   if (lsObj['filterCustomerName']) { filterCustomerName.value = lsObj['filterCustomerName'] }
-  if (lsObj['filterShipped']) { filterShipped.value = lsObj['filterShipped'] }
+  if (lsObj['filterItemCount']) { filterItemCount.value = lsObj['filterItemCount'] }
   if (lsObj['filterOrderDate']) { filterOrderDate.value = lsObj['filterOrderDate'] }
+  if (lsObj['filterOrderNumber']) { filterOrderNumber.value = lsObj['filterOrderNumber'] }
+  if (lsObj['filterShipped']) { filterShipped.value = lsObj['filterShipped'] }
   if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
 })
 
