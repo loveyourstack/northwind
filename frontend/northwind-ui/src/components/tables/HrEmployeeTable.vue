@@ -85,7 +85,7 @@
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Employee } from '@/types/hr'
+import { type Employee } from '@/types/hr'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useDateFormat, useDebounceFn } from '@vueuse/core'

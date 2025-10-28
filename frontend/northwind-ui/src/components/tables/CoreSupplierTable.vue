@@ -90,7 +90,7 @@
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Supplier } from '@/types/core'
+import { type Supplier } from '@/types/core'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useCoreStore } from '@/stores/core'

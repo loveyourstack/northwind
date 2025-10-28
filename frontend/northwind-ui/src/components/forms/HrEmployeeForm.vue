@@ -112,7 +112,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Employee, EmployeeInput, NewEmployee, GetEmployeeInputFromItem } from '@/types/hr'
+import { type Employee, type EmployeeInput, NewEmployee, GetEmployeeInputFromItem } from '@/types/hr'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 

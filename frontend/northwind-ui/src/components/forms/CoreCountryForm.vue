@@ -50,7 +50,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Country, CountryInput, NewCountry, GetCountryInputFromItem } from '@/types/core'
+import { type Country, type CountryInput, NewCountry, GetCountryInputFromItem } from '@/types/core'
 import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{

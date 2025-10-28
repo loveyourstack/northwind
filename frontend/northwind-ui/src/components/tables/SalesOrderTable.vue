@@ -89,7 +89,7 @@
     </template>
 
     <template v-slot:[`item.customer_company_name`]="{ item }">
-      <router-link :to="{ name: 'Customer detail', params: {id: item.customer_fk }}">
+      <router-link :to="{ path: '/customers/' + item.customer_fk }">
         {{item.customer_company_name}}
       </router-link>
     </template>
@@ -134,8 +134,8 @@ import { useTheme } from 'vuetify'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { useAppStore } from '@/stores/app'
-import { NumericFilter } from '@/types/core'
-import { Order } from '@/types/sales'
+import { type NumericFilter } from '@/types/core'
+import { type Order } from '@/types/sales'
 import { getNumericFilterUrlParams, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
@@ -231,7 +231,7 @@ function getFilterStr(): string {
 
 function getRowClass(item: Order) {
   if (!item.is_shipped) {
-    return theme.global.current.value.dark ? { style: 'background-color: #480505;' } : { class: 'bg-red-lighten-5' }
+    return theme.name.value === 'dark' ? { style: 'background-color: #480505;' } : { class: 'bg-red-lighten-5' }
   }
 }
 

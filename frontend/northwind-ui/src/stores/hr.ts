@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Employee } from '@/types/hr'
+import { type Employee } from '@/types/hr'
 import ax from '@/api'
 
 export const useHRStore = defineStore('hr', () => {

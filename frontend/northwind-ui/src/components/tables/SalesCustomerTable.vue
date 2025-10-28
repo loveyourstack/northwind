@@ -95,7 +95,7 @@
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Customer } from '@/types/sales'
+import { type Customer } from '@/types/sales'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useCoreStore } from '@/stores/core'

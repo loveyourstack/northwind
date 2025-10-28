@@ -1,5 +1,5 @@
 import { VDataTable } from 'vuetify/components'
-import { NumericFilter } from '@/types/core'
+import { type NumericFilter } from '@/types/core'
 
 export const itemsPerPageOptions = [
   {value: 5, title: '5'},
@@ -132,16 +132,17 @@ export function processURIOptions (uri: string, options: { page: number, itemsPe
 
   var sortParam = ''
   for (var i = 0; i < options.sortBy.length; i++) {
+
     if (i === 0) {
       sortParam = '&xsort='
     } else {
       sortParam += ','
     }
 
-    if (options.sortBy[i].order === 'desc') {
-      sortParam += '-' + options.sortBy[i].key
+    if (options.sortBy[i]!.order === 'desc') {
+      sortParam += '-' + options.sortBy[i]!.key
     } else {
-      sortParam += options.sortBy[i].key
+      sortParam += options.sortBy[i]!.key
     }
   }
   uri += sortParam

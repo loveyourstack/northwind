@@ -59,7 +59,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { MeetingSchedule, MeetingScheduleInput, NewMeetingSchedule, GetMeetingScheduleInputFromItem } from '@/types/hr'
+import { type MeetingSchedule, type MeetingScheduleInput, NewMeetingSchedule, GetMeetingScheduleInputFromItem } from '@/types/hr'
 import { useCoreStore } from '@/stores/core'
 import TimeTextField from '@/components/TimeTextField.vue'
 
@@ -130,7 +130,7 @@ async function saveItem() {
   }
 
   await ax.post(baseURL, saveItem)
-    .then(response => {
+    .then((response: any) => {
       saveBtnLabel.value = 'Save'
       showSaved.value = true
       setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)

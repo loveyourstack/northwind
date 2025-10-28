@@ -27,7 +27,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import ax from '@/api'
-import { OrderValueLatestWeeks } from '@/types/sales'
+import { type OrderValueLatestWeeks } from '@/types/sales'
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()

@@ -56,8 +56,8 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Product } from '@/types/core'
-import { OrderItem, OrderItemInput, NewOrderItem, GetOrderItemInputFromItem } from '@/types/sales'
+import { type Product } from '@/types/core'
+import { type OrderItem, type OrderItemInput, NewOrderItem, GetOrderItemInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{

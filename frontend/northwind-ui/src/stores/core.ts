@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Country } from '@/types/core'
-import { SelectionItem } from '@/types/system'
+import { type Country } from '@/types/core'
+import { type SelectionItem } from '@/types/system'
 import ax from '@/api'
 
 export const useCoreStore = defineStore('core', () => {

@@ -96,7 +96,7 @@
     </template>
 
     <template v-slot:[`item.supplier_company_name`]="{ item }">
-      <router-link :to="{ name: 'Supplier detail', params: {id: item.supplier_fk }}">
+      <router-link :to="{ path: '/suppliers/' + item.supplier_fk }">
         {{item.supplier_company_name}}
       </router-link>
     </template>
@@ -127,7 +127,7 @@ import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Product } from '@/types/core'
+import { type Product } from '@/types/core'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useAppStore } from '@/stores/app'

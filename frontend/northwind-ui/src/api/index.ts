@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import { useAppStore } from '@/stores/app'
 
 const appStore = useAppStore()

@@ -58,7 +58,7 @@ import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Order } from '@/types/sales'
+import { type Order } from '@/types/sales'
 import SalesOrderForm from '@/components/forms/SalesOrderForm.vue'
 import SalesOrderItemTable from '@/components/tables/SalesOrderItemTable.vue';
 

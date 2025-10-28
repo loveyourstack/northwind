@@ -54,7 +54,7 @@
     </template>
 
     <template v-slot:[`item.product_name`]="{ item }">
-      <router-link :to="{ name: 'Product detail', params: {id: item.product_fk }}">
+      <router-link :to="{ path: '/products/' + item.product_fk }">
         {{item.product_name}}
       </router-link>
     </template>
@@ -84,7 +84,7 @@
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { OrderItem } from '@/types/sales'
+import { type OrderItem } from '@/types/sales'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import DtFooter from '@/components/DtFooter.vue'

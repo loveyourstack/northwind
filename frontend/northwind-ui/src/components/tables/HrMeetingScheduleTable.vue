@@ -90,7 +90,7 @@
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { MeetingSchedule } from '@/types/hr'
+import { type MeetingSchedule } from '@/types/hr'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import DtFooter from '@/components/DtFooter.vue'

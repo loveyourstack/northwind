@@ -47,7 +47,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Shipper, ShipperInput, NewShipper, GetShipperInputFromItem } from '@/types/sales'
+import { type Shipper, type ShipperInput, NewShipper, GetShipperInputFromItem } from '@/types/sales'
 import { useSalesStore } from '@/stores/sales'
 
 const props = defineProps<{

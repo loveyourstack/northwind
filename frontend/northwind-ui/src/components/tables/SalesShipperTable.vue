@@ -70,7 +70,7 @@
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Shipper } from '@/types/sales'
+import { type Shipper } from '@/types/sales'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import SalesShipperForm from '@/components/forms/SalesShipperForm.vue'

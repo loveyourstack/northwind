@@ -1,6 +1,6 @@
-import { ref, Ref, watchEffect } from 'vue'
+import { ref, type Ref, watchEffect } from 'vue'
 import ax from '@/api'
-import { GetMetadata } from '@/types/system'
+import { type GetMetadata } from '@/types/system'
 
 export function useFetch(url: string, result: Ref<any>, successFn?: Function, loading?: Ref<boolean>) {
 

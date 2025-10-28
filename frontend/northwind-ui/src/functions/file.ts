@@ -16,7 +16,7 @@ export function fileDownload(url: string) {
         var contDispVal: string = resp.headers['content-disposition']
         //console.log('contDispVal: ' + contDispVal)
         if (contDispVal) {
-            var cdFileName: string = contDispVal.split('filename=')[1]
+            var cdFileName: string = contDispVal.split('filename=')[1]!
             //console.log('cdFileName: ' + cdFileName)
             if (cdFileName) {
                 fileName = cdFileName

@@ -28,7 +28,7 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { NumericFilter } from '@/types/core'
+import { type NumericFilter } from '@/types/core'
 import { useCoreStore } from '@/stores/core'
 import { getNumericFilterDisplayText } from '@/functions/datatable'
 

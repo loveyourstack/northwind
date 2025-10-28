@@ -88,7 +88,7 @@
 <script lang="ts" setup>
 import { ref, watch, onBeforeMount, onMounted } from 'vue'
 import { VDataTable } from 'vuetify/components'
-import { PgTableSize } from '@/types/tech'
+import { type PgTableSize } from '@/types/tech'
 import { useFetch, useFetchDt } from '@/composables/fetch'
 import { getTextFilterUrlParam, processURIOptions } from '@/functions/datatable'
 import { useDebounceFn } from '@vueuse/core'

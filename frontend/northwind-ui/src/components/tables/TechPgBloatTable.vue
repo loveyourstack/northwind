@@ -64,7 +64,7 @@
 <script lang="ts" setup>
 import { ref, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
-import { PgBloat } from '@/types/tech'
+import { type PgBloat } from '@/types/tech'
 import { useFetchDt } from '@/composables/fetch'
 import { processURIOptions } from '@/functions/datatable'
 import DtFooter from '@/components/DtFooter.vue'

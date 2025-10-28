@@ -112,7 +112,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useNow, useDateFormat } from '@vueuse/core'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Customer, Order, OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
+import { type Customer, type Order, type OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
@@ -174,7 +174,7 @@ function fillFromCustomer() {
   }
 
   ax.get('/a/sales/customers/' + item.value!.customer_fk)
-    .then(response => {
+    .then((response: any) => {
       var cust:Customer = response.data.data
       item.value!.dest_company_name = cust.company_name
       item.value!.dest_address = cust.address ? cust.address : ''
@@ -214,7 +214,7 @@ async function saveItem() {
   }
 
   await ax.post(baseURL, saveItem)
-    .then(response => {
+    .then((response: any) => {
       saveBtnLabel.value = 'Save'
       showSaved.value = true
       setTimeout(() => { showSaved.value = false }, import.meta.env.VITE_FADE_MS)

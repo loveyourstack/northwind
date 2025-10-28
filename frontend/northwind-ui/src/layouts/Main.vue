@@ -12,7 +12,7 @@
 
       <div class="text-body-1 mr-2">Username</div>
 
-      <v-btn icon="mdi-theme-light-dark" v-tooltip="'Toggle theme'" @click="toggleTheme"></v-btn>
+      <v-btn icon="mdi-theme-light-dark" v-tooltip="'Toggle theme'" @click="theme.toggle()"></v-btn>
 
       <v-menu>
         <template v-slot:activator="{ props }">
@@ -66,15 +66,11 @@ const showRightNav = ref(true)
 
 const lsKey = 'main'
 
-function toggleTheme () {
-  theme.global.name.value = theme.global.current.value.dark ? 'light' : 'dark'
-}
-
 watch([showRightNav, theme.global.name], () => {
 
   let lsObj = {
     'showRightNav': showRightNav.value,
-    'theme': theme.global.name.value,
+    'theme': theme.name.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
 })
@@ -87,7 +83,7 @@ onBeforeMount(() => {
 
   let lsObj = JSON.parse(lsJSON)
   if (lsObj['showRightNav'] !== undefined) { showRightNav.value = lsObj['showRightNav'] }
-  if (lsObj['theme']) { theme.global.name.value = lsObj['theme'] }
+  if (lsObj['theme']) { theme.change(lsObj['theme']) }
 })
 
 onMounted(() => {

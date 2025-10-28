@@ -56,7 +56,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Territory, TerritoryInput, NewTerritory, GetTerritoryInputFromItem } from '@/types/sales'
+import { type Territory, type TerritoryInput, NewTerritory, GetTerritoryInputFromItem } from '@/types/sales'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 

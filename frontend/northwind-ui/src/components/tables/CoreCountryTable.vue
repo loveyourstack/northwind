@@ -74,7 +74,7 @@
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Country } from '@/types/core'
+import { type Country } from '@/types/core'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import CoreCountryForm from '@/components/forms/CoreCountryForm.vue'

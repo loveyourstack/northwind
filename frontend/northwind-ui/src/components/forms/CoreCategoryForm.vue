@@ -53,7 +53,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Category, CategoryInput, NewCategory, GetCategoryInputFromItem } from '@/types/core'
+import { type Category, type CategoryInput, NewCategory, GetCategoryInputFromItem } from '@/types/core'
 import { useCoreStore } from '@/stores/core'
 
 const props = defineProps<{

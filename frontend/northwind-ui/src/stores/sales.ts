@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { Shipper } from '@/types/sales'
-import { SelectionItem } from '@/types/system'
+import { type Shipper } from '@/types/sales'
+import { type SelectionItem } from '@/types/system'
 import ax from '@/api'
 
 export const useSalesStore = defineStore('sales', () => {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ApiError } from '@/types/system'
+import { type ApiError } from '@/types/system'
 
 export const useAppStore = defineStore('app', () => {
   const apiErr = null as ApiError | null

@@ -16,7 +16,6 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
-import { VTimePicker } from 'vuetify/labs/VTimePicker'
 
 const props = defineProps<{
   timeVal: string | undefined // hh24:mm

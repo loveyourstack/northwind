@@ -78,7 +78,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
-import { Customer, CustomerInput, NewCustomer, GetCustomerInputFromItem } from '@/types/sales'
+import { type Customer, type CustomerInput, NewCustomer, GetCustomerInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
 import { useSalesStore } from '@/stores/sales'
 

@@ -83,7 +83,7 @@
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
-import { Category } from '@/types/core'
+import { type Category } from '@/types/core'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import CoreCategoryForm from '@/components/forms/CoreCategoryForm.vue'
