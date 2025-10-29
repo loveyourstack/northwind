@@ -73,8 +73,6 @@ import { useFetchDt } from '@/composables/fetch'
 import { type Shipper } from '@/types/sales'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import SalesShipperForm from '@/components/forms/SalesShipperForm.vue'
-import DtFooter from '@/components/DtFooter.vue'
 
 const props = defineProps<{
   title?: string

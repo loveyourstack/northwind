@@ -100,10 +100,6 @@ import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@
 import { fileDownload } from '@/functions/file'
 import { useCoreStore } from '@/stores/core'
 import { useDebounceFn } from '@vueuse/core'
-import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
-import DtFooter from '@/components/DtFooter.vue'
-import FilterChip from '@/components/FilterChip.vue'
-import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   title?: string

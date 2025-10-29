@@ -26,7 +26,7 @@
                     @cancel="router.back"
                     @create="router.push({ name: 'Suppliers' })"
                     @delete="router.push({ name: 'Suppliers' })"
-                    @load="(name) => { itemName = name }"
+                    @load="(name: string) => { itemName = name }"
                   ></CoreSupplierForm>
                 </v-window-item>
 
@@ -58,8 +58,6 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import CoreSupplierForm from '@/components/forms/CoreSupplierForm.vue'
-import CoreProductTable from '@/components/tables/CoreProductTable.vue'
 
 const props = defineProps<{
   id: number

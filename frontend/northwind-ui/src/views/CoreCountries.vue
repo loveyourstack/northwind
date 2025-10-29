@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import CoreCountryTable from '@/components/tables/CoreCountryTable.vue'
 </script>

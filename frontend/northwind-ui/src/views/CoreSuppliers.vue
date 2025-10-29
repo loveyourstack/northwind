@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import CoreSupplierTable from '@/components/tables/CoreSupplierTable.vue'
 </script>

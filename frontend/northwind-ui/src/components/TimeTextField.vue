@@ -8,7 +8,7 @@
     </template>
     <template #default>
       <v-time-picker format="24hr" v-model="localTimeVal" :allowed-minutes="m => m % 5 === 0"
-        @update:model-value="showTimeP = false; emit('updated', localTimeVal)">
+        @update:model-value="emit('updated', localTimeVal)">
       </v-time-picker>
     </template>
   </v-menu>

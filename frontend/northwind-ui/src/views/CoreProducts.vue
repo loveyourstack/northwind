@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import CoreProductTable from '@/components/tables/CoreProductTable.vue'
 </script>

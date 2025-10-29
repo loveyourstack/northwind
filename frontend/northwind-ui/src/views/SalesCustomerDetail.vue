@@ -24,7 +24,7 @@
                     @cancel="router.back"
                     @create="router.push({ name: 'Customers' })"
                     @delete="router.push({ name: 'Customers' })"
-                    @load="(name) => { itemName = name }"
+                    @load="(name: string) => { itemName = name }"
                   ></SalesCustomerForm>
                 </v-window-item>
                 
@@ -56,8 +56,6 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import SalesCustomerForm from '@/components/forms/SalesCustomerForm.vue'
-import SalesOrderTable from '@/components/tables/SalesOrderTable.vue'
 
 const props = defineProps<{
   id: number

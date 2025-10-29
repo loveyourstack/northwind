@@ -138,13 +138,6 @@ import { type NumericFilter } from '@/types/core'
 import { type Order } from '@/types/sales'
 import { getNumericFilterUrlParams, getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
-import DateTextField from '@/components/DateTextField.vue'
-import DtFooter from '@/components/DtFooter.vue'
-import FilterChip from '@/components/FilterChip.vue'
-import FilterChipBool from '@/components/FilterChipBool.vue'
-import FilterChipNumeric from '@/components/FilterChipNumeric.vue'
-import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   customer_id: number // pass 0 rather than null/undefined, easier to handle

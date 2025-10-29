@@ -77,8 +77,6 @@ import { useFetchDt } from '@/composables/fetch'
 import { type Country } from '@/types/core'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import CoreCountryForm from '@/components/forms/CoreCountryForm.vue'
-import DtFooter from '@/components/DtFooter.vue'
 
 const props = defineProps<{
   title?: string

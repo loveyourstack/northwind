@@ -22,7 +22,6 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
-import CoreProductForm from '@/components/forms/CoreProductForm.vue'
 
 const props = defineProps<{
   id: number

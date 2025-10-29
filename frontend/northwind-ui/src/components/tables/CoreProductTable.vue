@@ -132,11 +132,6 @@ import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@
 import { fileDownload } from '@/functions/file'
 import { useAppStore } from '@/stores/app'
 import { useCoreStore } from '@/stores/core'
-import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
-import DtFooter from '@/components/DtFooter.vue'
-import FilterChip from '@/components/FilterChip.vue'
-import FilterChipBool from '@/components/FilterChipBool.vue'
-import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   supplier_id: number // pass 0 rather than null/undefined, easier to handle

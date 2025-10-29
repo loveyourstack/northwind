@@ -51,9 +51,6 @@ import { useAppStore } from '@/stores/app'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
-import ApiError from '@/components/ApiError.vue'
-import LeftNavList from '@/components/LeftNavList.vue'
-import RightNavList from '@/components/RightNavList.vue'
 
 const theme = useTheme()
 const appStore = useAppStore()

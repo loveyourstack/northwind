@@ -56,11 +56,8 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
 import { type Order } from '@/types/sales'
-import SalesOrderForm from '@/components/forms/SalesOrderForm.vue'
-import SalesOrderItemTable from '@/components/tables/SalesOrderItemTable.vue';
 
 const props = defineProps<{
   id: number

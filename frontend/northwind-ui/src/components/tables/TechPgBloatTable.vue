@@ -67,7 +67,6 @@ import { VDataTable } from 'vuetify/components'
 import { type PgBloat } from '@/types/tech'
 import { useFetchDt } from '@/composables/fetch'
 import { processURIOptions } from '@/functions/datatable'
-import DtFooter from '@/components/DtFooter.vue'
 
 const props = defineProps<{
   title?: string

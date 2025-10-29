@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import SalesTerritoryTable from '@/components/tables/SalesTerritoryTable.vue'
 </script>

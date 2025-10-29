@@ -24,7 +24,7 @@
                     @cancel="router.back"
                     @create="router.push({ name: 'Employees' })"
                     @delete="router.push({ name: 'Employees' })"
-                    @load="(name) => { itemName = name }"
+                    @load="(name: string) => { itemName = name }"
                   ></HrEmployeeForm>
                 </v-window-item>
 
@@ -56,8 +56,6 @@
 <script lang="ts" setup>
 import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import HrEmployeeForm from '@/components/forms/HrEmployeeForm.vue'
-import SalesTerritoryTable from '@/components/tables/SalesTerritoryTable.vue';
 
 const props = defineProps<{
   id: number

@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import SalesOrderTable from '@/components/tables/SalesOrderTable.vue'
 </script>

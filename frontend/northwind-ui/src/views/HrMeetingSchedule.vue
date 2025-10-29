@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import HrMeetingScheduleTable from '@/components/tables/HrMeetingScheduleTable.vue'
 </script>

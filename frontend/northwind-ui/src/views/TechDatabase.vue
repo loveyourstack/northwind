@@ -48,11 +48,6 @@
 
 <script lang="ts" setup>
 import { ref, onBeforeMount } from 'vue'
-import TechPgBloatTable from '@/components/tables/TechPgBloatTable.vue'
-import TechPgQueryTable from '@/components/tables/TechPgQueryTable.vue'
-import TechPgSettingTable from '@/components/tables/TechPgSettingTable.vue'
-import TechPgTableSizeTable from '@/components/tables/TechPgTableSizeTable.vue'
-import TechPgUnusedIdxTable from '@/components/tables/TechPgUnusedIdxTable.vue'
 
 const lsKey = 'tech_database'
 const selectedTab = ref('queries')

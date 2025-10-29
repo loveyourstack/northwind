@@ -11,8 +11,8 @@ Is a work in progress - some functionality is missing, especially in the UI, and
 * Follow the instructions in CONTRIBUTING.md for creating a local database
 * Fetch API packages: from root directory, `go get -d ./...`
 * Run the API server: from root directory, `make srv`
-* Fetch UI packages: from frontend/northwind-ui directory, `yarn`
-* Run the UI: from frontend/northwind-ui directory, `yarn dev`
+* Fetch UI packages: from frontend/northwind-ui directory, `pnpm install`
+* Run the UI: from frontend/northwind-ui directory, `pnpm dev`
 
 ## Testing
 

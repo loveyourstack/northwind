@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import CoreCategoryTable from '@/components/tables/CoreCategoryTable.vue'
 </script>

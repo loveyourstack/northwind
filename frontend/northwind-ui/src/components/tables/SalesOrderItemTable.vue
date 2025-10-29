@@ -87,8 +87,6 @@ import { useFetchDt } from '@/composables/fetch'
 import { type OrderItem } from '@/types/sales'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import DtFooter from '@/components/DtFooter.vue'
-import SalesOrderItemForm from '@/components/forms/SalesOrderItemForm.vue'
 
 const props = defineProps<{
   order_id: number // pass 0 rather than null/undefined, easier to handle

@@ -86,8 +86,6 @@ import { useFetchDt } from '@/composables/fetch'
 import { type Category } from '@/types/core'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
-import CoreCategoryForm from '@/components/forms/CoreCategoryForm.vue'
-import DtFooter from '@/components/DtFooter.vue'
 
 const props = defineProps<{
   title?: string

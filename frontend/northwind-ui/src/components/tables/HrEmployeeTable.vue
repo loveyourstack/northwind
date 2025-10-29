@@ -89,9 +89,6 @@ import { type Employee } from '@/types/hr'
 import { getTextFilterUrlParam, itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
 import { fileDownload } from '@/functions/file'
 import { useDateFormat, useDebounceFn } from '@vueuse/core'
-import AdjustColsListItem from '@/components/AdjustColsListItem.vue'
-import DtFooter from '@/components/DtFooter.vue'
-import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   title?: string

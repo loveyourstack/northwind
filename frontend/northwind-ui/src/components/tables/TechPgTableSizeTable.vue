@@ -92,8 +92,6 @@ import { type PgTableSize } from '@/types/tech'
 import { useFetch, useFetchDt } from '@/composables/fetch'
 import { getTextFilterUrlParam, processURIOptions } from '@/functions/datatable'
 import { useDebounceFn } from '@vueuse/core'
-import DtFooter from '@/components/DtFooter.vue'
-import FilterChipText from '@/components/FilterChipText.vue'
 
 const props = defineProps<{
   title?: string

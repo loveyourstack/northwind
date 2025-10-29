@@ -17,5 +17,4 @@
 </template>
 
 <script lang="ts" setup>
-import HrEmployeeTable from '@/components/tables/HrEmployeeTable.vue'
 </script>

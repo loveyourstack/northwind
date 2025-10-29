@@ -116,7 +116,6 @@ import { type Customer, type Order, type OrderInput, NewOrder, GetOrderInputFrom
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
-import DateTextField from '@/components/DateTextField.vue'
 
 const props = defineProps<{
   id: number
