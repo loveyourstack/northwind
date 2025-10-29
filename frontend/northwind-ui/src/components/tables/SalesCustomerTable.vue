@@ -30,7 +30,7 @@
             <div class="dt-title">{{ props.title ? props.title : 'Customers' }}</div>
           </div>
 
-          <v-btn class="float-end" color="primary" :to="{ name: 'New customer'}">Add</v-btn>
+          <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
 
           <v-menu>
             <template v-slot:activator="{ props }">
