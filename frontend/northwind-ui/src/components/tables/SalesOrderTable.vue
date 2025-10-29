@@ -8,6 +8,7 @@
     ></SalesOrderForm>
   </v-dialog>
 
+  <!-- note that destructuring assignment {..} is needed for row-props item to be passed properly -->
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
@@ -22,7 +23,7 @@
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
     class="dt"
-    :row-props="(item: Order) => getRowClass(item)"
+    :row-props="({item}) => getRowProps(item)"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center">
@@ -237,8 +238,8 @@ function getFilterStr(): string {
   return ret
 }
 
-function getRowClass(item: Order) {
-  console.log(item.is_shipped)
+function getRowProps(item: Order) {
+  //console.log(item)
   if (!item.is_shipped) {
     return theme.name.value === 'dark' ? { style: 'background-color: #480505;' } : { class: 'bg-red-lighten-5' }
   }

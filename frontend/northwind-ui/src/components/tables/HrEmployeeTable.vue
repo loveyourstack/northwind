@@ -113,7 +113,7 @@ var headers = [
   { title: 'Home phone', key: 'home_phone' },
   { title: 'Reports to', key: 'reports_to' },
   { title: 'Hire date', key: 'hire_date' },
-  { title: '# territories', key: 'territory_count' },
+  { title: '# territories', key: 'territory_count', align: 'end' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 const excludedHeaders = ref<string[]>([])
