@@ -87,7 +87,7 @@ const showSaved = ref(false)
 
 const cardTitle = computed(() => {
   var ret = 'Order #' + props.order_number + ': '
-  props.id !== 0 ? ret += 'detail id ' + props.id : ret += 'new detail'
+  props.id !== 0 ? ret += 'detail id ' + props.id : ret += 'new item'
   return ret
 })
 

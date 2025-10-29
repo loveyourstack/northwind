@@ -1,4 +1,13 @@
 <template>
+  <v-dialog v-model="showDialog" persistent width="auto">
+    <SalesCustomerForm :id="editID"
+      @cancel="showDialog = false"
+      @create="showDialog = false; refreshItems()"
+      @delete="showDialog = false; refreshItems()"
+      @update="showDialog = false; refreshItems()"
+    ></SalesCustomerForm>
+  </v-dialog>
+
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
@@ -79,8 +88,11 @@
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-btn icon flat size="small" :to="{ name: 'Customer detail', params: { id: item.id }}">
-        <v-icon color="primary" icon="mdi-details"></v-icon>
+      <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
+        <v-icon color="primary" icon="mdi-pencil"></v-icon>
+      </v-btn>
+      <v-btn icon flat size="small" v-tooltip="'Orders'" :to="{ name: 'Customer detail', params: { id: item.id }}">
+        <v-icon color="primary" icon="mdi-hand-extended"></v-icon>
       </v-btn>
     </template>
 
@@ -132,6 +144,9 @@ const search = ref('')
 const totalItems = ref(0)
 const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
+
+const editID = ref(0)
+const showDialog = ref(false)
 
 const filterCode = ref<string>()
 const filterCompanyName = ref<string>()

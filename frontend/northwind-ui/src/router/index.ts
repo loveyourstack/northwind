@@ -145,22 +145,6 @@ const routes = [
             name: 'Products',
             component: () => import('@/views/CoreProducts.vue'),
           },
-          {
-            path: 'new',
-            props: () => { return { id: 0 } },
-            name: 'New product',
-            component: () => import('@/views/CoreProductDetail.vue'),
-          },
-          {
-            path: ':id',
-            props: (route: any) => {
-              return {
-                id: parseInt(route.params.id),
-              }
-            },
-            name: 'Product detail',
-            component: () => import('@/views/CoreProductDetail.vue'),
-          },
         ],
       },
       {

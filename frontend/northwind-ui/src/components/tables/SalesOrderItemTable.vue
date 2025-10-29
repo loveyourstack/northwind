@@ -53,12 +53,6 @@
       </v-row>
     </template>
 
-    <template v-slot:[`item.product_name`]="{ item }">
-      <router-link :to="{ path: '/products/' + item.product_fk }">
-        {{item.product_name}}
-      </router-link>
-    </template>
-
     <template v-slot:[`item.unit_price`]="{ item }">
       <span>{{ '$' + item.unit_price.toFixed(2) }}</span>
     </template>

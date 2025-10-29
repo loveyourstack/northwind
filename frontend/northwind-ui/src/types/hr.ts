@@ -22,6 +22,7 @@ export interface Employee extends EmployeeInput {
   country: string
   country_iso2: string
   reports_to: string
+  territory_count: number
 }
 export function NewEmployee(): Employee {
   return  {
@@ -45,6 +46,7 @@ export function NewEmployee(): Employee {
     country: '',
     country_iso2: '',
     reports_to: '',
+    territory_count: 0
   }
 }
 export function GetEmployeeInputFromItem(item: Employee): EmployeeInput {

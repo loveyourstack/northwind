@@ -42,14 +42,15 @@ type Input struct {
 }
 
 type Model struct {
-	Id          int64            `db:"id" json:"id"`
-	Age         int              `db:"age" json:"age,omitempty"`
-	Country     string           `db:"country" json:"country,omitempty"`
-	CountryIso2 string           `db:"country_iso2" json:"country_iso2,omitempty"`
-	CreatedAt   lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
-	CreatedBy   string           `db:"created_by" json:"created_by,omitempty"`
-	ReportsTo   string           `db:"reports_to" json:"reports_to,omitempty"`
-	UpdatedAt   lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
+	Id             int64            `db:"id" json:"id"`
+	Age            int              `db:"age" json:"age,omitempty"`
+	Country        string           `db:"country" json:"country,omitempty"`
+	CountryIso2    string           `db:"country_iso2" json:"country_iso2,omitempty"`
+	CreatedAt      lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
+	CreatedBy      string           `db:"created_by" json:"created_by,omitempty"`
+	ReportsTo      string           `db:"reports_to" json:"reports_to,omitempty"`
+	TerritoryCount int              `db:"territory_count" json:"territory_count,omitempty"`
+	UpdatedAt      lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger
 	Input
 }
 

@@ -1,4 +1,12 @@
 <template>
+  <v-dialog v-model="showDialog" persistent width="auto">
+    <HrEmployeeForm :id="editID"
+      @cancel="showDialog = false"
+      @create="showDialog = false; refreshItems()"
+      @delete="showDialog = false; refreshItems()"
+      @update="showDialog = false; refreshItems()"
+    ></HrEmployeeForm>
+  </v-dialog>
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
@@ -69,8 +77,11 @@
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-btn icon flat size="small" :to="{ name: 'Employee detail', params: { id: item.id }}">
-        <v-icon color="primary" icon="mdi-details"></v-icon>
+      <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
+        <v-icon color="primary" icon="mdi-pencil"></v-icon>
+      </v-btn>
+      <v-btn icon flat size="small" v-tooltip="'Territories'" :to="{ name: 'Employee detail', params: { id: item.id }}">
+        <v-icon color="primary" icon="mdi-land-plots"></v-icon>
       </v-btn>
     </template>
 
@@ -102,6 +113,7 @@ var headers = [
   { title: 'Home phone', key: 'home_phone' },
   { title: 'Reports to', key: 'reports_to' },
   { title: 'Hire date', key: 'hire_date' },
+  { title: '# territories', key: 'territory_count' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 const excludedHeaders = ref<string[]>([])
@@ -119,6 +131,9 @@ const search = ref('')
 const totalItems = ref(0)
 const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
+
+const editID = ref(0)
+const showDialog = ref(false)
 
 const filterFirstName = ref<string>()
 const filterLastName = ref<string>()

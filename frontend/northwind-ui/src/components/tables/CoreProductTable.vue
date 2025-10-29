@@ -1,4 +1,13 @@
 <template>
+  <v-dialog v-model="showDialog" persistent width="auto">
+    <CoreProductForm :id="editID"
+      @cancel="showDialog = false"
+      @create="showDialog = false; refreshItems()"
+      @delete="showDialog = false; refreshItems()"
+      @update="showDialog = false; refreshItems()"
+    ></CoreProductForm>
+  </v-dialog>
+
   <v-data-table-server
     v-model:items-per-page="itemsPerPage"
     v-model:sortBy="sortBy"
@@ -21,7 +30,7 @@
             <div class="dt-title">{{ props.title ? props.title : 'Products' }}</div>
           </div>
 
-          <v-btn class="float-end" color="primary" :to="{ name: 'New product'}">Add</v-btn>
+          <v-btn class="float-end" color="primary" @click="editID = 0; showDialog = true">Add</v-btn>
 
           <v-menu>
             <template v-slot:activator="{ props }">
@@ -110,8 +119,8 @@
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-btn icon flat size="small" :to="{ name: 'Product detail', params: { id: item.id }}">
-        <v-icon color="primary" icon="mdi-details"></v-icon>
+      <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
+        <v-icon color="primary" icon="mdi-pencil"></v-icon>
       </v-btn>
     </template>
 
@@ -168,6 +177,9 @@ const search = ref('')
 const totalItems = ref(0)
 const totalItemsIsEstimate = ref(false)
 const totalItemsEstimated = ref(0)
+
+const editID = ref(0)
+const showDialog = ref(false)
 
 const filterName = ref<string>()
 
