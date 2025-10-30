@@ -60,6 +60,9 @@ import { type Product } from '@/types/core'
 import { type OrderItem, type OrderItemInput, NewOrderItem, GetOrderItemInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
 
+/*
+Composition relationship: order_id is mandatory. Order items are only added in the context of a selected order
+*/
 const props = defineProps<{
   order_id: number
   order_number: number

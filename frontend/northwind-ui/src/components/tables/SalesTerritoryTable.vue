@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <SalesTerritoryForm :id="editID"
+    <SalesTerritoryForm :id="editID" :salesman_id="props.salesman_id"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @delete="showDialog = false; refreshItems()"

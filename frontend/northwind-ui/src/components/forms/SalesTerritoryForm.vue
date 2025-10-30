@@ -22,7 +22,7 @@
               :rules="[(v: string) => !!v || 'Region is required']"
             ></v-autocomplete>
             
-            <v-autocomplete label="Salesman" v-model="item.salesman_fk"
+            <v-autocomplete label="Salesman" v-model="item.salesman_fk" :disabled="props.id === 0 && props.salesman_id > 0"
               :items="hrStore.employeesList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Salesman is required']"
             ></v-autocomplete>
@@ -62,6 +62,7 @@ import { useSalesStore } from '@/stores/sales'
 
 const props = defineProps<{
   id: number
+  salesman_id: number
 }>()
 
 const emit = defineEmits<{
@@ -144,6 +145,8 @@ onMounted(() => {
   } else {
     saveBtnLabel.value = 'Create'
     item.value = NewTerritory()
+
+    if (props.salesman_id) { item.value.salesman_fk = props.salesman_id }
   }
 })
 </script>

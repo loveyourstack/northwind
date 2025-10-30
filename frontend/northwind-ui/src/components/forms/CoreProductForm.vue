@@ -19,7 +19,7 @@
               :rules="[(v: number) => !!v || 'Category is required']"
             ></v-autocomplete>
 
-            <v-autocomplete label="Supplier" v-model="item.supplier_fk"
+            <v-autocomplete label="Supplier" v-model="item.supplier_fk" :disabled="props.id === 0 && props.supplier_id > 0"
               :items="coreStore.suppliersList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Supplier is required']"
             ></v-autocomplete>
@@ -82,8 +82,15 @@ import { type Product, type ProductInput, NewProduct, GetProductInputFromItem } 
 import { useAppStore } from '@/stores/app'
 import { useCoreStore } from '@/stores/core'
 
+/*
+The Add button for this form is shown in both /products and in /suppliers/{id}, where products are prefiltered by supplier id
+- in latter case, pass supplier_id prop (> 0) and use it to preselect supplier
+- if passed, disable the supplier dropdown when adding, but keep it enabled when editing
+*/
+
 const props = defineProps<{
   id: number
+  supplier_id: number
 }>()
 
 const emit = defineEmits<{
@@ -170,6 +177,9 @@ onMounted(() => {
   } else {
     saveBtnLabel.value = 'Create'
     item.value = NewProduct()
+
+    // if passed, preselect supplier
+    if (props.supplier_id) { item.value.supplier_fk = props.supplier_id }
   }
 })
 </script>

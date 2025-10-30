@@ -1,6 +1,6 @@
 <template>
   <v-dialog v-model="showDialog" persistent width="auto">
-    <CoreProductForm :id="editID"
+    <CoreProductForm :id="editID" :supplier_id="props.supplier_id"
       @cancel="showDialog = false"
       @create="showDialog = false; refreshItems()"
       @delete="showDialog = false; refreshItems()"

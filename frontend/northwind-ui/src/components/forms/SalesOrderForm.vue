@@ -13,7 +13,7 @@
 
           <v-col cols="12" md="6" class="form-col">
 
-            <v-autocomplete label="Customer" v-model="item.customer_fk"
+            <v-autocomplete label="Customer" v-model="item.customer_fk" :disabled="props.id === 0 && props.customer_id > 0"
               :items="salesStore.customersList" item-title="name" item-value="id"
               :rules="[(v: number) => !!v || 'Customer is required']"
             ></v-autocomplete>
@@ -119,6 +119,7 @@ import { useSalesStore } from '@/stores/sales'
 
 const props = defineProps<{
   id: number
+  customer_id: number
 }>()
 
 const emit = defineEmits<{
@@ -229,6 +230,8 @@ onMounted(() => {
   } else {
     saveBtnLabel.value = 'Create'
     item.value = NewOrder()
+    
+    if (props.customer_id) { item.value.customer_fk = props.customer_id }
   }
 })
 </script>
