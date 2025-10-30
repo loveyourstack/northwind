@@ -1,0 +1,20 @@
+[general]
+appName = "Northwind Supplier API"
+env     = "dev"
+debug   = true
+
+[database]
+host   = "localhost"
+port   = "5432"
+database = "northwind"
+schemaCreationOrder = []
+
+[dbServerUser]
+userName = "nw_supplier"
+password = "456"
+
+[api]
+port = "8012"
+
+[ui]
+url = "http://localhost:3002"

@@ -13,6 +13,8 @@ CREATE TABLE core.category
 );
 COMMENT ON TABLE core.category IS 'shortname: cat';
 
+GRANT SELECT ON core.category TO nw_supplier;
+
 
 CREATE TABLE core.country
 (	
@@ -26,6 +28,8 @@ CREATE TABLE core.country
   CONSTRAINT co_iso2_len CHECK (char_length(iso2) = 2)
 );
 COMMENT ON TABLE core.country IS 'shortname: co';
+
+GRANT SELECT ON core.country TO nw_supplier;
 
 
 CREATE TABLE core.supplier
@@ -48,6 +52,8 @@ CREATE TABLE core.supplier
 );
 COMMENT ON TABLE core.supplier IS 'shortname: s';
 
+GRANT SELECT ON core.supplier TO nw_supplier;
+
 
 CREATE TABLE core.product
 (
@@ -68,3 +74,16 @@ CREATE TABLE core.product
   updated_at tracking_at
 );
 COMMENT ON TABLE core.product IS 'shortname: p';
+
+GRANT ALL ON core.product TO nw_supplier;
+
+--RLS
+ALTER TABLE core.product ENABLE ROW LEVEL SECURITY;
+
+-- allow backoffice roles to bypass RLS
+CREATE POLICY northwind_owner_all ON core.product TO northwind_owner USING (true) WITH CHECK (true);
+CREATE POLICY northwind_server_all ON core.product TO northwind_server USING (true) WITH CHECK (true);
+CREATE POLICY northwind_cli_all ON core.product TO northwind_cli USING (true) WITH CHECK (true);
+
+-- enforce RLS for supplier role
+CREATE POLICY nw_supplier_self_only ON core.product TO nw_supplier USING (supplier_fk = current_setting('app.supplier_id')::bigint);

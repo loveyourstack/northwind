@@ -5,7 +5,7 @@
       <v-app-bar-nav-icon variant="text" v-tooltip="'Toggle left menu'" @click.stop="showLeftNav = !showLeftNav"></v-app-bar-nav-icon>
       <v-img max-height="30px" max-width="30px" src="./../assets/logo.png" class="ml-1"></v-img>
       <v-toolbar-title>
-        <span class="font-weight-bold projectFont">{{ appStore.projectTitle }}</span>
+        <span class="font-weight-bold projectFont">{{ appStore.company }} - {{ appStore.projectTitle }}</span>
       </v-toolbar-title>
 
       <v-spacer></v-spacer>

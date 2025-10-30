@@ -10,10 +10,15 @@ cli:
 db: cli
 	north createDb
 
-# regular server start
+# Backoffice server start
 .PHONY: srv
 srv:
 	go run ./cmd/nwsrv
+
+# Supplier API server start
+.PHONY: suppsrv
+suppsrv:
+	go run ./cmd/suppsrv
 
 # run all tests
 .PHONY: tests

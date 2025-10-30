@@ -9,8 +9,9 @@ export const useAppStore = defineStore('app', () => {
     {value: false, title: 'No'}
   ]
 
-  const projectTitle = 'Northwind'
+  const company = 'Northwind'
+  const projectTitle = 'Backoffice'
 
-  return { apiErr, booleanOptions, projectTitle }
+  return { apiErr, booleanOptions, company, projectTitle }
 })
 

@@ -14,6 +14,8 @@ CREATE OR REPLACE VIEW core.v_category AS
   FROM core.category cat
   LEFT JOIN (SELECT category_fk, count(*) FILTER (WHERE is_discontinued = false) AS active_product_count FROM core.product GROUP BY 1) p ON p.category_fk = cat.id;
 
+GRANT SELECT ON core.v_category TO nw_supplier;
+
 CREATE OR REPLACE VIEW core.v_category_data_update AS
   SELECT
     cat.*,
@@ -28,7 +30,9 @@ CREATE OR REPLACE VIEW core.v_category_data_update AS
   WHERE sys_du.affected_schema = 'core' AND sys_du.affected_table = 'category';
 
 
-CREATE OR REPLACE VIEW core.v_product AS
+-- security_barrier -> ensures RLS policies are applied before any other function
+-- security_invoker -> enables RLS policies and checks calling user's rights on all affected tables
+CREATE OR REPLACE VIEW core.v_product WITH (security_barrier, security_invoker) AS
 	SELECT 
     p.category_fk,
     cat.name AS category,
@@ -55,6 +59,7 @@ CREATE OR REPLACE VIEW core.v_product AS
   JOIN core.country co ON s.country_fk = co.id
   JOIN core.category cat ON p.category_fk = cat.id;
 
+GRANT SELECT ON core.v_product TO nw_supplier;
 
 CREATE OR REPLACE VIEW core.v_supplier AS
 	SELECT 
@@ -79,6 +84,8 @@ CREATE OR REPLACE VIEW core.v_supplier AS
   FROM core.supplier s
   JOIN core.country co ON s.country_fk = co.id
   LEFT JOIN (SELECT supplier_fk, count(*) FILTER (WHERE is_discontinued = false) AS active_product_count FROM core.product GROUP BY 1) p ON p.supplier_fk = s.id;
+
+GRANT SELECT ON core.v_supplier TO nw_supplier;
 
 CREATE OR REPLACE VIEW core.v_supplier_data_update AS
   SELECT

@@ -10,7 +10,7 @@
 
               <v-card max-width="500" class="mx-auto">
                 <v-card-title class="d-flex flex-wrap justify-center mt-4">
-                  <span class="ml-4">{{ appStore.projectTitle }}</span>
+                  <span class="ml-4">{{ appStore.company }} - {{ appStore.projectTitle }}</span>
                 </v-card-title>
                 <v-card-text class="pa-5">
                   <v-form ref="loginForm">

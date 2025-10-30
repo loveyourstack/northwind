@@ -16,8 +16,10 @@ import (
 
 func main() {
 
+	configFileName := "nw_config.toml"
+
 	// mandatory flag if not using default
-	configFilePath := flag.String("configFilePath", "nw_config.toml", "Path to the config file")
+	configFilePath := flag.String("configFilePath", configFileName, "Path to the config file")
 
 	flag.Parse()
 
@@ -25,7 +27,7 @@ func main() {
 	conf := nw.Config{}
 	err := conf.LoadFromFile(*configFilePath)
 	if err != nil {
-		log.Fatalf("initialization: nw_config.toml not found: %s", err.Error())
+		log.Fatalf("initialization: %s not found: %s", configFileName, err.Error())
 	}
 
 	ctx := context.Background()
