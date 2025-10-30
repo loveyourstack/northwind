@@ -10,7 +10,7 @@
 
       <v-spacer></v-spacer>
 
-      <div class="text-body-1 mr-2">Username</div>
+      <div class="text-body-1 mr-2">{{ auth.user.name }}</div>
 
       <v-btn icon="mdi-theme-light-dark" v-tooltip="'Toggle theme'" @click="theme.toggle()"></v-btn>
 
@@ -21,7 +21,7 @@
         
         <v-list>
           <v-list-item prepend-icon="mdi-logout">
-            <v-list-item-title class="clickable">Logout</v-list-item-title>
+            <v-list-item-title class="clickable" @click="logout()">Logout</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -47,12 +47,15 @@
 <script lang="ts" setup>
 import { ref, watch, onBeforeMount, onMounted } from 'vue'
 import { useTheme } from 'vuetify'
+import { useRouter } from 'vue-router'
+import auth from '@/auth'
 import { useAppStore } from '@/stores/app'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
 
 const theme = useTheme()
+const router = useRouter()
 const appStore = useAppStore()
 const coreStore = useCoreStore()
 const hrStore = useHRStore()
@@ -62,6 +65,11 @@ const showLeftNav = ref(true)
 const showRightNav = ref(true)
 
 const lsKey = 'main'
+
+function logout() {
+  auth.logout()
+  router.push({ path: '/login' })
+}
 
 watch([showRightNav, theme.global.name], () => {
 
@@ -89,7 +97,7 @@ onMounted(() => {
   coreStore.loadCountriesList()
   coreStore.loadProductsList()
   coreStore.loadSuppliersList()
-  hrStore.loadEmployeesList()
+  //hrStore.loadEmployeesList() // loaded by Login.vue
   salesStore.loadCustomersList()
   salesStore.loadShippersList()
 })

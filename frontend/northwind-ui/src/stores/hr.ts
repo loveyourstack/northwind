@@ -6,16 +6,18 @@ import ax from '@/api'
 export const useHRStore = defineStore('hr', () => {
 
   const employeesList = ref<Employee[]>([])
+  const mandEmployeesList = ref<Employee[]>([])
 
   function loadEmployeesList() {
     var myURL = '/a/hr/employees?xfields=id,name&xsort=last_name,first_name&xper_page=5000'
     ax.get(myURL)
     .then(response => {
       employeesList.value = response.data.data
+      mandEmployeesList.value = employeesList.value.filter((el: Employee) => el.id > 0)
     })
     .catch() // handled by interceptor
   }
 
-  return { employeesList, loadEmployeesList }
+  return { employeesList, mandEmployeesList, loadEmployeesList }
 })
 
