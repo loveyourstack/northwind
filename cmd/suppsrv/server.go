@@ -9,6 +9,7 @@ import (
 
 	"github.com/loveyourstack/lys"
 	"github.com/loveyourstack/lys/lyserr"
+	"github.com/loveyourstack/lys/lyspgdb"
 	"github.com/loveyourstack/northwind/cmd"
 )
 
@@ -18,9 +19,7 @@ type httpServerApplication struct {
 	PostOptions lys.PostOptions
 }
 
-type contextKey string
-
-const supplierIdCtxKey contextKey = "SupplierId"
+const supplierIdCtxKey lyspgdb.ContextKey = "SupplierId"
 
 // authenticate is middleware that authenticates the user and adds his information to request context
 func (srvApp *httpServerApplication) authenticate(next http.Handler) http.Handler {
