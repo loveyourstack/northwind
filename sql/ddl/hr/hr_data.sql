@@ -1,6 +1,6 @@
 
 INSERT INTO hr.employee (id, first_name, last_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) 
-  VALUES (-1, '', '', '', '', '1970-01-01', '2010-01-01', '', '', '', '', -1, '', '', 'None');
+  VALUES (-1, 'n/a', 'n/a', 'n/a', 'n/a', '1970-01-01', '2010-01-01', 'n/a', 'n/a', 'n/a', 'n/a', -1, 'n/a', 'n/a', 'None');
 
 INSERT INTO hr.employee (first_name, last_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) VALUES
   ('Nancy','Davolio','Sales Representative','Ms.','1971-12-08','2015-05-01','507 - 20th Ave. E. Apt. 2A','Seattle','WA','98122',(SELECT id FROM core.country WHERE iso2 = 'US'),'(206) 555-9857','Education includes a BA in psychology from Colorado State University in 1970.  She also completed The Art of the Cold Call.  Nancy is a member of Toastmasters International.','N Davolio'),

@@ -13,7 +13,6 @@ CREATE OR REPLACE VIEW core.v_category AS
     COALESCE(p.active_product_count,0) AS active_product_count
   FROM core.category cat
   LEFT JOIN (SELECT category_fk, count(*) FILTER (WHERE is_discontinued = false) AS active_product_count FROM core.product GROUP BY 1) p ON p.category_fk = cat.id;
-
 GRANT SELECT ON core.v_category TO nw_supplier;
 
 CREATE OR REPLACE VIEW core.v_category_data_update AS
@@ -58,8 +57,8 @@ CREATE OR REPLACE VIEW core.v_product WITH (security_barrier, security_invoker) 
   JOIN core.supplier s ON p.supplier_fk = s.id
   JOIN core.country co ON s.country_fk = co.id
   JOIN core.category cat ON p.category_fk = cat.id;
-
 GRANT SELECT ON core.v_product TO nw_supplier;
+
 
 CREATE OR REPLACE VIEW core.v_supplier AS
 	SELECT 
@@ -84,7 +83,6 @@ CREATE OR REPLACE VIEW core.v_supplier AS
   FROM core.supplier s
   JOIN core.country co ON s.country_fk = co.id
   LEFT JOIN (SELECT supplier_fk, count(*) FILTER (WHERE is_discontinued = false) AS active_product_count FROM core.product GROUP BY 1) p ON p.supplier_fk = s.id;
-
 GRANT SELECT ON core.v_supplier TO nw_supplier;
 
 CREATE OR REPLACE VIEW core.v_supplier_data_update AS
