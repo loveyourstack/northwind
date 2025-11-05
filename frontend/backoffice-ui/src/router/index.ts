@@ -146,6 +146,16 @@ const routes = [
         ]
       },
       {
+        path: '/orders-by-salesman',
+        children: [
+          {
+            path: '',
+            name: 'OrdersBySalesman',
+            component: () => import('@/views/SalesOrdersBySalesman.vue'),
+          },
+        ]
+      },
+      {
         path: '/products',
         children: [
           {

@@ -41,6 +41,7 @@ declare module 'vue' {
     SalesOrderForm: typeof import('./src/components/forms/SalesOrderForm.vue')['default']
     SalesOrderItemForm: typeof import('./src/components/forms/SalesOrderItemForm.vue')['default']
     SalesOrderItemTable: typeof import('./src/components/tables/SalesOrderItemTable.vue')['default']
+    SalesOrdersBySalesmanTable: typeof import('./src/components/tables/SalesOrdersBySalesmanTable.vue')['default']
     SalesOrderTable: typeof import('./src/components/tables/SalesOrderTable.vue')['default']
     SalesShipperForm: typeof import('./src/components/forms/SalesShipperForm.vue')['default']
     SalesShipperTable: typeof import('./src/components/tables/SalesShipperTable.vue')['default']

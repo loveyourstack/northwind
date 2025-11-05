@@ -167,6 +167,15 @@ export function GetOrderItemInputFromItem(item: OrderItem): OrderItemInput {
 
 // ------------------------------------------------------------------------------------------------------
 
+export interface OrdersBySalesman {
+  order_count: number
+  salesman: string
+  shipped_count: number
+  total_value: number
+}
+
+// ------------------------------------------------------------------------------------------------------
+
 export interface OrderValueLatestWeeks {
   order_week: number
   total_value: number

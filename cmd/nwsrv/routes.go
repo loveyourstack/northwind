@@ -22,6 +22,7 @@ import (
 	"github.com/loveyourstack/northwind/internal/stores/sales/salescustomer"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorder"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesorderitem"
+	"github.com/loveyourstack/northwind/internal/stores/sales/salesordersbysalesman"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesshipper"
 	"github.com/loveyourstack/northwind/internal/stores/sales/salesterritory"
 )
@@ -211,6 +212,13 @@ func (srvApp *httpServerApplication) salesRoutes(apiEnv lys.Env) lys.RouteAdderF
 		r.HandleFunc(endpoint+"/{id}", lys.Patch(apiEnv, orderStore)).Methods("PATCH")
 		//r.HandleFunc(endpoint+"/{id}", lys.Delete(apiEnv, orderStore)).Methods("DELETE")
 		r.HandleFunc(endpoint+"/{id}/archive", lys.ArchiveById(apiEnv, srvApp.Db, orderStore)).Methods("DELETE")
+
+		endpoint = "/orders-by-salesman"
+
+		ordersBySalesmanStore := salesordersbysalesman.Store{Db: srvApp.Db}
+		r.HandleFunc(endpoint, lys.Get(apiEnv, ordersBySalesmanStore, lys.GetOption[salesordersbysalesman.Model]{
+			SetFuncUrlParamNames: ordersBySalesmanStore.GetSetFuncUrlParamNames(),
+		})).Methods("GET")
 
 		endpoint = "/order-value-latest-weeks"
 
