@@ -14,6 +14,7 @@
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
     class="dt"
+    :row-props="({item}) => getRowProps(item)"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center">
@@ -30,6 +31,10 @@
 
               <v-list-item prepend-icon="mdi-selection-ellipse-remove">
                 <v-list-item-title class="clickable" @click="resetTable()">Reset table</v-list-item-title>
+              </v-list-item>
+
+              <v-list-item prepend-icon="mdi-download-outline">
+                <v-list-item-title class="clickable" @click="fileDownload(csvDlUrl)">Download to CSV</v-list-item-title>
               </v-list-item>
 
               <v-list-item prepend-icon="mdi-download-outline">
@@ -70,6 +75,8 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onBeforeMount } from 'vue'
 import { VDataTable } from 'vuetify/components'
+import { useTheme } from 'vuetify'
+import auth from '@/auth'
 import { useFetchDt } from '@/composables/fetch'
 import { type OrdersBySalesman } from '@/types/sales'
 import { itemsPerPageOptions, processURIOptions } from '@/functions/datatable'
@@ -79,6 +86,8 @@ const props = defineProps<{
   title?: string
 }>()
 
+const theme = useTheme()
+
 var headers = [
   { title: 'Salesman', key: 'salesman' },
   { title: '# orders', key: 'order_count', align: 'end' },
@@ -87,6 +96,9 @@ var headers = [
 ] as const
 
 const baseUrl = '/a/sales/orders-by-salesman'
+const csvDlUrl = computed(() => {
+  return baseUrl + '?xformat=csv' + getFilterStr()
+}) 
 const excelDlUrl = computed(() => {
   return baseUrl + '?xformat=excel' + getFilterStr()
 }) 
@@ -115,6 +127,13 @@ function getFilterStr(): string {
   ret += '&until_date=' + filterUntilDate.value
 
   return ret
+}
+
+function getRowProps(item: OrdersBySalesman) {
+  // highlight user's sales row if it is in the list
+  if (item.salesman === auth.user.name) {
+    return theme.name.value === 'dark' ? { class: 'bg-blue-darken-4' } : { class: 'bg-blue-lighten-4' }
+  }
 }
 
 function loadItems(options: { page: number, itemsPerPage: number, sortBy: VDataTable['sortBy'] }) {
