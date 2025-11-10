@@ -15,7 +15,7 @@ ax.interceptors.response.use(
   (error) => {
     //console.log(error.toJSON())
 
-    // special handling for blob requests (file downloads: see file.ts) errors in order to get err_description
+    // special handling for blob request (file downloads: see file.ts) errors in order to get err_description
     // from https://github.com/axios/axios/issues/815
     if (error.request.responseType === 'blob') {
       return new Promise((resolve, reject) => {

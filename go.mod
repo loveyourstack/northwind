@@ -8,12 +8,13 @@ require (
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v5 v5.7.5
-	github.com/loveyourstack/connectors v0.1.9
-	github.com/loveyourstack/lys v0.3.3
+	github.com/loveyourstack/connectors v0.1.11
+	github.com/loveyourstack/lys v0.3.5
 	github.com/spf13/cobra v1.9.1
 )
 
 require (
+	codeberg.org/tealeg/xlsx/v4 v4.0.1 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/frankban/quicktest v1.14.6 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.9 // indirect
@@ -35,7 +36,6 @@ require (
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/shabbyrobe/xmlwriter v0.0.0-20230525083848-85336ec334fa // indirect
 	github.com/spf13/pflag v1.0.7 // indirect
-	github.com/tealeg/xlsx/v3 v3.3.13 // indirect
 	golang.org/x/crypto v0.40.0 // indirect
 	golang.org/x/exp v0.0.0-20250718183923-645b1fa84792 // indirect
 	golang.org/x/net v0.42.0 // indirect

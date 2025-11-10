@@ -38,7 +38,9 @@ func main() {
 	// create http server app
 	srvApp := &httpServerApplication{
 		Application: app,
-		GetOptions:  lys.FillGetOptions(lys.GetOptions{}),   // use defaults
+		GetOptions: lys.FillGetOptions(lys.GetOptions{
+			CsvDelimiter: '|',
+		}), // use defaults for others
 		PostOptions: lys.FillPostOptions(lys.PostOptions{}), // use defaults
 		EcbClient:   ecbapi.NewClient(app.InfoLog, app.ErrorLog),
 	}
