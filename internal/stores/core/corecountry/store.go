@@ -24,7 +24,7 @@ const (
 type Input struct {
 	IsActive bool   `db:"is_active" json:"is_active"`
 	Iso2     string `db:"iso2" json:"iso2,omitempty" validate:"required,len=2"`
-	Name     string `db:"name" json:"name,omitempty" validate:"required"`
+	Name     string `db:"name" json:"name,omitempty" validate:"required,max=64"`
 }
 
 type Model struct {

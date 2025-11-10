@@ -24,12 +24,12 @@ const (
 )
 
 type Input struct {
-	Discount         float32 `db:"discount" json:"discount,omitempty"`
+	Discount         float32 `db:"discount" json:"discount,omitempty" validate:"min=0,max=1"`
 	LastUserUpdateBy string  `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
 	OrderFk          int64   `db:"order_fk" json:"order_fk,omitempty" validate:"required"`
 	ProductFk        int64   `db:"product_fk" json:"product_fk,omitempty" validate:"required"`
-	Quantity         int32   `db:"quantity" json:"quantity,omitempty" validate:"required"`
-	UnitPrice        float32 `db:"unit_price" json:"unit_price,omitempty" validate:"required"`
+	Quantity         int     `db:"quantity" json:"quantity,omitempty" validate:"required,gte=1"`
+	UnitPrice        float32 `db:"unit_price" json:"unit_price,omitempty" validate:"required,gte=0"`
 }
 
 type Model struct {

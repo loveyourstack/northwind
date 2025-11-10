@@ -23,9 +23,9 @@ const (
 )
 
 type Input struct {
-	CompanyName      string `db:"company_name" json:"company_name,omitempty" validate:"required"`
+	CompanyName      string `db:"company_name" json:"company_name,omitempty" validate:"required,max=255"`
 	LastUserUpdateBy string `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
-	Phone            string `db:"phone" json:"phone,omitempty"`
+	Phone            string `db:"phone" json:"phone,omitempty" validate:"max=64"`
 }
 
 type Model struct {

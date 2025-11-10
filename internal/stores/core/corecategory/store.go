@@ -25,12 +25,12 @@ const (
 )
 
 type Input struct {
-	ColorHex         string `db:"color_hex" json:"color_hex,omitempty"`
+	ColorHex         string `db:"color_hex" json:"color_hex,omitempty" validate:"hexcolor"`
 	ColorIsLight     bool   `db:"color_is_light" json:"color_is_light"`   // assigned in Insert and Update funcs
 	CreatedBy        string `db:"created_by" json:"created_by,omitempty"` // omitted from Update, assigned in Insert func
-	Description      string `db:"description" json:"description,omitempty" validate:"required"`
+	Description      string `db:"description" json:"description,omitempty" validate:"required,max=255"`
 	LastUserUpdateBy string `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
-	Name             string `db:"name" json:"name,omitempty" validate:"required"`
+	Name             string `db:"name" json:"name,omitempty" validate:"required,max=64"`
 }
 
 type Model struct {

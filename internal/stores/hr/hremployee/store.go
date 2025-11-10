@@ -23,22 +23,22 @@ const (
 )
 
 type Input struct {
-	Address          string       `db:"address" json:"address,omitempty" validate:"required"`
-	City             string       `db:"city" json:"city,omitempty" validate:"required"`
+	Address          string       `db:"address" json:"address,omitempty" validate:"required,max=255"`
+	City             string       `db:"city" json:"city,omitempty" validate:"required,max=255"`
 	CountryFk        int64        `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
 	DateOfBirth      lystype.Date `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
-	FirstName        string       `db:"first_name" json:"first_name,omitempty" validate:"required"`
+	FirstName        string       `db:"first_name" json:"first_name,omitempty" validate:"required,max=255"`
 	HireDate         lystype.Date `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
-	HomePhone        string       `db:"home_phone" json:"home_phone,omitempty"`
-	JobTitle         string       `db:"job_title" json:"job_title,omitempty" validate:"required"`
-	LastName         string       `db:"last_name" json:"last_name,omitempty" validate:"required"`
+	HomePhone        string       `db:"home_phone" json:"home_phone,omitempty" validate:"required,max=255"`
+	JobTitle         string       `db:"job_title" json:"job_title,omitempty" validate:"required,max=255"`
+	LastName         string       `db:"last_name" json:"last_name,omitempty" validate:"required,max=255"`
 	LastUserUpdateBy string       `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
-	Name             string       `db:"name" json:"name,omitempty" validate:"required"`
-	Notes            string       `db:"notes" json:"notes,omitempty"`
-	PostalCode       string       `db:"postal_code" json:"postal_code,omitempty" validate:"required"`
+	Name             string       `db:"name" json:"name,omitempty" validate:"required,max=255"`
+	Notes            string       `db:"notes" json:"notes,omitempty" validate:"max=2000"`
+	PostalCode       string       `db:"postal_code" json:"postal_code,omitempty" validate:"required,max=64"`
 	ReportsToFk      int64        `db:"reports_to_fk" json:"reports_to_fk,omitempty" validate:"required"`
-	State            string       `db:"state" json:"state,omitempty"`
-	Title            string       `db:"title" json:"title,omitempty" validate:"required"`
+	State            string       `db:"state" json:"state,omitempty" validate:"max=64"`
+	Title            string       `db:"title" json:"title,omitempty" validate:"required,max=64"`
 }
 
 type Model struct {

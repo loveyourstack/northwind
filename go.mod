@@ -9,7 +9,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	github.com/jackc/pgx/v5 v5.7.5
 	github.com/loveyourstack/connectors v0.1.11
-	github.com/loveyourstack/lys v0.3.5
+	github.com/loveyourstack/lys v0.3.6
 	github.com/spf13/cobra v1.9.1
 )
 

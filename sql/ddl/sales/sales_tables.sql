@@ -43,7 +43,7 @@ CREATE TABLE sales.order
   dest_city text_medium_mandatory,
   dest_company_name text_medium_mandatory,
   dest_country_fk bigint NOT NULL REFERENCES core.country(id),
-  dest_postal_code text_short,
+  dest_postal_code text_short_mandatory,
   dest_state text_short,
   freight_cost price_gte0,
   is_shipped boolean NOT NULL DEFAULT false,
@@ -76,7 +76,7 @@ CREATE TABLE sales.order_item
   last_user_update_by tracking_by,
   order_fk bigint NOT NULL REFERENCES sales.order(id),
   product_fk bigint NOT NULL REFERENCES core.product(id),
-  quantity int_gte0,
+  quantity int_positive,
   unit_price price_gte0,
   updated_at tracking_at,
   UNIQUE(order_fk, product_fk)

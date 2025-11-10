@@ -24,12 +24,12 @@ const (
 )
 
 type Input struct {
-	Code             string           `db:"code" json:"code,omitempty" validate:"required"`
+	Code             string           `db:"code" json:"code,omitempty" validate:"required,len=5"`
 	CreatedBy        string           `db:"created_by" json:"created_by,omitempty"`                   // omitted from Update, assigned in Insert func
 	LastUserUpdateBy string           `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
 	SalesmanFk       int64            `db:"salesman_fk" json:"salesman_fk,omitempty" validate:"required"`
-	Name             string           `db:"name" json:"name,omitempty" validate:"required"`
-	Region           salesregion.Enum `db:"region" json:"region,omitempty" validate:"required"`
+	Name             string           `db:"name" json:"name,omitempty" validate:"required,max=255"`
+	Region           salesregion.Enum `db:"region" json:"region,omitempty" validate:"required,max=64"`
 }
 
 type Model struct {

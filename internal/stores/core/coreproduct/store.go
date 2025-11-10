@@ -28,14 +28,14 @@ type Input struct {
 	CategoryFk       int64    `db:"category_fk" json:"category_fk" validate:"required"`
 	IsDiscontinued   bool     `db:"is_discontinued" json:"is_discontinued"`
 	LastUserUpdateBy string   `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
-	Name             string   `db:"name" json:"name,omitempty" validate:"required"`
+	Name             string   `db:"name" json:"name,omitempty" validate:"required,max=255"`
 	QuantityPerUnit  string   `db:"quantity_per_unit" json:"quantity_per_unit" validate:"required"`
-	ReorderLevel     int      `db:"reorder_level" json:"reorder_level"`
+	ReorderLevel     int      `db:"reorder_level" json:"reorder_level" validate:"gte=0"`
 	SupplierFk       int64    `db:"supplier_fk" json:"supplier_fk" validate:"required"`
 	Tags             []string `db:"tags" json:"tags,omitempty"`
-	UnitPrice        float32  `db:"unit_price" json:"unit_price" validate:"required"`
-	UnitsInStock     int      `db:"units_in_stock" json:"units_in_stock"`
-	UnitsOnOrder     int      `db:"units_on_order" json:"units_on_order"`
+	UnitPrice        float32  `db:"unit_price" json:"unit_price" validate:"required,gte=0"`
+	UnitsInStock     int      `db:"units_in_stock" json:"units_in_stock" validate:"gte=0"`
+	UnitsOnOrder     int      `db:"units_on_order" json:"units_on_order" validate:"gte=0"`
 }
 
 type Model struct {

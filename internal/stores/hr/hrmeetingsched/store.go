@@ -22,9 +22,9 @@ const (
 )
 
 type Input struct {
-	Day           string       `db:"day" json:"day,omitempty" validate:"required"`
-	Frequency     string       `db:"frequency" json:"frequency,omitempty" validate:"required"`
-	Name          string       `db:"name" json:"name,omitempty" validate:"required"`
+	Day           string       `db:"day" json:"day,omitempty" validate:"required,max=64"`
+	Frequency     string       `db:"frequency" json:"frequency,omitempty" validate:"required,max=64"`
+	Name          string       `db:"name" json:"name,omitempty" validate:"required,max=255"`
 	ScheduledTime lystype.Time `db:"scheduled_time" json:"scheduled_time,omitzero" validate:"required"`
 }
 
