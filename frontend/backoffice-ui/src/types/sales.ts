@@ -139,6 +139,7 @@ export interface OrderItemInput {
   unit_price: number
 }
 export interface OrderItem extends OrderItemInput  {
+  gross_value: number
   id: number
   order_number: string
   product_name: string
@@ -150,6 +151,7 @@ export function NewOrderItem(order_id: number): OrderItem {
     product_fk: undefined,
     quantity: 1,
     unit_price: 0,
+    gross_value: 0,
     id: 0,
     order_number: '',
     product_name: '',

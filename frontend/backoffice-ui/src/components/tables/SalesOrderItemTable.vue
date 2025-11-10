@@ -61,6 +61,10 @@
       <span v-if="item.discount">{{ Intl.NumberFormat('en-US', { style: 'percent', maximumFractionDigits: 0, minimumFractionDigits: 0}).format(item.discount) }}</span>
     </template>
 
+    <template v-slot:[`item.gross_value`]="{ item }">
+      <span>{{ '$' + item.gross_value.toFixed(2) }}</span>
+    </template>
+
     <template v-slot:[`item.actions`]="{ item }">
       <v-btn icon flat size="small" @click="editID = item.id; showDialog = true">
         <v-icon color="primary" icon="mdi-pencil"></v-icon>
@@ -93,6 +97,7 @@ var headers = [
   { title: 'Quantity', key: 'quantity', align: 'end' },
   { title: 'Unit price', key: 'unit_price', align: 'end' },
   { title: 'Discount', key: 'discount', align: 'end' },
+  { title: 'Gross value', key: 'gross_value', align: 'end' },
   { title: 'Actions', key: 'actions', sortable: false },
 ] as const
 
