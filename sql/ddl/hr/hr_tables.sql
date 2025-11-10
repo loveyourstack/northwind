@@ -8,11 +8,11 @@ CREATE TABLE hr.employee
   created_at tracking_at,
   created_by tracking_by,
   date_of_birth date NOT NULL CHECK (date_of_birth >= '1920-01-01'),
-  first_name text_medium_mandatory,
+  family_name text_medium_mandatory,
+  given_name text_medium_mandatory,
   hire_date date NOT NULL CHECK (hire_date >= '2010-01-01'),
   home_phone text_medium_mandatory,
   job_title text_medium_mandatory,
-  last_name text_medium_mandatory,
   last_user_update_by tracking_by,
   name text_medium_mandatory UNIQUE, -- not generated, in order to allow user to specify uniqueness however he chooses, e.g. using department or some other criterion
   notes varchar(2000) NOT NULL CHECK (notes != ''),

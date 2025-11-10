@@ -4,11 +4,11 @@ export interface EmployeeInput {
   city: string
   country_fk: number | undefined
   date_of_birth: Date | undefined
-  first_name: string
+  family_name: string
+  given_name: string
   hire_date: Date | undefined
   home_phone?: string
   job_title: string
-  last_name: string
   name: string
   notes: string
   postal_code: string
@@ -30,11 +30,11 @@ export function NewEmployee(): Employee {
     city: '',
     country_fk: undefined,
     date_of_birth: undefined,
-    first_name: '',
+    family_name: '',
+    given_name: '',
     hire_date: undefined,
     home_phone: '',
     job_title: '',
-    last_name: '',
     name: '',
     notes: '',
     postal_code: '',
@@ -55,11 +55,11 @@ export function GetEmployeeInputFromItem(item: Employee): EmployeeInput {
     city: item.city,
     country_fk: item.country_fk,
     date_of_birth: item.date_of_birth,
-    first_name: item.first_name,
+    family_name: item.family_name,
+    given_name: item.given_name,
     hire_date: item.hire_date,
     home_phone: item.home_phone,
     job_title: item.job_title,
-    last_name: item.last_name,
     name: item.name,
     notes: item.notes,
     postal_code: item.postal_code,

@@ -18,12 +18,12 @@
               :rules="[(v: string) => !!v || 'Title is required']"
             ></v-text-field>
 
-            <v-text-field label="First name" v-model="item.first_name"
-              :rules="[(v: string) => !!v || 'First name is required']"
+            <v-text-field label="Given name" v-model="item.given_name"
+              :rules="[(v: string) => !!v || 'Given name is required']"
             ></v-text-field>
 
-            <v-text-field label="Last name" v-model="item.last_name"
-              :rules="[(v: string) => !!v || 'Last name is required']"
+            <v-text-field label="Family name" v-model="item.family_name"
+              :rules="[(v: string) => !!v || 'Family name is required']"
             ></v-text-field>
 
             <v-text-field label="Date of birth" type="date" v-model="item.date_of_birth"

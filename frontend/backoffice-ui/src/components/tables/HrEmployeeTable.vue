@@ -57,14 +57,14 @@
         <v-col>
           <v-chip-group column>
 
-            <FilterChipText name="First name" :filterValue="filterFirstName" 
-              @closed="filterFirstName = ''; refreshItems()" 
-              @updated="(val: string | undefined) => { filterFirstName = val; debouncedRefreshItems() }">
+            <FilterChipText name="Given name" :filterValue="filterGivenName" 
+              @closed="filterGivenName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterGivenName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
-            <FilterChipText name="Last name" :filterValue="filterLastName" 
-              @closed="filterLastName = ''; refreshItems()" 
-              @updated="(val: string | undefined) => { filterLastName = val; debouncedRefreshItems() }">
+            <FilterChipText name="Family name" :filterValue="filterFamilyName" 
+              @closed="filterFamilyName = ''; refreshItems()" 
+              @updated="(val: string | undefined) => { filterFamilyName = val; debouncedRefreshItems() }">
             </FilterChipText>
 
           </v-chip-group>
@@ -107,8 +107,8 @@ const props = defineProps<{
 
 var headers = [
   { title: 'Title', key: 'title' },  
-  { title: 'First name', key: 'first_name' },
-  { title: 'Last name', key: 'last_name' },
+  { title: 'Given name', key: 'given_name' },
+  { title: 'Family name', key: 'family_name' },
   { title: 'Job title', key: 'job_title' },
   { title: 'Home phone', key: 'home_phone' },
   { title: 'Reports to', key: 'reports_to' },
@@ -135,8 +135,8 @@ const totalItemsEstimated = ref(0)
 const editID = ref(0)
 const showDialog = ref(false)
 
-const filterFirstName = ref<string>()
-const filterLastName = ref<string>()
+const filterFamilyName = ref<string>()
+const filterGivenName = ref<string>()
 const lsKey = 'employees_dt'
 
 function getFilterStr(): string {
@@ -145,8 +145,8 @@ function getFilterStr(): string {
   // exclude None
   ret += '&id=!-1'
 
-  ret += getTextFilterUrlParam('first_name', filterFirstName.value)
-  ret += getTextFilterUrlParam('last_name', filterLastName.value)
+  ret += getTextFilterUrlParam('family_name', filterFamilyName.value)
+  ret += getTextFilterUrlParam('given_name', filterGivenName.value)
 
   return ret
 }
@@ -180,8 +180,8 @@ watch([itemsPerPage, search, sortBy, excludedHeaders], () => {
   let lsObj = {
     'itemsPerPage': itemsPerPage.value,
     'sortBy': sortBy.value,
-    'filterFirstName': filterFirstName.value,
-    'filterLastName': filterLastName.value,
+    'filterFamilyName': filterFamilyName.value,
+    'filterGivenName': filterGivenName.value,
     'excludedHeaders': excludedHeaders.value,
   }
   localStorage.setItem(lsKey, JSON.stringify(lsObj))
@@ -196,8 +196,8 @@ onBeforeMount(() => {
   let lsObj = JSON.parse(lsJSON)
   if (lsObj['itemsPerPage']) { itemsPerPage.value = lsObj['itemsPerPage'] }
   if (lsObj['sortBy']) { sortBy.value = lsObj['sortBy'] }
-  if (lsObj['filterFirstName']) { filterFirstName.value = lsObj['filterFirstName'] }
-  if (lsObj['filterLastName']) { filterLastName.value = lsObj['filterLastName'] }
+  if (lsObj['filterFamilyName']) { filterFamilyName.value = lsObj['filterFamilyName'] }
+  if (lsObj['filterGivenName']) { filterGivenName.value = lsObj['filterGivenName'] }
   if (lsObj['excludedHeaders']) { excludedHeaders.value = lsObj['excludedHeaders'] }
 })
 

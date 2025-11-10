@@ -19,7 +19,7 @@ const (
 	tableName      string = "employee"
 	viewName       string = "v_employee"
 	pkColName      string = "id"
-	defaultOrderBy string = "last_name"
+	defaultOrderBy string = "family_name"
 )
 
 type Input struct {
@@ -27,11 +27,11 @@ type Input struct {
 	City             string       `db:"city" json:"city,omitempty" validate:"required,max=255"`
 	CountryFk        int64        `db:"country_fk" json:"country_fk,omitempty" validate:"required"`
 	DateOfBirth      lystype.Date `db:"date_of_birth" json:"date_of_birth,omitzero" validate:"required"`
-	FirstName        string       `db:"first_name" json:"first_name,omitempty" validate:"required,max=255"`
+	FamilyName       string       `db:"family_name" json:"family_name,omitempty" validate:"required,max=255"`
+	GivenName        string       `db:"given_name" json:"given_name,omitempty" validate:"required,max=255"`
 	HireDate         lystype.Date `db:"hire_date" json:"hire_date,omitzero" validate:"required"`
 	HomePhone        string       `db:"home_phone" json:"home_phone,omitempty" validate:"required,max=255"`
 	JobTitle         string       `db:"job_title" json:"job_title,omitempty" validate:"required,max=255"`
-	LastName         string       `db:"last_name" json:"last_name,omitempty" validate:"required,max=255"`
 	LastUserUpdateBy string       `db:"last_user_update_by" json:"last_user_update_by,omitempty"` // assigned in Update funcs
 	Name             string       `db:"name" json:"name,omitempty" validate:"required,max=255"`
 	Notes            string       `db:"notes" json:"notes,omitempty" validate:"max=2000"`

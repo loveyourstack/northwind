@@ -37,5 +37,5 @@ $BODY$
 
 /*
 select * from hr.employee
-select * from derive_unique('hr', 'employee', 'first_name', 10, 'Michaela')
+select * from derive_unique('hr', 'employee', 'given_name', 10, 'Michaela')
 */

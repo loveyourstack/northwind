@@ -1,8 +1,8 @@
 
-INSERT INTO hr.employee (id, first_name, last_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) 
+INSERT INTO hr.employee (id, given_name, family_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) 
   VALUES (-1, 'n/a', 'n/a', 'n/a', 'n/a', '1970-01-01', '2010-01-01', 'n/a', 'n/a', 'n/a', 'n/a', -1, 'n/a', 'n/a', 'None');
 
-INSERT INTO hr.employee (first_name, last_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) VALUES
+INSERT INTO hr.employee (given_name, family_name, job_title, title, date_of_birth, hire_date, address, city, state, postal_code, country_fk, home_phone, notes, name) VALUES
   ('Nancy','Davolio','Sales Representative','Ms.','1971-12-08','2015-05-01','507 - 20th Ave. E. Apt. 2A','Seattle','WA','98122',(SELECT id FROM core.country WHERE iso2 = 'US'),'(206) 555-9857','Education includes a BA in psychology from Colorado State University in 1970.  She also completed The Art of the Cold Call.  Nancy is a member of Toastmasters International.','N Davolio'),
   ('Andrew','Fuller','Vice President, Sales','Dr.','1975-02-19','2015-08-14','908 W. Capital Way','Tacoma','WA','98401',(SELECT id FROM core.country WHERE iso2 = 'US'),'(206) 555-9482','Andrew received his BTS commercial in 1974 and a Ph.D. in international marketing from the University of Dallas in 1981.  He is fluent in French and Italian and reads German.  He joined the company as a sales representative, was promoted to sales manager in January 1992 and to vice president of sales in March 1993.  Andrew is a member of the Sales Management Roundtable, the Seattle Chamber of Commerce, and the Pacific Rim Importers Association.','A Fuller'),
   ('Janet','Leverling','Sales Representative','Ms.','1986-08-30','2015-04-01','722 Moss Bay Blvd.','Kirkland','WA','98033',(SELECT id FROM core.country WHERE iso2 = 'US'),'(206) 555-3412','Janet has a BS degree in chemistry from Boston College (1984).  She has also completed a certificate program in food retailing management.  Janet was hired as a sales associate in 1991 and promoted to sales representative in February 1992.','J Leverling'),
@@ -13,8 +13,8 @@ INSERT INTO hr.employee (first_name, last_name, job_title, title, date_of_birth,
   ('Laura','Callahan','Inside Sales Coordinator','Ms.','1981-01-09','2017-03-05','4726 - 11th Ave. N.E.','Seattle','WA','98105',(SELECT id FROM core.country WHERE iso2 = 'US'),'(206) 555-1189','Laura received a BA in psychology from the University of Washington.  She has also completed a course in business French.  She reads and writes French.','L Callahan'),
   ('Anne','Dodsworth','Sales Representative','Ms.','1989-01-27','2017-11-15','7 Houndstooth Rd.','London','','WG2 7LT',(SELECT id FROM core.country WHERE iso2 = 'UK'),'(71) 555-4444','Anne has a BA degree in English from St. Lawrence College.  She is fluent in French and German.','A Dodsworth');
 
-UPDATE hr.employee SET reports_to_fk = (SELECT id FROM hr.employee WHERE last_name = 'Buchanan') WHERE last_name IN ('Suyama','King','Dodsworth');
-UPDATE hr.employee SET reports_to_fk = (SELECT id FROM hr.employee WHERE last_name = 'Fuller') WHERE reports_to_fk IS NULL;
+UPDATE hr.employee SET reports_to_fk = (SELECT id FROM hr.employee WHERE family_name = 'Buchanan') WHERE family_name IN ('Suyama','King','Dodsworth');
+UPDATE hr.employee SET reports_to_fk = (SELECT id FROM hr.employee WHERE family_name = 'Fuller') WHERE reports_to_fk IS NULL;
 ALTER TABLE hr.employee ALTER COLUMN reports_to_fk SET NOT NULL;
 
 
