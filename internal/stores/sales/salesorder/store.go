@@ -35,7 +35,7 @@ type Input struct {
 	DestCity         string       `db:"dest_city" json:"dest_city,omitempty" validate:"required,max=255"`
 	DestCompanyName  string       `db:"dest_company_name" json:"dest_company_name,omitempty" validate:"required,max=255"`
 	DestCountryFk    int64        `db:"dest_country_fk" json:"dest_country_fk,omitempty" validate:"required"`
-	DestPostalCode   string       `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"required,max=64"`
+	DestPostalCode   string       `db:"dest_postal_code" json:"dest_postal_code,omitempty" validate:"max=64"`
 	DestState        string       `db:"dest_state" json:"dest_state,omitempty" validate:"max=64"`
 	FreightCost      float32      `db:"freight_cost" json:"freight_cost,omitempty" validate:"gte=0"`
 	IsShipped        bool         `db:"is_shipped" json:"is_shipped"`

@@ -36,6 +36,7 @@ type Model struct {
 	Id          int64            `db:"id" json:"id"`
 	CreatedAt   lystype.Datetime `db:"created_at" json:"created_at,omitzero"`
 	CreatedBy   string           `db:"created_by" json:"created_by,omitempty"`
+	GrossValue  float32          `db:"gross_value" json:"gross_value,omitempty"` // generated
 	OrderNumber int32            `db:"order_number" json:"order_number,omitempty"`
 	ProductName string           `db:"product_name" json:"product_name,omitempty"`
 	UpdatedAt   lystype.Datetime `db:"updated_at" json:"updated_at,omitzero"` // assigned by trigger

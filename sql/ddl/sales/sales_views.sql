@@ -53,13 +53,13 @@ CREATE OR REPLACE VIEW sales.v_order AS
     ship.company_name AS shipper_company_name,
     o.updated_at,
     COALESCE(oi.count,0) AS order_item_count,
-    COALESCE(oi.value,0) AS order_value
+    COALESCE(oi.gross_value,0) AS order_value
   FROM sales.order o
   JOIN sales.customer c ON o.customer_fk = c.id
   JOIN core.country co ON o.dest_country_fk = co.id
   JOIN hr.employee emp ON o.salesman_fk = emp.id
   JOIN sales.shipper ship ON o.shipper_fk = ship.id
-  LEFT JOIN (SELECT order_fk, count(*), SUM(quantity * unit_price * (1 - discount)) AS value FROM sales.order_item GROUP BY 1) oi ON oi.order_fk = o.id;
+  LEFT JOIN (SELECT order_fk, count(*), SUM(gross_value) AS gross_value FROM sales.order_item GROUP BY 1) oi ON oi.order_fk = o.id;
 
 
 CREATE OR REPLACE VIEW sales.v_order_item AS
@@ -67,6 +67,7 @@ CREATE OR REPLACE VIEW sales.v_order_item AS
     oi.discount,
     oi.created_at,
     oi.created_by,
+    oi.gross_value,
     oi.id,
     oi.last_user_update_by,
     oi.order_fk,
