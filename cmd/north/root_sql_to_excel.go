@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/loveyourstack/lys/lysexcel"
@@ -33,8 +34,16 @@ var sqlToExcelCmd = &cobra.Command{
 			cliApp.ErrorLog.Error("os.CreateTemp failed: " + err.Error())
 			os.Exit(1)
 		}
-		f.Close()
-		defer os.Remove(f.Name())
+		err = f.Close()
+		if err != nil {
+			cliApp.ErrorLog.Error("f.Close failed: " + err.Error())
+			os.Exit(1)
+		}
+		defer func() {
+			if err = os.Remove(f.Name()); err != nil {
+				fmt.Printf("os.Remove failed: %s", err.Error())
+			}
+		}()
 
 		// write items to Excel
 		err = lysexcel.WriteItemsToFile(items, catStore.GetMeta().JsonTagTypeMap, f.Name(), "")
