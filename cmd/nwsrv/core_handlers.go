@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 
@@ -16,7 +15,7 @@ func (srvApp *httpServerApplication) coreAddCategoryTest(w http.ResponseWriter, 
 		Name:        "name2",
 		Description: "desc2",
 	}
-	_, err := catStore.Insert(context.Background(), input)
+	_, err := catStore.Insert(r.Context(), input)
 	if err != nil {
 		lys.HandleError(r.Context(), fmt.Errorf("catStore.Insert failed: %w", err), srvApp.ErrorLog, w)
 		return
