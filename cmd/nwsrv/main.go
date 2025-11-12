@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/loveyourstack/connectors/apiclients/ecbapi"
 	"github.com/loveyourstack/lys"
@@ -61,8 +62,11 @@ func main() {
 
 	// create HTTP server using srvApp's routes and handlers
 	srv := &http.Server{
-		Addr:    ":" + srvApp.Config.API.Port,
-		Handler: srvApp.getRouter(),
+		Addr:              ":" + srvApp.Config.API.Port,
+		Handler:           http.TimeoutHandler(srvApp.getRouter(), 5*time.Second, ""),
+		IdleTimeout:       time.Second,
+		ReadHeaderTimeout: 500 * time.Millisecond,
+		ReadTimeout:       500 * time.Millisecond,
 	}
 
 	// start the HTTP server process
