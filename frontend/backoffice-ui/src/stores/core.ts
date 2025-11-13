@@ -10,7 +10,6 @@ export const useCoreStore = defineStore('core', () => {
   const countriesList = ref<Country[]>([])
   const categoriesList = ref<SelectionItem[]>([])
   const frequenciesList = ref<string[]>(['Daily', 'Weekly'])
-  const operatorsList = <string[]>(['<', '<=', '=', '>=', '>', '<=>', '!=' ])
   const productsList = ref<SelectionItem[]>([])
   const suppliersList = ref<SelectionItem[]>([])
   const weekdaysList = ref<string[]>(['None', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'])
@@ -52,7 +51,7 @@ export const useCoreStore = defineStore('core', () => {
     .catch() // handled by interceptor
   }
 
-  return { activeCountriesList, categoriesList, countriesList, frequenciesList, operatorsList, productsList, suppliersList, weekdaysList,
+  return { activeCountriesList, categoriesList, countriesList, frequenciesList, productsList, suppliersList, weekdaysList,
     loadCategoriesList, loadCountriesList, loadSuppliersList, loadProductsList  }
 })
 

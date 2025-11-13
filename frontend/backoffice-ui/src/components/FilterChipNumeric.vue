@@ -11,7 +11,7 @@
     <v-card width="300" class="pa-2">
 
       <v-autocomplete label="Operator" v-model="filterValue.operator" autofocus
-        :items="coreStore.operatorsList" @update:model-value="emit('updated')"
+        :items="appStore.operatorsList" @update:model-value="emit('updated')"
       ></v-autocomplete>
 
       <v-text-field type="number" label="Value" v-model.number="filterValue.value"
@@ -28,8 +28,8 @@
 
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { type NumericFilter } from '@/types/core'
-import { useCoreStore } from '@/stores/core'
+import { type NumericFilter } from '@/types/app'
+import { useAppStore } from '@/stores/app'
 import { getNumericFilterDisplayText } from '@/functions/datatable'
 
 const props = defineProps<{
@@ -44,7 +44,7 @@ const emit = defineEmits<{
   (e: 'updatedDebounce'): void
 }>()
 
-const coreStore = useCoreStore()
+const appStore = useAppStore()
 
 const filterText = computed(() => {
   return getNumericFilterDisplayText(props.filterValue, props.isPercent)

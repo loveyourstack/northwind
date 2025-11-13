@@ -10,8 +10,9 @@ export const useAppStore = defineStore('app', () => {
   ]
 
   const company = 'Northwind'
+  const operatorsList = <string[]>(['<', '<=', '=', '>=', '>', '<=>', '!=' ])
   const projectTitle = 'Backoffice'
 
-  return { apiErr, booleanOptions, company, projectTitle }
+  return { apiErr, booleanOptions, company, operatorsList, projectTitle }
 })
 

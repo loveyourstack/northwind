@@ -1,5 +1,5 @@
 import { VDataTable } from 'vuetify/components'
-import { type NumericFilter } from '@/types/core'
+import { type NumericFilter } from '@/types/app'
 
 export const itemsPerPageOptions = [
   {value: 5, title: '5'},

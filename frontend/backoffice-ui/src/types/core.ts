@@ -55,14 +55,6 @@ export function GetCountryInputFromItem(item: Country): CountryInput {
 
 // ------------------------------------------------------------------------------------------------------
 
-export interface NumericFilter {
-  operator: string
-  value: number
-  value_upper: number // treated as upper limit when operator is 'between'
-}
-
-// ------------------------------------------------------------------------------------------------------
-
 export interface ProductInput {
   category_fk: number | undefined
   is_discontinued?: boolean
