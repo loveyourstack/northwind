@@ -9,7 +9,7 @@ CREATE DOMAIN tracking_by AS text NOT NULL DEFAULT 'Unknown';
 CREATE DOMAIN text_short AS varchar(64) NOT NULL; 
 CREATE DOMAIN text_short_mandatory AS varchar(64) NOT NULL CHECK (value != '');
 
--- person names, address lines
+-- full names, address lines
 CREATE DOMAIN text_medium AS varchar(255) NOT NULL;
 CREATE DOMAIN text_medium_mandatory AS varchar(255) NOT NULL CHECK (value != '');
 

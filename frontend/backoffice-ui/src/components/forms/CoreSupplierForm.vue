@@ -80,6 +80,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
+import { callDelete } from '@/functions/form'
 import { type Supplier, type SupplierInput, NewSupplier, GetSupplierInputFromItem } from '@/types/core'
 import { useCoreStore } from '@/stores/core'
 
@@ -111,16 +112,7 @@ const cardTitle = computed(() => {
 })
 
 function deleteItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL)
-    .then(() => {
-      coreStore.loadSuppliersList()
-      emit('delete')
-    })
-    .catch() // handled by interceptor
+  callDelete(itemURL, () => { coreStore.loadSuppliersList(); emit('delete') })
 }
 
 function loadItem() {

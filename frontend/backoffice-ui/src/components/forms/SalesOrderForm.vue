@@ -112,6 +112,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useNow, useDateFormat } from '@vueuse/core'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
+import { callDelete } from '@/functions/form'
 import { type Customer, type Order, type OrderInput, NewOrder, GetOrderInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
 import { useHRStore } from '@/stores/hr'
@@ -148,15 +149,7 @@ const cardTitle = computed(() => {
 })
 
 function archiveItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL + '/archive')
-    .then(() => {
-      emit('archive')
-    })
-    .catch() // handled by interceptor
+  callDelete(itemURL + '/archive', () => { hrStore.loadEmployeesList(); emit('archive') })
 }
 
 function calculateFreightCost() {

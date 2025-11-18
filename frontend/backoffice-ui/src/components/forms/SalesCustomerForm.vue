@@ -78,6 +78,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
+import { callDelete } from '@/functions/form'
 import { type Customer, type CustomerInput, NewCustomer, GetCustomerInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
 import { useSalesStore } from '@/stores/sales'
@@ -117,16 +118,7 @@ const codeRules = [
 ]
 
 function deleteItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL)
-    .then(() => {
-      salesStore.loadCustomersList()
-      emit('delete')
-    })
-    .catch() // handled by interceptor
+  callDelete(itemURL, () => { salesStore.loadCustomersList(); emit('delete') })
 }
 
 function loadItem() {

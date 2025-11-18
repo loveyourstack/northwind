@@ -56,6 +56,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
+import { callDelete } from '@/functions/form'
 import { type Territory, type TerritoryInput, NewTerritory, GetTerritoryInputFromItem } from '@/types/sales'
 import { useHRStore } from '@/stores/hr'
 import { useSalesStore } from '@/stores/sales'
@@ -90,15 +91,7 @@ const cardTitle = computed(() => {
 })
 
 function deleteItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL)
-    .then(() => {
-      emit('delete')
-    })
-    .catch() // handled by interceptor
+  callDelete(itemURL, () => { emit('delete') })
 }
 
 function loadItem() {

@@ -56,6 +56,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
+import { callDelete } from '@/functions/form'
 import { type Product } from '@/types/core'
 import { type OrderItem, type OrderItemInput, NewOrderItem, GetOrderItemInputFromItem } from '@/types/sales'
 import { useCoreStore } from '@/stores/core'
@@ -95,16 +96,7 @@ const cardTitle = computed(() => {
 })
 
 function archiveItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL + '/archive')
-    .then(() => {
-      coreStore.loadCategoriesList()
-      emit('archive')
-    })
-    .catch() // handled by interceptor
+  callDelete(itemURL + '/archive', () => { emit('archive') })
 }
 
 function loadItem() {

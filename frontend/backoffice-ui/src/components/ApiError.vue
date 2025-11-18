@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="showDialog" width="auto" min-width="300px">
+  <v-dialog v-model="showDialog" width="auto" min-width="300px" max-width="800px">
     <v-card>
       <v-card-title style="background-color: red;">
         <v-icon size="small" color="white" icon="mdi-alert" class="mr-2"></v-icon>

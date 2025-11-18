@@ -53,6 +53,7 @@
 import { ref, computed, onMounted } from 'vue'
 import ax from '@/api'
 import { useFetch } from '@/composables/fetch'
+import { callDelete } from '@/functions/form'
 import { type Category, type CategoryInput, NewCategory, GetCategoryInputFromItem } from '@/types/core'
 import { useCoreStore } from '@/stores/core'
 
@@ -84,16 +85,7 @@ const cardTitle = computed(() => {
 })
 
 function deleteItem() {
-  if (!confirm('Are you sure?')) {
-    return
-  }
-
-  ax.delete(itemURL)
-    .then(() => {
-      coreStore.loadCategoriesList()
-      emit('delete')
-    })
-    .catch() // handled by interceptor
+  callDelete(itemURL, () => { coreStore.loadCategoriesList(); emit('delete') })
 }
 
 function loadItem() {
