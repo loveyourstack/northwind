@@ -115,7 +115,7 @@
     </template>
 
     <template v-slot:[`item.is_discontinued`]="{ item }">
-      <v-icon v-if="item.is_discontinued" size="small" icon="mdi-check"></v-icon>
+      <v-checkbox v-model="item.is_discontinued" hide-details density="compact" @change="changeDiscontinued(item)"></v-checkbox>
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
@@ -134,6 +134,7 @@
 <script lang="ts" setup>
 import { ref, computed, watch, onBeforeMount, onMounted } from 'vue'
 import { useDebounceFn } from '@vueuse/core'
+import ax from '@/api'
 import { VDataTable } from 'vuetify/components'
 import { useFetchDt } from '@/composables/fetch'
 import { type Product } from '@/types/core'
@@ -199,6 +200,17 @@ const filterDiscontinuedText = computed(() => {
 })
 
 const lsKey = 'products_dt'
+
+function changeDiscontinued(item: Product) {
+
+  var saveItem = { 'is_discontinued': item.is_discontinued }
+
+  ax.patch(baseUrl + '/' + item.id, saveItem)
+    .then(() => {
+      refreshItems()
+    })
+    .catch() // handled by interceptor
+}
 
 function getFilterStr(): string {
   var ret = ''
