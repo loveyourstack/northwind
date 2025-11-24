@@ -11,13 +11,13 @@
     <div v-if="showSalesItems">
       <v-list-item link title="Customers" to="/customers" prepend-icon="mdi-account-box-outline"></v-list-item>
       <v-list-item link title="Orders" to="/orders" prepend-icon="mdi-hand-extended"></v-list-item>
-      <v-list-item link title="Shippers" to="/shippers" prepend-icon="mdi-truck"></v-list-item>
       <v-list-item link title="Territories" to="/territories" prepend-icon="mdi-land-plots"></v-list-item>
     </div>
 
     <v-divider></v-divider>
     <v-list-subheader title="HR" class="text-uppercase mt-2 clickable" @click="showHrItems = !showHrItems"></v-list-subheader>
     <div v-if="showHrItems">
+      <v-list-item link title="Calendar" to="/calendar" prepend-icon="mdi-calendar"></v-list-item>
       <v-list-item link title="Employees" to="/employees" prepend-icon="mdi-account-circle"></v-list-item>
       <v-list-item link title="Meeting schedule" to="/meeting-schedule" prepend-icon="mdi-account-group"></v-list-item>
     </div>

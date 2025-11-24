@@ -28,6 +28,16 @@ const routes = [
         component: () => import('@/views/Home.vue'),
       },
       {
+        path: '/calendar',
+        children: [
+          {
+            path: '',
+            name: 'Calendar',
+            component: () => import('@/views/HrCalendar.vue'),
+          },
+        ]
+      },
+      {
         path: '/categories',
         children: [
           {

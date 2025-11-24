@@ -33,6 +33,7 @@ declare module 'vue' {
     HrMeetingScheduleForm: typeof import('./src/components/forms/HrMeetingScheduleForm.vue')['default']
     HrMeetingScheduleTable: typeof import('./src/components/tables/HrMeetingScheduleTable.vue')['default']
     LeftNavList: typeof import('./src/components/LeftNavList.vue')['default']
+    MyCalendar: typeof import('./src/components/MyCalendar.vue')['default']
     RightNavList: typeof import('./src/components/RightNavList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
