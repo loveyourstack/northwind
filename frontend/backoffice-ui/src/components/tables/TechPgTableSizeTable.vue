@@ -11,7 +11,6 @@
     :show-current-page=true
     item-value="id"
     @update:options="loadItems"
-    class="dt"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center">

@@ -21,7 +21,6 @@
     item-value="id"
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
-    class="dt"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center" class="pb-2" style="min-width: 800px;">

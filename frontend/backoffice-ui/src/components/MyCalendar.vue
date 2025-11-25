@@ -125,7 +125,6 @@ function getTypeLabel(type: string) {
     case 'week': return 'Week'
   
     default: console.log('unknown type: ' + type)
-      break;
   }
 }
 

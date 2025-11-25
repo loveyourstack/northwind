@@ -13,7 +13,6 @@
     item-value="id"
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
-    class="dt"
     :row-props="({item}) => getRowProps(item)"
   >
     <template v-slot:[`top`]="{}">

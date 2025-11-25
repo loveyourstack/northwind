@@ -20,7 +20,6 @@
     item-value="id"
     :items-per-page-options="itemsPerPageOptions"
     @update:options="loadItems"
-    class="dt"
   >
     <template v-slot:[`top`]="{}">
       <v-row align="center">
