@@ -103,11 +103,7 @@ onMounted(() => {
 })
 </script>
 
-<style>
-
-.clickable:hover {
-  cursor: pointer;
-}
+<style scoped>
 
 /* using pseudo-element to be able to apply opacity to background image */
 .cockpit {
@@ -130,61 +126,4 @@ onMounted(() => {
   opacity: 0.25;
 }
 
-.color-pill {
-  border-radius: 0.25em;
-  padding: 5px 10px 5px 10px;
-}
-
-.dt-title {
-  font-size: 1.25rem;
-  font-weight: 500;
-  letter-spacing: 0.0125em;
-  line-height: 2rem;
-  white-space: nowrap;
-}
-
-.dt-title-block {
-  float: left;
-  padding: 0.3rem 2rem 0.5rem 0;
-}
-
-.form-col-s {
-  min-width: 350px;
-}
-.form-col {
-  min-width: 450px;
-}
-.form-col-l {
-  min-width: 550px;
-}
-
-.fs-std {
-  border-color: #FAFAFA80;
-}
-
-.projectFont {
-  font-family: "Sriracha", cursive;
-}
-
-tbody tr:nth-of-type(even) {
-  background-color: rgba(0, 0, 0, .02);
-}
-.v-theme--dark tbody tr:nth-of-type(even) {
-  background-color: rgba(0, 0, 0, .10);
-}
-
-.v-data-table-footer {
-  float: left !important;
-  justify-content: flex-start;
-  margin-top: 1rem;
-}
-
-.v-data-table__td a {
-  color: #1E88E5;
-  text-decoration: none;
-}
-
-.v-field--disabled {
-  opacity: 0.7 !important;
-}
 </style>

@@ -15,7 +15,7 @@ import { createVuetify } from 'vuetify'
 export default createVuetify({
   defaults: {
     VDataTableServer: {
-      style: 'border-radius: 4px !important; min-width: 680px; padding: 16px !important;'
+      class: 'dt'
     }
   },
   theme: {
